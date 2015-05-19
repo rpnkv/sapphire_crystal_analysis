@@ -4,6 +4,7 @@ package capture_subsystem.auxillary;
 import capture_subsystem.frame_sources.FrameSource;
 import capture_subsystem.gui.ImagePanel;
 import capture_subsystem.interfaces.CaptureGUIComponentsProvideable;
+import capture_subsystem.interfaces.FrameProvideable;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -12,14 +13,13 @@ public class CapturePerformer implements Runnable {
 
     BufferedImage frame;
     JTextArea outputArea;
-    FrameSource frameSource;
+    FrameProvideable frameSource;
     ImagePanel imagePanel;
-    JFrame sourceSettingsFrame;
     boolean performCapture;
     Integer fps;
 
     public CapturePerformer(CaptureGUIComponentsProvideable guiComponents,
-                            FrameSource frameSource,  Integer fps) {
+                            FrameProvideable frameSource,  Integer fps) {
         this.outputArea = guiComponents.getOutpArea();
         this.imagePanel = guiComponents.getImagePanel();
         this.frameSource = frameSource;
@@ -33,7 +33,6 @@ public class CapturePerformer implements Runnable {
         outputArea.append("fps: " + fps + ".\n");
         outputArea.append("delay between frames capture: " + String.valueOf(1000 / fps) + ".\n");
         outputArea.append("Source: " + frameSource.toString() + ".");
-        BufferedImage grFrame;
         do {
             try {
                 frame = frameSource.getFrame();
@@ -43,9 +42,7 @@ public class CapturePerformer implements Runnable {
                         "\nProgram failure.");
                 return;
             }
-
             imagePanel.setImage(frame);
-
             try {
                 Thread.sleep(1000/fps);
             } catch (InterruptedException e) {
@@ -59,11 +56,7 @@ public class CapturePerformer implements Runnable {
         return frame;
     }
 
-    public int getFPS() {
-        return fps;
-    }
-
-    public void setFPS(int FPS) {
+    public void setFPS(Integer FPS) {
         fps = FPS;
     }
 

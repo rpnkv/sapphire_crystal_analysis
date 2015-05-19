@@ -19,9 +19,7 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
         try {
             subsystemGUI = new CapturePanel();
             frameSourceManager = new FrameSourceManager();
-            capturePerformer = new CapturePerformer
-                    (subsystemGUI,frameSourceManager.getCurrentFrameSource(),frameSourceManager.getFps());
-        } catch (FrameGrabber.Exception e) {
+            } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
         }
     }
@@ -29,6 +27,9 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
 
     @Override
     public void startCapture() {
+        capturePerformer = new CapturePerformer
+                (subsystemGUI,frameSourceManager,frameSourceManager.getFPS());
+
         videoCaptureThread = new Thread(capturePerformer, "Video capture thread");
         videoCaptureThread.start();
     }
