@@ -1,10 +1,11 @@
 package core.gui;
 
+import capture_subsystem.interfaces.CapturePerformeable;
 import core.ProjectCore;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
 
 /**
  * Created by ierus on 4/1/15.
@@ -21,23 +22,29 @@ public class CoreGUI extends JFrame {
 	JMenu main,capture,analysis, monitoring,info;
 
 	JMenuItem mCapture, mPreformAnalysistest ,mExit;
-	JMenuItem cStart, cStop, cShowOrig, cSettings;
+	JMenuItem cStart, cStop, cSettings;
 	JMenuItem aSetMM, aSetCaptureRegions, confDiagramPanel;
 	JMenuItem mnInitConnection, mnStartMonitoring,mnShowLog;
 
+	CapturePerformeable capturePerformeable;
+
 	ProjectCore projectCore;
 
-	public CoreGUI(ProjectCore projectCore, JPanel capturePanel, JPanel analysisPanel) throws HeadlessException {
+	public CoreGUI(ProjectCore projectCore, JPanel capturePanel, JPanel analysisPanel,
+				   CapturePerformeable capturePerformeable) throws HeadlessException {
 		super("Crystal analysis");
 		this.projectCore = projectCore;
 		this.setSize(1030, 650);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
-		/*initMenu();
+
+		this.capturePerformeable = capturePerformeable;
+
+		initMenu();
 		this.capturePanel = capturePanel;
-		this.analysisPanel = analysisPanel;
+		//analysisPanel = analysisPanel;
 		this.add(capturePanel,BorderLayout.WEST);
-		processAnalysisPanelAdding(analysisPanel);*/
+		//processAnalysisPanelAdding(analysisPanel);
 
 		this.setVisible(true);
 	}
@@ -57,32 +64,45 @@ public class CoreGUI extends JFrame {
 		analysis = new JMenu("Analysis");
 		monitoring = new JMenu("Logging");
 		info = new JMenu("Info");
-		mainMenuFill();
-		captureMenuFill();
-		analysisMenuFill();
-		monitoringMenuFill();
-		infoMenuFill();
+		mainMenuInit();
+		captureMenuInit();
+		analysisMenuInit();
+		monitoringMenuInit();
+		infoMenuInit();
+		menuBar.add(main);
+		menuBar.add(capture);
+		menuBar.add(analysis);
+		menuBar.add(monitoring);
+		menuBar.add(info);
 		this.setJMenuBar(menuBar);
 	}
 
-	private void mainMenuFill(){
+	private void mainMenuInit(){
 
 	}
 
-	private void captureMenuFill(){
+	private void captureMenuInit(){
+		cStart = new JMenuItem("Start");
+		cStart.addActionListener((e) -> capturePerformeable.startCapture());
+		cStop = new JMenuItem("Stop");
+		cStop.addActionListener((e) -> capturePerformeable.stopCapture());
+		cSettings = new JMenuItem("Settings");
+		cSettings.addActionListener((e) -> capturePerformeable.showSettings());
+		capture.add(cStart);
+		capture.add(cStop);
+		capture.add(cSettings);
+	}
+
+	private void analysisMenuInit(){
 
 	}
 
-	private void analysisMenuFill(){
+
+	private void monitoringMenuInit() {
 
 	}
 
-
-	private void monitoringMenuFill() {
-
-	}
-
-	private void infoMenuFill(){
+	private void infoMenuInit(){
 
 	}
 }

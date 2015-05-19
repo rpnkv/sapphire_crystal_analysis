@@ -17,7 +17,7 @@ public class ProjectCore {
         analysisFacade = new AnalysisFacade();
         monitoringFacade = new MonitoringFacade();
 
-        gui = new CoreGUI(this,captureFacade.getGUIPanel(),analysisFacade.getGUIPanel());
+        gui = new CoreGUI(this,captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade);
     }
 
     public static void main(String[] args) {
