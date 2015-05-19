@@ -26,7 +26,6 @@ public class CaptureSettingsFrame extends JFrame{
 		this.frameSourceManager = frameSourceManager;
 		initFrameSourcesBox();
 		defineContentPane(frameSourceManager.getCurrentFrameSource().toString());
-		setSize(defaultWidth,defaultHeight);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
@@ -89,7 +88,7 @@ public class CaptureSettingsFrame extends JFrame{
 	private void initFrameSourcesBox() {
 		frameSourcesCB = new JComboBox<>(frameSourceManager.getFrameSourcesNames());
 		frameSourcesCB.setSelectedItem(frameSourceManager.getCurrentFrameSource().toString());
-		frameSourcesCB.addActionListener(e -> initSettingsPanel((String) frameSourcesCB.getSelectedItem()));
+		frameSourcesCB.addActionListener(e -> defineContentPane((String) frameSourcesCB.getSelectedItem()));
 	}
 
 	private JPanel initSettingsPanel(String name){
@@ -105,12 +104,13 @@ public class CaptureSettingsFrame extends JFrame{
 	}
 
 	private void defineContentPane(String sourceName){
+		JPanel settingsPanel = initSettingsPanel(sourceName);
 		getContentPane().removeAll();
 		getContentPane().setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
 		getContentPane().add(crtUpperPanel());
-		JPanel settingsPanel = initSettingsPanel(sourceName);
-		getContentPane().add(initSettingsPanel(sourceName));
+		getContentPane().add(settingsPanel);
 		getContentPane().add(crtLowerPanel());
+		setSize(defaultWidth,defaultHeight+settingsPanel.getHeight());
 		update(getGraphics());
 	}
 

@@ -1,8 +1,6 @@
 package analysis_subsystem.crystalMathModel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 
@@ -27,7 +25,7 @@ public class MathModelSettingsPanel extends JPanel {
         corePanel.add(initMenBrightPanel());
         corePanel.add(initShprBrightPanel());
 
-        this.setSize(380,170);
+        this.setSize(380,150);
         this.add(corePanel);
         this.setVisible(true);
     }

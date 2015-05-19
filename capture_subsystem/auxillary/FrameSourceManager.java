@@ -13,9 +13,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
-/**
- * Created by ierus on 5/19/15.
- */
 public class FrameSourceManager implements FrameProvideable{
 
     public static final int FPS_MIN = 1;
@@ -30,7 +27,7 @@ public class FrameSourceManager implements FrameProvideable{
     public FrameSourceManager() throws FrameGrabber.Exception {
         fps = FPS_INIT;
         initFrameSources();
-        currentFrameSource = frameSources.get(0);
+        currentFrameSource = frameSources.get(2);
     }
 
     private void initFrameSources() throws FrameGrabber.Exception {
