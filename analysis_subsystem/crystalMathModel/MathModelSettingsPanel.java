@@ -70,13 +70,9 @@ public class MathModelSettingsPanel extends JPanel {
         JFormattedTextField field = (JFormattedTextField) comp.getComponent(0);
         DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
         formatter.setCommitsOnValidEdit(true);
-        crCoreBrightSp.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int value = (int) crCoreBrightSp.getValue();
-                customizableGraphicMathModel.setCrystalCoreBrightness((short) value);
-            }
+        crCoreBrightSp.addChangeListener(e -> {
+            int value = (int) crCoreBrightSp.getValue();
+            customizableGraphicMathModel.setCrystalCoreBrightness((short) value);
         });
 
         return crCoreBrightSp ;
@@ -91,12 +87,9 @@ public class MathModelSettingsPanel extends JPanel {
         JFormattedTextField field = (JFormattedTextField) comp.getComponent(0);
         DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
         formatter.setCommitsOnValidEdit(true);
-        crBrdBrightSp.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int value = (int) crBrdBrightSp.getValue();
-                customizableGraphicMathModel.setCrystalBorderBrightness((short) value);
-            }
+        crBrdBrightSp.addChangeListener(e -> {
+            int value = (int) crBrdBrightSp.getValue();
+            customizableGraphicMathModel.setCrystalBorderBrightness((short) value);
         });
 
         return crBrdBrightSp;
@@ -111,13 +104,9 @@ public class MathModelSettingsPanel extends JPanel {
         JFormattedTextField field = (JFormattedTextField) comp.getComponent(0);
         DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
         formatter.setCommitsOnValidEdit(true);
-        menBrightSp.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int value = (int) menBrightSp.getValue();
-                customizableGraphicMathModel.setMeniscusBrightness((short) value);
-            }
+        menBrightSp.addChangeListener(e -> {
+            int value = (int) menBrightSp.getValue();
+            customizableGraphicMathModel.setMeniscusBrightness((short) value);
         });
 
         return menBrightSp;
@@ -132,13 +121,9 @@ public class MathModelSettingsPanel extends JPanel {
         JFormattedTextField field = (JFormattedTextField) comp.getComponent(0);
         DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
         formatter.setCommitsOnValidEdit(true);
-        shprBrightSp.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int value = (int) shprBrightSp.getValue();
-                customizableGraphicMathModel.setShaperBrightness((short) value);
-            }
+        shprBrightSp.addChangeListener(e -> {
+            int value = (int) shprBrightSp.getValue();
+            customizableGraphicMathModel.setShaperBrightness((short) value);
         });
         return shprBrightSp;
     }

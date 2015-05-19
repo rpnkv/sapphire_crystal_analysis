@@ -36,7 +36,7 @@ public class MathModelFrameSource extends FrameSource implements FrameProvideabl
 
 	@Override
 	protected JPanel completeSettingsPanel() {
-		return null;
+		return new MathModelSettingsPanel(this);
 	}
 
 	private BufferedImage builtFrame() {

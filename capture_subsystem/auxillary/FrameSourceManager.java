@@ -4,9 +4,8 @@ import analysis_subsystem.crystalMathModel.MathModelFrameSource;
 import capture_subsystem.frame_sources.FrameSource;
 import capture_subsystem.frame_sources.camera.CameraFrameSource;
 import capture_subsystem.frame_sources.image.ImageFrameSource;
-import capture_subsystem.gui.CaptureSettingsPanel;
+import capture_subsystem.gui.CaptureSettingsFrame;
 import capture_subsystem.interfaces.FrameProvideable;
-import capture_subsystem.interfaces.SettingsPanelProvideable;
 import org.bytedeco.javacv.FrameGrabber;
 
 import javax.swing.*;
@@ -23,7 +22,7 @@ public class FrameSourceManager implements FrameProvideable{
     public static final int FPS_MAX = 24;
     public static final int FPS_INIT = 19;    //initial frames per second
 
-    private JFrame settingsFrame;
+    private CaptureSettingsFrame settingsFrame;
     private FrameSource currentFrameSource;
     private ArrayList<FrameSource> frameSources;
     private Integer fps;
@@ -45,12 +44,7 @@ public class FrameSourceManager implements FrameProvideable{
         SwingUtilities.invokeLater(() ->{
             if(settingsFrame != null)
                 settingsFrame.dispose();
-            CaptureSettingsPanel settingsPanel = new CaptureSettingsPanel(this);
-            settingsFrame = new JFrame("Source settings");
-            settingsFrame.setSize(350, 400);
-            settingsFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            settingsFrame.add(settingsPanel);
-            settingsFrame.setVisible(true);
+            settingsFrame = new CaptureSettingsFrame(this);
         });
     }
 
@@ -62,12 +56,11 @@ public class FrameSourceManager implements FrameProvideable{
         this.fps = fps;
     }
 
-    public SettingsPanelProvideable[] getFrameSources() {
-        return frameSources.toArray(new SettingsPanelProvideable[3]);
-    }
-
-    public int getSourcesAmount(){
-        return frameSources.size();
+    public String[] getFrameSourcesNames() {
+        String sourceNames[] = new String[frameSources.size()];
+        for(int i = 0; i < frameSources.size(); i++)
+            sourceNames[i] = frameSources.get(i).toString();
+        return sourceNames;
     }
 
     public FrameSource getCurrentFrameSource(){
@@ -80,6 +73,15 @@ public class FrameSourceManager implements FrameProvideable{
                 currentFrameSource = frameSource;
             }
         });
+    }
+
+    public JPanel getSettingsPanelByName(String name){
+        JPanel[] settingsPanel = {null};
+        frameSources.forEach((frameSource) -> {
+            if(frameSource.toString().equals(name))
+                settingsPanel[0] = frameSource.getSettingsPanel();
+        });
+        return settingsPanel[0];
     }
 
     @Override
