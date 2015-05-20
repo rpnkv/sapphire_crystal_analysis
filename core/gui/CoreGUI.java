@@ -2,7 +2,6 @@ package core.gui;
 
 import analysis_subsystem.interfaces.AnalysisPerformable;
 import capture_subsystem.interfaces.CapturePerformable;
-import core.ProjectCore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,13 +23,10 @@ public class CoreGUI extends JFrame {
 	CapturePerformable capturePerformeable;
 	AnalysisPerformable analysisPerformable;
 
-	ProjectCore projectCore;
-
-	public CoreGUI(ProjectCore projectCore, JPanel capturePanel, JPanel analysisPanel,
+	public CoreGUI(JPanel capturePanel, JPanel analysisPanel,
 				   CapturePerformable capturePerformeable, AnalysisPerformable analysisPerformable) throws HeadlessException {
 		super("Crystal analysis");
-		this.projectCore = projectCore;
-		this.setSize(1030, 650);
+		this.setSize(1030, 600);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 

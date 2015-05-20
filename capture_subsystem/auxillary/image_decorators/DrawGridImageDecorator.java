@@ -1,72 +1,56 @@
 package capture_subsystem.auxillary.image_decorators;
 
+import core.auxillary.ShapeDrawers.ShapeDrawer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * Created by ierus on 5/20/15.
- */
 public class DrawGridImageDecorator extends ImageDecorator {
 
-    public DrawGridImageDecorator() {
+    ShapeDrawer drawer;
+
+    public DrawGridImageDecorator(ShapeDrawer shapeDrawer) {
         super("draw grid image decorator");
+        drawer = shapeDrawer;
     }
 
     @Override
     public void setImage(BufferedImage source) {
+        drawer.init(source);
         drawXGrid(source);
         drawYGrid(source);
-        drawText(5,15,"0", Color.red,source);
+        drawer.drawText(5,15,"0", Color.red);
+        drawer.dispose();
         innerDecorator.setImage(source);
     }
 
-    private void drawXGrid(BufferedImage cpdImg) {
-        Graphics2D g2d = cpdImg.createGraphics();
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.red);
+    private void drawXGrid(BufferedImage source) {
 
-        g2d.drawLine(15, 15, cpdImg.getWidth() - 15, 15);
-        g2d.drawLine(cpdImg.getWidth() - 18, 18, cpdImg.getWidth() - 15, 15);
-        g2d.drawLine(cpdImg.getWidth() - 18, 12, cpdImg.getWidth() - 15, 15);
-        g2d.dispose();
-        for (int i = 50; i < cpdImg.getWidth(); i += 50) {
-            drawShpLnX(15, cpdImg.getHeight() - 15, i, 8, 3, Color.black, cpdImg);
-            drawText(i - 17, 14, String.valueOf(i), Color.red, cpdImg);
+        drawer.drawLine(15, 15, source.getWidth() - 15, 15,2,Color.red);
+        drawer.drawLine(source.getWidth() - 18, 18, source.getWidth() - 15, 15);
+        drawer.drawLine(source.getWidth() - 18, 12, source.getWidth() - 15, 15);
+        for (int i = 50; i < source.getWidth(); i += 50) {
+            drawShpLnX(15, source.getHeight() - 15, i, 8, 3, Color.black);
+            drawer.drawText(i - 17, 14, String.valueOf(i), Color.red);
         }
-        drawText(cpdImg.getWidth() - 14, 14, "X", Color.red, cpdImg);
-
+        drawer.drawText(source.getWidth() - 14, 14, "X", Color.red);
     }
 
 
     private void drawYGrid(BufferedImage cpdImg) {
-        Graphics2D g2d = cpdImg.createGraphics();
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.red);
 
-
-        g2d.drawLine(15, 15, 15, cpdImg.getHeight() - 15);
-        g2d.drawLine(18, cpdImg.getHeight() - 18, 15, cpdImg.getHeight() - 15);
-        g2d.drawLine(12, cpdImg.getHeight() - 18, 15, cpdImg.getHeight() - 15);
-        g2d.dispose();
+        drawer.drawLine(15, 15, 15, cpdImg.getHeight() - 15,Color.red);
+        drawer.drawLine(18, cpdImg.getHeight() - 18, 15, cpdImg.getHeight() - 15);
+        drawer.drawLine(12, cpdImg.getHeight() - 18, 15, cpdImg.getHeight() - 15);
         for (int i = 50; i < cpdImg.getHeight(); i += 50) {
-            drawText(1, i, String.valueOf(i), Color.red, cpdImg);
-            drawShpLnY(15, cpdImg.getWidth() - 15, i, 8, 3, Color.black, cpdImg);
+            drawer.drawText(1, i, String.valueOf(i), Color.red);
+            drawShpLnY(15, cpdImg.getWidth() - 15, i, 8, 3, Color.black);
         }
-        drawText(2, cpdImg.getHeight() - 14, "Y", Color.red, cpdImg);
-    }
-
-    private void drawText(int x, int y, String s, Color color, BufferedImage cpdImg) {
-        Graphics2D g2d = cpdImg.createGraphics();
-        g2d.setColor(color);
-        g2d.setFont(new Font("Arial", Font.PLAIN, 16));
-        g2d.drawString(s,x,y);
-        g2d.dispose();
-
+        drawer. drawText(2, cpdImg.getHeight() - 14, "Y", Color.red);
     }
 
     private void drawShpLnY(int x0, int x1, int y,
-                            int interval, int length, Color color,
-                            BufferedImage diagramShape){
+                            int interval, int length, Color color){
         if(x0!=x1){
             int xBeg,xEnd;
             if(x0 < x1){
@@ -76,21 +60,13 @@ public class DrawGridImageDecorator extends ImageDecorator {
                 xBeg = x1;
                 xEnd = x0;
             }
-
-            Graphics2D g2d = diagramShape.createGraphics();
-            g2d.setStroke(new BasicStroke(2));
-            g2d.setColor(color);
-
             for(int i = xBeg; i <xEnd; i+=(length+interval))
-                g2d.drawLine(i,y,i+length,y);
-
-            g2d.dispose();
+                drawer.drawLine(i,y,i+length,y,color);
         }
     }
 
     private void drawShpLnX(int y0, int y1, int x,
-                            int interval, int length, Color color,
-                            BufferedImage diagramShape){
+                            int interval, int length, Color color){
         if(y0!=y1) {
             int yBeg, yEnd;
             if (y0 < y1) {
@@ -100,15 +76,8 @@ public class DrawGridImageDecorator extends ImageDecorator {
                 yBeg = y1;
                 yEnd = y0;
             }
-
-            Graphics2D g2d = diagramShape.createGraphics();
-            g2d.setStroke(new BasicStroke(2));
-            g2d.setColor(color);
-
-
             for(int i = yBeg; i <yEnd; i+=(length+interval))
-                g2d.drawLine(x,i,x,i+length);
-            g2d.dispose();
+                drawer.drawLine(x,i,x,i+length,color);
         }
     }
 }

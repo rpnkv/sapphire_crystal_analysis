@@ -1,8 +1,8 @@
 package capture_subsystem.gui;
 
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 import capture_subsystem.auxillary.FrameSourceManager;
 import capture_subsystem.auxillary.image_decorators.DrawGridImageDecorator;
-import capture_subsystem.auxillary.image_decorators.GrayScaleImageDecorator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,9 +22,11 @@ public class CaptureSettingsFrame extends JFrame{
 
 	JButton btnApply, btnOK, btnExit;
 	FrameSourceManager frameSourceManager;
+	ShapeDrawer drawer;
 
-	public CaptureSettingsFrame(FrameSourceManager frameSourceManager) {
+	public CaptureSettingsFrame(FrameSourceManager frameSourceManager, ShapeDrawer drawer) {
 		super("Source settings");
+		this.drawer = drawer;
 		this.frameSourceManager = frameSourceManager;
 		initFrameSourcesBox();
 		defineContentPane(frameSourceManager.getCurrentFrameSource().toString());
@@ -51,7 +53,7 @@ public class CaptureSettingsFrame extends JFrame{
 		drawGrid.addActionListener(e ->{
 					if(drawGrid.isSelected()){
 						isDrawGrid = true;
-						frameSourceManager.getDecorable().addDecorator(new DrawGridImageDecorator());
+						frameSourceManager.getDecorable().addDecorator(new DrawGridImageDecorator(drawer));
 					}
 					else {
 						isDrawGrid = false;

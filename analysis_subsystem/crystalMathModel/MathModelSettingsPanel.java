@@ -4,14 +4,9 @@ import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 
-/**
- * Created by ierus on 3/14/15.
- */
 public class MathModelSettingsPanel extends JPanel {
 
     ICustomizableGraphicMathModel customizableGraphicMathModel;
-
-    //JSpinner crCoreBrightSp, crBrdBrightSp, menBrightSp, shprBrightSp;
 
     int spinnerStep;
 

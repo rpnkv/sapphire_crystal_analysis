@@ -4,5 +4,5 @@ import core.interfaces.GUIPanelProvidable;
 
 
 public interface CaptureSubsystemCommonInterface
-        extends CapturePerformable,FrameProvideable,GUIPanelProvidable, VideoFlowDecorable {
+        extends CapturePerformable,FrameProvideable,GUIPanelProvidable, VideoFlowDecorable, ImagePanelActionListenable {
 }

@@ -2,27 +2,29 @@ package capture_subsystem;
 
 import capture_subsystem.auxillary.CapturePerformer;
 import capture_subsystem.auxillary.FrameSourceManager;
-import capture_subsystem.auxillary.image_decorators.DrawGridImageDecorator;
 import capture_subsystem.auxillary.image_decorators.GrayScaleImageDecorator;
 import capture_subsystem.auxillary.image_decorators.ImageDecorator;
 import capture_subsystem.gui.CapturePanel;
 import capture_subsystem.gui.ImagePanel;
 import capture_subsystem.interfaces.CaptureSubsystemCommonInterface;
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 import org.bytedeco.javacv.FrameGrabber;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
 public class CaptureFacade implements CaptureSubsystemCommonInterface {
-    CapturePanel subsystemGUI;
-    CapturePerformer capturePerformer;
-    FrameSourceManager frameSourceManager;
-    Thread videoCaptureThread;
+    CapturePanel subsystemGUI;//панель графического интерфейса подсистемы
+    CapturePerformer capturePerformer;//класс, выполняющий захват видео в отдельном потоке исполнения
+    FrameSourceManager frameSourceManager;//класс, выполняющий управление источниками видеосигнала
+    Thread videoCaptureThread;//поток видеозахвата
 
-    public CaptureFacade() {
+    public CaptureFacade(ShapeDrawer drawer) {
         try {
             subsystemGUI = new CapturePanel();
-            frameSourceManager = new FrameSourceManager(this);
+            frameSourceManager = new FrameSourceManager(this, drawer);
             } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +51,6 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
     public void showSettings() {
         frameSourceManager.showCaptureSettings();
     }
-
 
     @Override
     public JPanel getGUIPanel() {
@@ -91,5 +92,25 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
             System.out.println("no such decorator");
         }
 
+    }
+
+    @Override
+    public void addMouseListener(MouseListener mouseListener) {
+        subsystemGUI.getImagePanel().addMouseListener(mouseListener);
+    }
+
+    @Override
+    public void addMouseWheelListener(MouseWheelListener wheelListener) {
+        subsystemGUI.addMouseWheelListener(wheelListener);
+    }
+
+    @Override
+    public void removeMouseWheelListener(MouseWheelListener wheelListener) {
+        subsystemGUI.getImagePanel().removeMouseWheelListener(wheelListener);
+    }
+
+    @Override
+    public void setComponentPopupMenu(JPopupMenu popupMenu) {
+        subsystemGUI.getImagePanel().setComponentPopupMenu(popupMenu);
     }
 }

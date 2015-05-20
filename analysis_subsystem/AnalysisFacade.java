@@ -1,23 +1,29 @@
 package analysis_subsystem;
 
+import analysis_subsystem.auxillary.RegionSettingManager;
+import core.auxillary.ShapeDrawers.JavaAPIShapeDrawer;
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 import analysis_subsystem.gui.FrameAnalysisPanel;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
-import core.interfaces.GUIPanelProvidable;
+import capture_subsystem.interfaces.ImagePanelActionListenable;
 
 import javax.swing.*;
 
 public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
 
-    FrameAnalysisPanel analysisPanel;
+    JPanel componentGUI;
+    RegionSettingManager regionSettingManager;
+    AnalysisPerformer analysisPerformer;
+    ShapeDrawer drawer;
 
-
-    public AnalysisFacade() {
-        analysisPanel = new FrameAnalysisPanel();
+    public AnalysisFacade(ShapeDrawer drawer) {
+        componentGUI = new FrameAnalysisPanel();
+        this.drawer = new JavaAPIShapeDrawer();
     }
 
     @Override
     public JPanel getGUIPanel() {
-        return analysisPanel;
+        return componentGUI;
     }
 
     @Override
@@ -33,5 +39,15 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     @Override
     public void performAnalysis() {
         System.out.println("analysis");
+    }
+
+    @Override
+    public void setActionListeneable(ImagePanelActionListenable actionListeneable) {
+        regionSettingManager = new RegionSettingManager(actionListeneable);
+    }
+
+    @Override
+    public ShapeDrawer getShapeDrawer() {
+        return drawer;
     }
 }

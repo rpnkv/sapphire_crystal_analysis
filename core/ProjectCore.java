@@ -2,22 +2,22 @@ package core;
 
 import analysis_subsystem.AnalysisFacade;
 import capture_subsystem.CaptureFacade;
+import core.auxillary.ShapeDrawers.JavaAPIShapeDrawer;
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 import core.gui.CoreGUI;
-import monitoring_subsystem.MonitoringFacade;
 
-public class ProjectCore {
-
+public class ProjectCore{
     CoreGUI gui;
-    CaptureFacade captureFacade;
-    AnalysisFacade analysisFacade;
-    MonitoringFacade monitoringFacade;
+    SubsystemsMediator mediator;
 
     public ProjectCore() {
-        captureFacade = new CaptureFacade();
-        analysisFacade = new AnalysisFacade();
-        monitoringFacade = new MonitoringFacade();
+        ShapeDrawer drawer = new JavaAPIShapeDrawer();
+        CaptureFacade captureFacade = new CaptureFacade(drawer);
+        AnalysisFacade analysisFacade = new AnalysisFacade(drawer);
+        mediator = new SubsystemsMediator(captureFacade, analysisFacade);
 
-        gui = new CoreGUI(this,captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade);
+        gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade);
+        analysisFacade.setActionListeneable(mediator);
     }
 
     public static void main(String[] args) {
