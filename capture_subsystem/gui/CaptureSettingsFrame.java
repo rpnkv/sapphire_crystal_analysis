@@ -15,7 +15,7 @@ public class CaptureSettingsFrame extends JFrame{
 	JCheckBox drawGrid;
 
 	private int defaultWidth = 430, defaultHeight = 135;
-
+	private boolean isDrawGrid = false;
 	//components of lower panel
 	JSpinner spinner;
 	JLabel lblFPS = new JLabel("FPS: ");
@@ -47,10 +47,14 @@ public class CaptureSettingsFrame extends JFrame{
 		panel.add(lblSource);
 		panel.add(frameSourcesCB);
 		drawGrid = new JCheckBox("grid");
+		drawGrid.setSelected(isDrawGrid);
 		drawGrid.addActionListener(e ->{
-					if(drawGrid.isSelected())
+					if(drawGrid.isSelected()){
+						isDrawGrid = true;
 						frameSourceManager.getDecorable().addDecorator(new DrawGridImageDecorator());
+					}
 					else {
+						isDrawGrid = false;
 						frameSourceManager.getDecorable().deleteDecorator("draw grid image decorator");
 					}
 				}

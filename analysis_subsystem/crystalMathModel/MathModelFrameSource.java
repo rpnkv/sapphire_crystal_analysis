@@ -41,7 +41,7 @@ public class MathModelFrameSource extends FrameSource implements FrameProvideabl
 
 	private BufferedImage builtFrame() {
 		BufferedImage frame = new BufferedImage(mathModel.getFrameWidth(),
-				mathModel.getFrameHeight(),BufferedImage.TYPE_BYTE_GRAY);
+				mathModel.getFrameHeight(),BufferedImage.TYPE_3BYTE_BGR);
 		builtCrystalBody(frame);
 		builtMeniscus(frame);
 		builtShaper(frame);

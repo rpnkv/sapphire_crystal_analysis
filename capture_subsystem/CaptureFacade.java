@@ -72,7 +72,6 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
             decorator1.addDecorator(decorator);
             capturePerformer.setImageSetable(decorator1);
         }
-
     }
 
     @Override

@@ -97,4 +97,9 @@ public class FrameSourceManager implements FrameProvideable{
             return new BufferedImage(640,480,BufferedImage.TYPE_BYTE_BINARY);
         }
     }
+
+    @Override
+    public String toString() {
+        return currentFrameSource.toString();
+    }
 }
