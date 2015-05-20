@@ -1,5 +1,7 @@
 package capture_subsystem.gui;
 
+import capture_subsystem.interfaces.ImageSetable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,7 +11,7 @@ import static org.bytedeco.javacpp.opencv_core.CvSize;
 /**
  * Created by ierus on 3/11/15.
  */
-public class ImagePanel extends JPanel {
+public class ImagePanel extends JPanel implements ImageSetable{
 
     private BufferedImage image;
 

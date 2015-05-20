@@ -1,10 +1,9 @@
 package capture_subsystem.auxillary;
 
 
-import capture_subsystem.frame_sources.FrameSource;
-import capture_subsystem.gui.ImagePanel;
 import capture_subsystem.interfaces.CaptureGUIComponentsProvideable;
 import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.ImageSetable;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -14,14 +13,14 @@ public class CapturePerformer implements Runnable {
     BufferedImage frame;
     JTextArea outputArea;
     FrameProvideable frameSource;
-    ImagePanel imagePanel;
+    ImageSetable imageSetter;
     boolean performCapture;
     Integer fps;
 
     public CapturePerformer(CaptureGUIComponentsProvideable guiComponents,
                             FrameProvideable frameSource,  Integer fps) {
         this.outputArea = guiComponents.getOutpArea();
-        this.imagePanel = guiComponents.getImagePanel();
+        this.imageSetter = guiComponents;
         this.frameSource = frameSource;
         this.fps = fps;
         performCapture = true;
@@ -42,7 +41,7 @@ public class CapturePerformer implements Runnable {
                         "\nProgram failure.");
                 return;
             }
-            imagePanel.setImage(frame);
+            imageSetter.setImage(frame);
             try {
                 Thread.sleep(1000/fps);
             } catch (InterruptedException e) {
@@ -58,6 +57,14 @@ public class CapturePerformer implements Runnable {
 
     public void setFPS(Integer FPS) {
         fps = FPS;
+    }
+
+    public ImageSetable getImageSetter() {
+        return imageSetter;
+    }
+
+    public void setImageSetter(ImageSetable imageSetter) {
+        this.imageSetter = imageSetter;
     }
 
     public void stopCapture(){

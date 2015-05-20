@@ -7,9 +7,8 @@ import javax.swing.*;
 /**
  * Created by ierus on 5/19/15.
  */
-public interface CaptureGUIComponentsProvideable {
+public interface CaptureGUIComponentsProvideable extends ImageSetable {
 
     JTextArea getOutpArea();
-    ImagePanel getImagePanel();
 
 }

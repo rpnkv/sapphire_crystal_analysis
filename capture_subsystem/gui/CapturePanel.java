@@ -5,11 +5,11 @@ import capture_subsystem.interfaces.CaptureGUIComponentsProvideable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class CapturePanel extends JPanel implements CaptureGUIComponentsProvideable{
     ImagePanel imagePanel;
     JTextArea outpArea;
-
     JScrollPane scrollPane;
     JPanel textAreaPanel;
 
@@ -54,11 +54,12 @@ public class CapturePanel extends JPanel implements CaptureGUIComponentsProvidea
     }
 
     @Override
-    public ImagePanel getImagePanel() {
-        return imagePanel;
-    }
-    @Override
     public JTextArea getOutpArea() {
         return outpArea;
+    }
+
+    @Override
+    public void setImage(BufferedImage source) {
+        imagePanel.setImage(source);
     }
 }
