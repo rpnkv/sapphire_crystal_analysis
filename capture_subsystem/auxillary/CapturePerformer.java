@@ -1,7 +1,7 @@
 package capture_subsystem.auxillary;
 
 
-import capture_subsystem.interfaces.CaptureGUIComponentsProvideable;
+import capture_subsystem.interfaces.CaptureGUIComponentsProvidable;
 import capture_subsystem.interfaces.FrameProvideable;
 import capture_subsystem.interfaces.ImageSetable;
 
@@ -17,7 +17,7 @@ public class CapturePerformer implements Runnable {
     boolean performCapture;
     Integer fps;
 
-    public CapturePerformer(CaptureGUIComponentsProvideable guiComponents,
+    public CapturePerformer(CaptureGUIComponentsProvidable guiComponents,
                             FrameProvideable frameSource,  Integer fps) {
         this.outputArea = guiComponents.getOutpArea();
         this.imageSetable = guiComponents.imageSetable();

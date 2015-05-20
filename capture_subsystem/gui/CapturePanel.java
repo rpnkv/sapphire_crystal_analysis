@@ -1,14 +1,13 @@
 package capture_subsystem.gui;
 
-import capture_subsystem.interfaces.CaptureGUIComponentsProvideable;
+import capture_subsystem.interfaces.CaptureGUIComponentsProvidable;
 import capture_subsystem.interfaces.ImageSetable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class CapturePanel extends JPanel implements CaptureGUIComponentsProvideable{
+public class CapturePanel extends JPanel implements CaptureGUIComponentsProvidable {
     ImagePanel imagePanel;
     JTextArea outpArea;
     JScrollPane scrollPane;
@@ -17,7 +16,6 @@ public class CapturePanel extends JPanel implements CaptureGUIComponentsProvidea
 
     public CapturePanel() {
         genOutpArea();
-
         this.add(initImagePanel());
         this.add(textAreaPanel);
      }
@@ -25,7 +23,7 @@ public class CapturePanel extends JPanel implements CaptureGUIComponentsProvidea
     private JPanel initImagePanel() {
         JPanel imagePanelWrap = new JPanel();
         Border border = BorderFactory.createTitledBorder("Capture:");
-        Dimension imagePanelDimension = new Dimension(500,375);
+        Dimension imagePanelDimension = new Dimension(488,366);
         imagePanel = new ImagePanel(imagePanelDimension);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

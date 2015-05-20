@@ -1,37 +1,33 @@
 package core.gui;
 
-import capture_subsystem.interfaces.CapturePerformeable;
+import analysis_subsystem.interfaces.AnalysisPerformable;
+import capture_subsystem.interfaces.CapturePerformable;
 import core.ProjectCore;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
-/**
- * Created by ierus on 4/1/15.
- */
 public class CoreGUI extends JFrame {
 
 	JPanel capturePanel;
 	JPanel analysisPanel;
-	JPanel monitoringPanel;
+
 
 	JPanel rightPanel;
 
 	JMenuBar menuBar;
 	JMenu main,capture,analysis, monitoring,info;
 
-	JMenuItem mCapture, mPreformAnalysistest ,mExit;
 	JMenuItem cStart, cStop, cSettings;
-	JMenuItem aSetMM, aSetCaptureRegions, confDiagramPanel;
-	JMenuItem mnInitConnection, mnStartMonitoring,mnShowLog;
+	JMenuItem aPerfInst, aPerfIter, aPerf;
 
-	CapturePerformeable capturePerformeable;
+	CapturePerformable capturePerformeable;
+	AnalysisPerformable analysisPerformable;
 
 	ProjectCore projectCore;
 
 	public CoreGUI(ProjectCore projectCore, JPanel capturePanel, JPanel analysisPanel,
-				   CapturePerformeable capturePerformeable) throws HeadlessException {
+				   CapturePerformable capturePerformeable, AnalysisPerformable analysisPerformable) throws HeadlessException {
 		super("Crystal analysis");
 		this.projectCore = projectCore;
 		this.setSize(1030, 650);
@@ -39,12 +35,13 @@ public class CoreGUI extends JFrame {
 		this.setLayout(new BorderLayout());
 
 		this.capturePerformeable = capturePerformeable;
+		this.analysisPerformable = analysisPerformable;
 
 		initMenu();
 		this.capturePanel = capturePanel;
-		//analysisPanel = analysisPanel;
+		this.analysisPanel = analysisPanel;
 		this.add(capturePanel,BorderLayout.WEST);
-		//processAnalysisPanelAdding(analysisPanel);
+		processAnalysisPanelAdding(analysisPanel);
 
 		this.setVisible(true);
 	}
@@ -94,7 +91,17 @@ public class CoreGUI extends JFrame {
 	}
 
 	private void analysisMenuInit(){
+		aPerfInst = new JMenuItem("Run instant analysis");
+		aPerfInst.addActionListener(e -> analysisPerformable.performInstantAnalysis());
 
+		aPerfIter = new JMenuItem("Run analysis iteration");
+		aPerfIter.addActionListener(e -> analysisPerformable.performAnalysisIteration());
+
+		aPerf = new JMenuItem("Perform analysis");
+		aPerf.addActionListener(e -> analysisPerformable.performAnalysis());
+		analysis.add(aPerfInst);
+		analysis.add(aPerfIter);
+		analysis.add(aPerf);
 	}
 
 

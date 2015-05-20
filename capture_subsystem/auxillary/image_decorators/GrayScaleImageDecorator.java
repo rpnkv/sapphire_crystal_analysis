@@ -18,7 +18,6 @@ public class GrayScaleImageDecorator extends ImageDecorator {
         int width = source.getWidth();
         int height = source.getHeight();
 
-
         double gmRed = 0.299, gmGreen = 0.587, gmBlue = 0.014;
 
         for(int i=0; i<height; i++){

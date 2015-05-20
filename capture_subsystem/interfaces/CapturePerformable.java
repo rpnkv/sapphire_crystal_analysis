@@ -1,6 +1,6 @@
 package capture_subsystem.interfaces;
 
-public interface CapturePerformeable {
+public interface CapturePerformable {
     void startCapture();
     void stopCapture();
     void showSettings();
