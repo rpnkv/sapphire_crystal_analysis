@@ -30,7 +30,7 @@ public class CoreGUI extends JFrame {
 				   CapturePerformable capturePerformeable, AnalysisPerformable analysisPerformable) throws HeadlessException {
 		super("Crystal analysis");
 		this.projectCore = projectCore;
-		this.setSize(1030, 650);
+		this.setSize(1030, 600);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 

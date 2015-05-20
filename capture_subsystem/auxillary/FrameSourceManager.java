@@ -30,14 +30,20 @@ public class FrameSourceManager implements FrameProvideable{
         this.decorable = decorable;
         fps = FPS_INIT;
         initFrameSources();
-        currentFrameSource = frameSources.get(2);
+        currentFrameSource = frameSources.get(0);
     }
 
-    private void initFrameSources() throws FrameGrabber.Exception {
+    private synchronized void initFrameSources() throws FrameGrabber.Exception {
         frameSources = new ArrayList<>();
-        frameSources.add(new CameraFrameSource());
         frameSources.add(new ImageFrameSource());
         frameSources.add(new MathModelFrameSource(640,480));
+        new Thread(() -> {
+            try {
+                frameSources.add(new CameraFrameSource());
+            } catch (FrameGrabber.Exception e) {
+                System.out.println(e);
+            }
+        }).start();
     }
 
     public void showCaptureSettings(){

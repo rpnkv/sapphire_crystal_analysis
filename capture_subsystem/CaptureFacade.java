@@ -11,6 +11,8 @@ import capture_subsystem.interfaces.CaptureSubsystemCommonInterface;
 import org.bytedeco.javacv.FrameGrabber;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
 public class CaptureFacade implements CaptureSubsystemCommonInterface {
@@ -91,5 +93,25 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
             System.out.println("no such decorator");
         }
 
+    }
+
+    @Override
+    public void addMouseListener(MouseListener mouseListener) {
+        subsystemGUI.getImagePanel().addMouseListener(mouseListener);
+    }
+
+    @Override
+    public void addMouseWheelListener(MouseWheelListener wheelListener) {
+        subsystemGUI.addMouseWheelListener(wheelListener);
+    }
+
+    @Override
+    public void removeMouseWheelListener(MouseWheelListener wheelListener) {
+        subsystemGUI.getImagePanel().removeMouseWheelListener(wheelListener);
+    }
+
+    @Override
+    public void setComponentPopupMenu(JPopupMenu popupMenu) {
+        subsystemGUI.getImagePanel().setComponentPopupMenu(popupMenu);
     }
 }

@@ -46,10 +46,8 @@ public class CapturePanel extends JPanel implements CaptureGUIComponentsProvidab
         textAreaPanel.add(scrollPane);
     }
 
-    public void renewImagePanel(){
-        Dimension dim = new Dimension(imagePanel.getWidth(), imagePanel.getHeight());
-        imagePanel = null;
-        imagePanel = new ImagePanel(dim);
+    public ImagePanel getImagePanel() {
+        return imagePanel;
     }
 
     @Override
