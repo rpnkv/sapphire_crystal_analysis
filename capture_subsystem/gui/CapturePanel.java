@@ -1,6 +1,7 @@
 package capture_subsystem.gui;
 
 import capture_subsystem.interfaces.CaptureGUIComponentsProvideable;
+import capture_subsystem.interfaces.ImageSetable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -59,7 +60,7 @@ public class CapturePanel extends JPanel implements CaptureGUIComponentsProvidea
     }
 
     @Override
-    public void setImage(BufferedImage source) {
-        imagePanel.setImage(source);
+    public ImageSetable imageSetable() {
+        return imagePanel;
     }
 }

@@ -6,6 +6,7 @@ import capture_subsystem.frame_sources.camera.CameraFrameSource;
 import capture_subsystem.frame_sources.image.ImageFrameSource;
 import capture_subsystem.gui.CaptureSettingsFrame;
 import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.VideoFlowDecorable;
 import org.bytedeco.javacv.FrameGrabber;
 
 import javax.swing.*;
@@ -23,8 +24,10 @@ public class FrameSourceManager implements FrameProvideable{
     private FrameSource currentFrameSource;
     private ArrayList<FrameSource> frameSources;
     private Integer fps;
+    private VideoFlowDecorable decorable;
 
-    public FrameSourceManager() throws FrameGrabber.Exception {
+    public FrameSourceManager(VideoFlowDecorable decorable) throws FrameGrabber.Exception {
+        this.decorable = decorable;
         fps = FPS_INIT;
         initFrameSources();
         currentFrameSource = frameSources.get(2);
@@ -79,6 +82,10 @@ public class FrameSourceManager implements FrameProvideable{
                 settingsPanel[0] = frameSource.getSettingsPanel();
         });
         return settingsPanel[0];
+    }
+
+    public VideoFlowDecorable getDecorable() {
+        return decorable;
     }
 
     @Override

@@ -2,14 +2,15 @@ package capture_subsystem;
 
 import capture_subsystem.auxillary.CapturePerformer;
 import capture_subsystem.auxillary.FrameSourceManager;
+import capture_subsystem.auxillary.image_decorators.DrawGridImageDecorator;
 import capture_subsystem.auxillary.image_decorators.GrayScaleImageDecorator;
 import capture_subsystem.auxillary.image_decorators.ImageDecorator;
 import capture_subsystem.gui.CapturePanel;
+import capture_subsystem.gui.ImagePanel;
 import capture_subsystem.interfaces.CaptureSubsystemCommonInterface;
 import org.bytedeco.javacv.FrameGrabber;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CaptureFacade implements CaptureSubsystemCommonInterface {
@@ -21,7 +22,7 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
     public CaptureFacade() {
         try {
             subsystemGUI = new CapturePanel();
-            frameSourceManager = new FrameSourceManager();
+            frameSourceManager = new FrameSourceManager(this);
             } catch (FrameGrabber.Exception e) {
             e.printStackTrace();
         }
@@ -40,7 +41,6 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
 
     @Override
     public void stopCapture() {
-        deleteDecorator("gray scale image decorator");
         capturePerformer.stopCapture();
         videoCaptureThread = null;
     }
@@ -63,17 +63,25 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
 
     @Override
     public void addDecorator(ImageDecorator decorator) {
-        decorator.setInnerDecorator(capturePerformer.getImageSetter());
-        capturePerformer.setImageSetter(decorator);
+        if( capturePerformer.getImageSetable() instanceof ImagePanel){
+            decorator.setInnerDecorator(capturePerformer.getImageSetable());
+            capturePerformer.setImageSetable(decorator);
+        }
+            else {
+            ImageDecorator decorator1 = (ImageDecorator) capturePerformer.getImageSetable();
+            decorator1.addDecorator(decorator);
+            capturePerformer.setImageSetable(decorator1);
+        }
+
     }
 
     @Override
     public void deleteDecorator(String alias) {
         try {
-            if(capturePerformer.getImageSetter() instanceof ImageDecorator){
-                ImageDecorator upperDecorator = (ImageDecorator) capturePerformer.getImageSetter();
+            if(capturePerformer.getImageSetable() instanceof ImageDecorator){
+                ImageDecorator upperDecorator = (ImageDecorator) capturePerformer.getImageSetable();
                 if(upperDecorator.toString().equals(alias))
-                    capturePerformer.setImageSetter(upperDecorator.getInnerDecorator());
+                    capturePerformer.setImageSetable(upperDecorator.getInnerDecorator());
                 else
                     upperDecorator.deleteDecorator(alias);
                 System.out.println("decorator \'" +alias +"\' has been deleted.");

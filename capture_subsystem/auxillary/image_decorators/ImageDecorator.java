@@ -12,7 +12,7 @@ public abstract class ImageDecorator implements ImageSetable{
         this.alias = alias;
     }
 
-    public void addDecorator(ImageDecorator newDecorator) throws NullPointerException{
+    public final void addDecorator(ImageDecorator newDecorator) throws NullPointerException{
         if (innerDecorator instanceof ImagePanel){
             newDecorator.setInnerDecorator(innerDecorator);
             this.innerDecorator = newDecorator;
@@ -22,7 +22,7 @@ public abstract class ImageDecorator implements ImageSetable{
         else throw new NullPointerException("in class" + alias);
     }
 
-    public void deleteDecorator(String alias) throws NullPointerException{
+    public final void deleteDecorator(String alias) throws NullPointerException{
         if (innerDecorator instanceof ImageDecorator)
             if (innerDecorator.toString().equals(alias))
                 innerDecorator = ((ImageDecorator) innerDecorator).getInnerDecorator();
@@ -31,7 +31,7 @@ public abstract class ImageDecorator implements ImageSetable{
         else throw new NullPointerException("in class" + alias);
     }
 
-    public ImageSetable getRootDecorator() throws NullPointerException{
+    public final ImageSetable getRootDecorator() throws NullPointerException{
         if(innerDecorator instanceof ImagePanel)
             return innerDecorator;
         else
@@ -41,16 +41,16 @@ public abstract class ImageDecorator implements ImageSetable{
         return null;
     }
 
-    public ImageSetable getInnerDecorator() {
+    public final ImageSetable getInnerDecorator() {
         return innerDecorator;
     }
 
-    public void setInnerDecorator(ImageSetable innerDecorator) {
+    public final void setInnerDecorator(ImageSetable innerDecorator) {
         this.innerDecorator = innerDecorator;
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return alias;
     }
 }

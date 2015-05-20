@@ -1,6 +1,8 @@
 package capture_subsystem.gui;
 
 import capture_subsystem.auxillary.FrameSourceManager;
+import capture_subsystem.auxillary.image_decorators.DrawGridImageDecorator;
+import capture_subsystem.auxillary.image_decorators.GrayScaleImageDecorator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,10 +47,14 @@ public class CaptureSettingsFrame extends JFrame{
 		panel.add(lblSource);
 		panel.add(frameSourcesCB);
 		drawGrid = new JCheckBox("grid");
-		/*drawGrid.setSelected(drawGridSelectable.isDrawGrid());
-		drawGrid.addActionListener((e) ->
-				drawGridSelectable.setDrawGrid(drawGrid.isSelected())
-		);*/
+		drawGrid.addActionListener(e ->{
+					if(drawGrid.isSelected())
+						frameSourceManager.getDecorable().addDecorator(new DrawGridImageDecorator());
+					else {
+						frameSourceManager.getDecorable().deleteDecorator("draw grid image decorator");
+					}
+				}
+		);
 		panel.add(crtFpsPanel());
 		panel.add(drawGrid);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));

@@ -13,14 +13,14 @@ public class CapturePerformer implements Runnable {
     BufferedImage frame;
     JTextArea outputArea;
     FrameProvideable frameSource;
-    ImageSetable imageSetter;
+    ImageSetable imageSetable;
     boolean performCapture;
     Integer fps;
 
     public CapturePerformer(CaptureGUIComponentsProvideable guiComponents,
                             FrameProvideable frameSource,  Integer fps) {
         this.outputArea = guiComponents.getOutpArea();
-        this.imageSetter = guiComponents;
+        this.imageSetable = guiComponents.imageSetable();
         this.frameSource = frameSource;
         this.fps = fps;
         performCapture = true;
@@ -41,7 +41,7 @@ public class CapturePerformer implements Runnable {
                         "\nProgram failure.");
                 return;
             }
-            imageSetter.setImage(frame);
+            imageSetable.setImage(frame);
             try {
                 Thread.sleep(1000/fps);
             } catch (InterruptedException e) {
@@ -59,12 +59,12 @@ public class CapturePerformer implements Runnable {
         fps = FPS;
     }
 
-    public ImageSetable getImageSetter() {
-        return imageSetter;
+    public ImageSetable getImageSetable() {
+        return imageSetable;
     }
 
-    public void setImageSetter(ImageSetable imageSetter) {
-        this.imageSetter = imageSetter;
+    public void setImageSetable(ImageSetable imageSetable) {
+        this.imageSetable = imageSetable;
     }
 
     public void stopCapture(){
