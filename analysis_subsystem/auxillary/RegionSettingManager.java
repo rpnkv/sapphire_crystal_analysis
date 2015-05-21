@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class RegionSettingManager implements MouseListener,MouseWheelListener{
 
-    final int MENISCUS_BEGIN = 1, DEVIATION_BEGIN = 2, MENISCUS_END = 3, DEVIATION_END =4;
-    final int MENISCUS_WIDTH = 5, DEVIATION_WIDTH = 6;
+    public final int MENISCUS_BEGIN = 1, DEVIATION_BEGIN = 2, MENISCUS_END = 3, DEVIATION_END =4;
+    public int MENISCUS_WIDTH = 5, DEVIATION_WIDTH = 6;
 
     private Point menBegin;
     private int menEnd;
@@ -49,7 +49,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         System.out.println(e.toString());
     }
 
-    void setState(int state) {
+    public void setState(int state) {
         this.state = state;
     }
 

@@ -7,7 +7,6 @@ import javax.swing.*;
 public class PopupMenu extends JPopupMenu {
     RegionSettingManager regionSettingManager;
 
-
     JMenuItem setMeniscus, setDeviation, editMeniscus, editDeviation;
 
     public PopupMenu(RegionSettingManager regionSettingManager) {
@@ -25,10 +24,10 @@ public class PopupMenu extends JPopupMenu {
     }
 
     private void addActionListeners(){
-        setMeniscus.addActionListener(e -> regionSettingManager.initMeniscusCoordSetup());
-        setDeviation.addActionListener(e -> regionSettingManager.initDeviationCoordSetup());
-        editMeniscus.addActionListener(e -> regionSettingManager.initMeniscusWidthEdit());
-        editDeviation.addActionListener(e -> regionSettingManager.initDeviationWidthEdit());
+        setMeniscus.addActionListener(e -> regionSettingManager.setState(regionSettingManager.MENISCUS_BEGIN));
+        setDeviation.addActionListener(e -> regionSettingManager.setState(regionSettingManager.DEVIATION_BEGIN));
+        editMeniscus.addActionListener(e -> regionSettingManager.setState(regionSettingManager.MENISCUS_WIDTH));
+        editDeviation.addActionListener(e -> regionSettingManager.setState(regionSettingManager.DEVIATION_WIDTH));
     }
 
     private void addMenuItems(){

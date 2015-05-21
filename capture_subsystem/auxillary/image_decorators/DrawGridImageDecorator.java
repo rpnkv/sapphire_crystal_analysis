@@ -39,7 +39,7 @@ public class DrawGridImageDecorator extends ImageDecorator {
 
     private void drawYGrid(BufferedImage cpdImg) {
 
-        drawer.drawLine(15, 15, 15, cpdImg.getHeight() - 15,Color.red);
+        drawer.drawLine(15, 15, 15, cpdImg.getHeight() - 15,2,Color.red);
         drawer.drawLine(18, cpdImg.getHeight() - 18, 15, cpdImg.getHeight() - 15);
         drawer.drawLine(12, cpdImg.getHeight() - 18, 15, cpdImg.getHeight() - 15);
         for (int i = 50; i < cpdImg.getHeight(); i += 50) {
