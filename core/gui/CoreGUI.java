@@ -1,18 +1,19 @@
 package core.gui;
 
 import analysis_subsystem.interfaces.AnalysisPerformable;
+import analysis_subsystem.interfaces.CaptureRegionsViewable;
+import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import capture_subsystem.interfaces.CapturePerformable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CoreGUI extends JFrame {
+public class CoreGUI extends JFrame implements ConnectionStatusEditable, CaptureRegionsViewable{
 
-	JPanel capturePanel;
-	JPanel analysisPanel;
+	private final String connectionEstablished = "Connection status:  established ",
+			connectionDisconnected = "Connection status: disconnected ";
 
-
-	JPanel rightPanel;
+	JPanel rightPanel, lowerPanel, analysisPanel, capturePanel;
 
 	JMenuBar menuBar;
 	JMenu main,capture,analysis, monitoring,info;
@@ -20,17 +21,19 @@ public class CoreGUI extends JFrame {
 	JMenuItem cStart, cStop, cSettings;
 	JMenuItem aPerfInst, aPerfIter, aPerf;
 
-	CapturePerformable capturePerformeable;
+	CapturePerformable capturePerformable;
 	AnalysisPerformable analysisPerformable;
 
+	JLabel lblConnectionStatus, lblRegionInteractive;
+
 	public CoreGUI(JPanel capturePanel, JPanel analysisPanel,
-				   CapturePerformable capturePerformeable, AnalysisPerformable analysisPerformable) throws HeadlessException {
+				   CapturePerformable capturePerformable, AnalysisPerformable analysisPerformable) throws HeadlessException {
 		super("Crystal analysis");
 		this.setSize(1030, 600);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 
-		this.capturePerformeable = capturePerformeable;
+		this.capturePerformable = capturePerformable;
 		this.analysisPerformable = analysisPerformable;
 
 		initMenu();
@@ -38,8 +41,27 @@ public class CoreGUI extends JFrame {
 		this.analysisPanel = analysisPanel;
 		this.add(capturePanel,BorderLayout.WEST);
 		processAnalysisPanelAdding(analysisPanel);
-
+		constructLowerPanel();
+		this.add(lowerPanel,BorderLayout.SOUTH);
 		this.setVisible(true);
+	}
+
+	private void constructLowerPanel() {
+		Font font = new Font("Lucida sans", Font.BOLD, 11);
+		lowerPanel = new JPanel();
+		lowerPanel.setLayout(new BorderLayout());
+
+
+		lblConnectionStatus = new JLabel();
+		lblConnectionStatus.setFont(font);
+		setConnectionStatus(false);
+
+		lblRegionInteractive = new JLabel();
+		lblRegionInteractive.setFont(font);
+		updateCaptureRegions("Capture regions aren't set.");
+
+		lowerPanel.add(lblRegionInteractive,BorderLayout.WEST);
+		lowerPanel.add(lblConnectionStatus,BorderLayout.EAST);
 	}
 
 	private void processAnalysisPanelAdding(JPanel analysisPanel) {
@@ -76,11 +98,11 @@ public class CoreGUI extends JFrame {
 
 	private void captureMenuInit(){
 		cStart = new JMenuItem("Start");
-		cStart.addActionListener((e) -> capturePerformeable.startCapture());
+		cStart.addActionListener((e) -> capturePerformable.startCapture());
 		cStop = new JMenuItem("Stop");
-		cStop.addActionListener((e) -> capturePerformeable.stopCapture());
+		cStop.addActionListener((e) -> capturePerformable.stopCapture());
 		cSettings = new JMenuItem("Settings");
-		cSettings.addActionListener((e) -> capturePerformeable.showSettings());
+		cSettings.addActionListener((e) -> capturePerformable.showSettings());
 		capture.add(cStart);
 		capture.add(cStop);
 		capture.add(cSettings);
@@ -107,5 +129,18 @@ public class CoreGUI extends JFrame {
 
 	private void infoMenuInit(){
 
+	}
+
+	@Override
+	public void setConnectionStatus(boolean status) {
+		if(status)
+			lblConnectionStatus.setText(connectionEstablished);
+		else
+			lblConnectionStatus.setText(connectionDisconnected);
+	}
+
+	@Override
+	public void updateCaptureRegions(String text) {
+		lblRegionInteractive.setText(text);
 	}
 }
