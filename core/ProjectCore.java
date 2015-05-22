@@ -17,7 +17,7 @@ public class ProjectCore{
         mediator = new SubsystemsMediator(captureFacade, analysisFacade);
 
         gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade);
-        analysisFacade.setActionListeneable(mediator);
+        analysisFacade.setActionListenable(mediator);
     }
 
     public static void main(String[] args) {

@@ -18,7 +18,7 @@ public class DrawCaptureAreaImageDecorator extends ImageDecorator {
 
     @Override
     public void setImage(BufferedImage source) {
-        drawer.init(source);
+       drawer.init(source);
         switch (area.getKind()){
             case Deviation:
                 drawer.drawLine(area.getStart().x,area.getStart().y,area.getLength()+area.getStart().x
@@ -26,9 +26,10 @@ public class DrawCaptureAreaImageDecorator extends ImageDecorator {
                 break;
             case Meniscus:
                 drawer.drawLine(area.getStart().x,area.getStart().y,area.getStart().x,area.getLength()+area.getStart().y,
-                        area.getWidth(), Color.blue);
+                        area.getWidth(), Color.red);
                 break;
         }
         drawer.dispose();
+        getInnerDecorator().setImage(source);
     }
 }

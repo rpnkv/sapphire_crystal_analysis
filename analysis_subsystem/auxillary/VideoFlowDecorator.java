@@ -42,17 +42,19 @@ public class VideoFlowDecorator implements CaptureCoordEditable{
     }
 
     private void addDeviationDecorator(Point beginPoint, int end, int width) {
+        boolean decoratorIsSet = (deviationDecorator != null);
         deviationDecorator = new DrawCaptureAreaImageDecorator(devDecName,drawer,
                 new CaptureArea(beginPoint,end,width, CaptureArea.Kind.Deviation));
-        if(deviationDecorator != null)
+        if(decoratorIsSet)
             videoFlowDecorable.deleteDecorator(devDecName);
         videoFlowDecorable.addDecorator(deviationDecorator);
     }
 
     private void addMeniscusDecorator(Point beginPoint, int end, int width) {
+        boolean decoratorIsSet = (meniscusDecorator != null);
         meniscusDecorator = new DrawCaptureAreaImageDecorator(menDecName,drawer,
                 new CaptureArea(beginPoint,end,width, CaptureArea.Kind.Meniscus));
-        if(meniscusDecorator != null)
+        if(decoratorIsSet)
             videoFlowDecorable.deleteDecorator(menDecName);
         videoFlowDecorable.addDecorator(meniscusDecorator);
     }

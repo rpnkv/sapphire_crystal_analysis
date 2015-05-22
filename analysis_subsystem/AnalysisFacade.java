@@ -45,8 +45,9 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     }
 
     @Override
-    public void setActionListeneable(ImagePanelActionListenable actionListeneable) {
+    public void setActionListenable(ImagePanelActionListenable actionListeneable) {
         regionSettingManager = new RegionSettingManager(actionListeneable);
+        regionSettingManager.addCaptureCoordEditable(videoFlowDecorator);
     }
 
     public void setDecorable(VideoFlowDecorable decorable) {
