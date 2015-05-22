@@ -42,6 +42,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         System.out.println(e.toString());
+        informListeners(AreaTypes.Meniscus,new Point(100,200),100,5);
     }
 
     @Override
@@ -51,6 +52,10 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    protected void informListeners(AreaTypes type, Point begin, int end, int width){
+        captureCoordEditables.forEach((listener) -> listener.setCaptureCoord(type,begin,end,width));
     }
 
     public void addCaptureCoordEditable(CaptureCoordEditable captureCoordEditable) {

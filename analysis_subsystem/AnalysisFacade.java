@@ -1,6 +1,8 @@
 package analysis_subsystem;
 
 import analysis_subsystem.auxillary.RegionSettingManager;
+import analysis_subsystem.auxillary.VideoFlowDecorator;
+import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.auxillary.ShapeDrawers.JavaAPIShapeDrawer;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
 import analysis_subsystem.gui.FrameAnalysisPanel;
@@ -15,6 +17,7 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     RegionSettingManager regionSettingManager;
     AnalysisPerformer analysisPerformer;
     ShapeDrawer drawer;
+    VideoFlowDecorator videoFlowDecorator;
 
     public AnalysisFacade(ShapeDrawer drawer) {
         componentGUI = new FrameAnalysisPanel();
@@ -44,6 +47,10 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     @Override
     public void setActionListeneable(ImagePanelActionListenable actionListeneable) {
         regionSettingManager = new RegionSettingManager(actionListeneable);
+    }
+
+    public void setDecorable(VideoFlowDecorable decorable) {
+        videoFlowDecorator = new VideoFlowDecorator(decorable, drawer);
     }
 
     @Override

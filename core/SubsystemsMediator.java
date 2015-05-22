@@ -19,7 +19,7 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
                               AnalysisSubsystemCommonInterface analysisFacade) {
         this.captureFacade = captureFacade;
         this.analysisFacade = analysisFacade;
-
+        analysisFacade.setDecorable(captureFacade);
     }
 
     @Override
