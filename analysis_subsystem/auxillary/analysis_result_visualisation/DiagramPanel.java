@@ -337,6 +337,7 @@ public class DiagramPanel extends ImagePanel implements IDiagramPanelListener, I
 		g2d.setStroke(new BasicStroke(1));
 		g2d.setColor(color);
 
+
 		int step = 450/brightnessValues.length,iterator = 1;
 
 		if(brightnessValues.length <= 450)
