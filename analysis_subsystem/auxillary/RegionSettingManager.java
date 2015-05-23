@@ -4,7 +4,6 @@ import analysis_subsystem.interfaces.CaptureCoordEditable;
 import analysis_subsystem.interfaces.CaptureRegionsViewable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,9 +12,7 @@ import java.awt.event.MouseWheelListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import static analysis_subsystem.auxillary.AreaTypes.Deviation;
-import static analysis_subsystem.auxillary.AreaTypes.Meniscus;
-import static analysis_subsystem.auxillary.AreaTypes.Shaper;
+import static analysis_subsystem.auxillary.AreaTypes.*;
 
 public class RegionSettingManager implements MouseListener,MouseWheelListener{
 
@@ -28,12 +25,13 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
     private AreaDescription shaperInf;
 
     private ImagePanelActionListenable actionListenable;
-    private JPopupMenu popupMenu;
+    private PopupMenu popupMenu;
 
     private ArrayList<CaptureCoordEditable> captureCoordEditables;
     private CaptureRegionsViewable coordViewer;
 
     private int state = 0;
+    boolean descriptionIsValid = false;
 
     public RegionSettingManager(ImagePanelActionListenable actionListenable, CaptureRegionsViewable coordViewer) {
         this.actionListenable = actionListenable;
@@ -94,9 +92,13 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                 state = 0;
                 informListeners(shaperInf);
                 break;
+            default: descriptionIsValid = true;
         }
-        if(state != 0)
-        updateCoordinates();
+
+
+        if(!descriptionIsValid){
+            updateCoordinates();
+        }
     }
 
     @Override
@@ -156,7 +158,6 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         text += "Now editing: " +  getEditableState() +".";
 
         coordViewer.updateCaptureRegions(text);
-
     }
 
     private String collectCoord(AreaTypes type){
