@@ -2,13 +2,12 @@ package analysis_subsystem;
 
 import analysis_subsystem.auxillary.RegionSettingManager;
 import analysis_subsystem.auxillary.VideoFlowDecorator;
-import analysis_subsystem.interfaces.CaptureRegionsViewable;
-import capture_subsystem.interfaces.VideoFlowDecorable;
-import core.auxillary.ShapeDrawers.JavaAPIShapeDrawer;
-import core.auxillary.ShapeDrawers.ShapeDrawer;
 import analysis_subsystem.gui.FrameAnalysisPanel;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
+import analysis_subsystem.interfaces.CaptureRegionsViewable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
+import capture_subsystem.interfaces.VideoFlowDecorable;
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 
 import javax.swing.*;
 
@@ -46,8 +45,8 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     }
 
     @Override
-    public void setActionListenable(ImagePanelActionListenable actionListeneable, CaptureRegionsViewable regionsViewable) {
-        regionSettingManager = new RegionSettingManager(actionListeneable, regionsViewable);
+    public void setActionListenable(ImagePanelActionListenable actionListenable, CaptureRegionsViewable regionsViewable) {
+        regionSettingManager = new RegionSettingManager(actionListenable, regionsViewable);
         regionSettingManager.addCaptureCoordEditable(videoFlowDecorator);
     }
 

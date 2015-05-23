@@ -13,27 +13,14 @@ public class VideoFlowDecorator implements CaptureCoordEditable{
 
     DrawCaptureAreaImageDecorator meniscusDecorator;
     DrawCaptureAreaImageDecorator deviationDecorator;
+    DrawCaptureAreaImageDecorator shaperDecorator;
 
-    private final String devDecName = "deviation decorator", menDecName = "meniscus decorator";
+    private final
+    String devDecName = "deviation decorator", menDecName = "meniscus decorator", shpDecName = "shaper decorator";
 
     public VideoFlowDecorator(VideoFlowDecorable videoFlowDecorable, ShapeDrawer drawer) {
         this.videoFlowDecorable = videoFlowDecorable;
         this.drawer = drawer;
-    }
-
-    @Override
-    public void setCaptureCoord(AreaTypes type, Point beginPoint, int end, int width) {
-        switch (type){
-            case Meniscus:
-                addMeniscusDecorator(beginPoint,end,width);
-                break;
-            case Deviation:
-                addDeviationDecorator(beginPoint,end,width);
-                break;
-            case Erase:
-                eraseDecorators();
-                break;
-        }
     }
 
     private void eraseDecorators() {
@@ -41,21 +28,44 @@ public class VideoFlowDecorator implements CaptureCoordEditable{
         videoFlowDecorable.deleteDecorator(menDecName);
     }
 
-    private void addDeviationDecorator(Point beginPoint, int end, int width) {
+    private void addDeviationDecorator(AreaDescription areaDescription) {
         boolean decoratorIsSet = (deviationDecorator != null);
-        deviationDecorator = new DrawCaptureAreaImageDecorator(devDecName,drawer,
-                new CaptureArea(beginPoint,end,width, CaptureArea.Kind.Deviation));
+        deviationDecorator = new DrawCaptureAreaImageDecorator(devDecName,drawer,areaDescription);
         if(decoratorIsSet)
             videoFlowDecorable.deleteDecorator(devDecName);
         videoFlowDecorable.addDecorator(deviationDecorator);
     }
 
-    private void addMeniscusDecorator(Point beginPoint, int end, int width) {
+    private void addMeniscusDecorator(AreaDescription areaDescription) {
         boolean decoratorIsSet = (meniscusDecorator != null);
-        meniscusDecorator = new DrawCaptureAreaImageDecorator(menDecName,drawer,
-                new CaptureArea(beginPoint,end,width, CaptureArea.Kind.Meniscus));
+        meniscusDecorator = new DrawCaptureAreaImageDecorator(menDecName,drawer,areaDescription);
         if(decoratorIsSet)
             videoFlowDecorable.deleteDecorator(menDecName);
         videoFlowDecorable.addDecorator(meniscusDecorator);
+    }
+
+    @Override
+    public void setCaptureCoord(AreaDescription areaDescription) {
+        switch (areaDescription.getAreaType()){
+            case Meniscus:
+                addMeniscusDecorator(areaDescription);
+                break;
+            case Deviation:
+                addDeviationDecorator(areaDescription);
+                break;
+            case Shaper:
+                addShaperDecorator(areaDescription);
+            case Erase:
+                eraseDecorators();
+                break;
+        }
+    }
+
+    private void addShaperDecorator(AreaDescription areaDescription) {
+        boolean decoratorIsSet = (shaperDecorator != null);
+        shaperDecorator = new DrawCaptureAreaImageDecorator(shpDecName,drawer,areaDescription);
+        if(decoratorIsSet)
+            videoFlowDecorable.deleteDecorator(shpDecName);
+        videoFlowDecorable.addDecorator(shaperDecorator);
     }
 }

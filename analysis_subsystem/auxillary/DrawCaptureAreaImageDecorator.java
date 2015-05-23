@@ -7,26 +7,30 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class DrawCaptureAreaImageDecorator extends ImageDecorator {
-    CaptureArea area;
+    AreaDescription areaDescription;
     ShapeDrawer drawer;
 
-    protected DrawCaptureAreaImageDecorator(String alias, ShapeDrawer drawer, CaptureArea area) {
+    protected DrawCaptureAreaImageDecorator(String alias, ShapeDrawer drawer, AreaDescription areaDescription) {
         super(alias);
         this.drawer = drawer;
-        this.area = area;
+        this.areaDescription = areaDescription;
     }
 
     @Override
     public void setImage(BufferedImage source) {
        drawer.init(source);
-        switch (area.getKind()){
+        switch (areaDescription.getAreaType()){
             case Deviation:
-                drawer.drawLine(area.getStart().x,area.getStart().y,area.getLength()+area.getStart().x
-                        ,area.getStart().y,area.getWidth(), Color.blue);
+                drawer.drawLine(areaDescription.getBegin().x,areaDescription.getBegin().y,areaDescription.getLenght()+areaDescription.getBegin().x
+                        ,areaDescription.getBegin().y,areaDescription.getWidth(), Color.blue);
                 break;
             case Meniscus:
-                drawer.drawLine(area.getStart().x,area.getStart().y,area.getStart().x,area.getLength()+area.getStart().y,
-                        area.getWidth(), Color.red);
+                drawer.drawLine(areaDescription.getBegin().x,areaDescription.getBegin().y,areaDescription.getBegin().x,areaDescription.getLenght()+areaDescription.getBegin().y,
+                        areaDescription.getWidth(), Color.red);
+                break;
+            case Shaper:
+                drawer.drawLine(areaDescription.getBegin().x,areaDescription.getBegin().y,areaDescription.getLenght()+areaDescription.getBegin().x
+                        ,areaDescription.getBegin().y,areaDescription.getWidth(), Color.green);
                 break;
         }
         drawer.dispose();

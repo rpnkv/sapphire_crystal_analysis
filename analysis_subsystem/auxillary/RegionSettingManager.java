@@ -18,25 +18,21 @@ import static analysis_subsystem.auxillary.AreaTypes.Meniscus;
 
 public class RegionSettingManager implements MouseListener,MouseWheelListener{
 
-    public final int MENISCUS_BEGIN = 1, DEVIATION_BEGIN = 2, MENISCUS_END = 3, DEVIATION_END =4;
-    public final int MENISCUS_WIDTH = 5, DEVIATION_WIDTH = 6;
+    public final int MENISCUS_BEGIN = 1, DEVIATION_BEGIN = 2, MENISCUS_END = 3, DEVIATION_END =4, SHAPER_BEGIN = 5;
+    public final int SHAPER_END = 6, MENISCUS_WIDTH = 7, DEVIATION_WIDTH = 8, SHAPER_WIDTH = 9;
 
-    double widthFactor, heightFactor;
-    private Point menBegin;
-    private int menEnd;
-    private int menWidth;
+    private double widthFactor, heightFactor;
+    private AreaDescription meniscusInf;
+    private AreaDescription deviationInf;
+    private AreaDescription shaperInf;
 
-    private Point devBegin;
-    private int devEnd;
-    private int devWidth;
+    private ImagePanelActionListenable actionListenable;
+    private JPopupMenu popupMenu;
 
-    ImagePanelActionListenable actionListenable;
-    JPopupMenu popupMenu;
+    private ArrayList<CaptureCoordEditable> captureCoordEditables;
+    private CaptureRegionsViewable coordViewer;
 
-    ArrayList<CaptureCoordEditable> captureCoordEditables;
-    CaptureRegionsViewable coordViewer;
-
-    int state = 0;
+    private int state = 0;
 
     public RegionSettingManager(ImagePanelActionListenable actionListenable, CaptureRegionsViewable coordViewer) {
         this.actionListenable = actionListenable;
@@ -53,32 +49,49 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
     public void mouseClicked(MouseEvent e) {
         switch (state){
             case MENISCUS_BEGIN :
-                menBegin = new Point((int) (e.getX()*widthFactor), (int) (e.getY()* heightFactor));
+                meniscusInf = new AreaDescription(AreaTypes.Meniscus, new Point(
+                        (int) (e.getX()*widthFactor), (int) (e.getY()* heightFactor)));
                 state = MENISCUS_END;
                 break;
             case DEVIATION_BEGIN :
-                devBegin = new Point((int) (e.getX()*widthFactor), (int) (e.getY()*heightFactor));
+                deviationInf = new AreaDescription(AreaTypes.Deviation,
+                        new Point((int) (e.getX()*widthFactor), (int) (e.getY()*heightFactor)));
+                state = DEVIATION_END;
+                break;
+            case SHAPER_BEGIN :
+                shaperInf = new AreaDescription(AreaTypes.Shaper,
+                        new Point((int) (e.getX()*widthFactor), (int) (e.getY()*heightFactor)));
                 state = DEVIATION_END;
                 break;
             case MENISCUS_END :
-                menEnd = (int) (e.getY()*heightFactor - menBegin.y);
+                meniscusInf.lenght = (int) (e.getY()*heightFactor - meniscusInf.begin.y);
                 state = MENISCUS_WIDTH;
                 actionListenable.addMouseWheelListener(this);
                 break;
             case DEVIATION_END:
-                devEnd = (int) ((e.getX() * widthFactor) - devBegin.x);
+                deviationInf.lenght = (int) ((e.getX() * widthFactor) - deviationInf.begin.x);
                 state = DEVIATION_WIDTH;
+                actionListenable.addMouseWheelListener(this);
+                break;
+            case SHAPER_END :
+                shaperInf.lenght = (int) ((e.getX() * widthFactor) - shaperInf.begin.x);
+                state =SHAPER_WIDTH;
                 actionListenable.addMouseWheelListener(this);
                 break;
             case MENISCUS_WIDTH :
                 actionListenable.removeMouseWheelListener(this);
                 state = 0;
-                informListeners(Meniscus,menBegin,menEnd,menWidth);
+                informListeners(meniscusInf);
                 break;
             case DEVIATION_WIDTH :
                 actionListenable.removeMouseWheelListener(this);
                 state = 0;
-                informListeners(AreaTypes.Deviation,devBegin,devEnd,devWidth);
+                informListeners(deviationInf);
+                break;
+            case SHAPER_WIDTH:
+                actionListenable.removeMouseWheelListener(this);
+                state = 0;
+                informListeners(shaperInf);
                 break;
         }
         if(state != 0)
@@ -90,14 +103,19 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         int rotation = (int)e.getPreciseWheelRotation();
         switch (state){
             case MENISCUS_WIDTH :
-                if (rotation < 0 && menWidth <2 || menWidth ==30)
+                if (rotation < 0 && meniscusInf.width <2 || meniscusInf.width ==30)
                     return;
-                menWidth += rotation;
+                meniscusInf.width += rotation;
                 break;
             case DEVIATION_WIDTH :
-                if (rotation < 0 && devWidth <2|| devWidth ==30)
+                if (rotation < 0 && deviationInf.width <2|| deviationInf.width ==30)
                     return;
-                devWidth += rotation;
+                deviationInf.width += rotation;
+                break;
+            case SHAPER_WIDTH :
+                if (rotation < 0 && shaperInf.width <2|| shaperInf.width ==30)
+                    return;
+                shaperInf.width += rotation;
                 break;
         }
         if(state != 0)
@@ -109,8 +127,8 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         updateCoordinates();
     }
 
-    protected void informListeners(AreaTypes type, Point begin, int end, int width){
-        captureCoordEditables.forEach((listener) -> listener.setCaptureCoord(type,begin,end,width));
+    protected void informListeners(AreaDescription areaDescription){
+        captureCoordEditables.forEach((listener) -> listener.setCaptureCoord(areaDescription));
     }
 
     public void addCaptureCoordEditable(CaptureCoordEditable captureCoordEditable) {
@@ -120,70 +138,109 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
     private void updateCoordinates(){
         String text = "Capture coordinates: ";
 
-        text += "meniscus " + collectCoord(Meniscus,true) + "--" + collectCoord(Meniscus,false) + ", ";
+        text += "meniscus" + collectCoord(Meniscus) +": ";
         text += collectWidth(Meniscus) +"; ";
 
-        text += "deviation " + collectCoord(Deviation,true) + "--" + collectCoord(Deviation,false) + ", ";
-        text += collectWidth(Deviation) +".";
+        text += "deviation" + collectCoord(Deviation) + ": ";
+        text += collectWidth(Deviation) +";";
 
-        text += " Now editing: " + getEditableState() +".";
+        text += "shaper" + collectCoord(Deviation) + ": ";
+        text += collectWidth(Deviation) +";";
+
+        text +=  getEditableState() +".";
 
         coordViewer.updateCaptureRegions(text);
     }
 
-    private String collectCoord(AreaTypes type, boolean edge){
-        Point currentPoint;
+    private String collectCoord(AreaTypes type){
+        Point start = null;
+        Point end = null;
         switch (type){
             case Meniscus :
-                if(edge)
-                    currentPoint = menBegin;
-                else
                 try {
-                    currentPoint = new Point(menBegin.x,menEnd);
-                }catch (NullPointerException e){
-                    currentPoint = null;
-                }
+                    start = new Point(meniscusInf.begin);
+                }catch (NullPointerException ignored){}
+                try{
+                    end = new Point(meniscusInf.begin.x,meniscusInf.lenght);
+                }catch (NullPointerException ignored){}
                 break;
             case Deviation:
-                if(edge)
-                    currentPoint = devBegin;
-                else
-                    try {
-                        currentPoint = new Point(devBegin.x,devEnd);
-                    }catch (NullPointerException e){
-                        currentPoint = null;
-                    }
+                try {
+                    start = new Point(deviationInf.begin);
+                }catch (NullPointerException ignored){}
+                try{
+                    end = new Point(deviationInf.begin.y,deviationInf.lenght);
+                }catch (NullPointerException ignored){}
                 break;
-            default: currentPoint = null;
+            case Shaper:
+                try {
+                    start = new Point(shaperInf.begin);
+                }catch (NullPointerException ignored){}
+                try{
+                    end = new Point(shaperInf.begin.y,shaperInf.lenght);
+                }catch (NullPointerException ignored){}
+                break;
         }
 
         DecimalFormat coordinatesFormatter = new DecimalFormat("000");
         String coord = "[";
-        if (currentPoint == null)
-            coord = "[xxx,xxx]";
-        else {
-            coord += coordinatesFormatter.format(currentPoint.x)+ ",";
-            coord += coordinatesFormatter.format(currentPoint.y)+"]";
+        switch (type){
+            case Meniscus:
+                if(start == null)
+                    coord+="xxx;xxx:xxx]";
+                else
+                if (end == null)
+                    coord+= coordinatesFormatter.format(start.x)+";"+coordinatesFormatter.format(start.y) +":xxx]";
+                else
+                coord+= coordinatesFormatter.format(start.x)+";"+coordinatesFormatter.format(start.y) +":" +
+                        coordinatesFormatter.format(end.y) +"]";
+                break;
+            case Deviation :
+                if(start == null)
+                    coord+="xxx:xxx;xxx]";
+                else
+                if (end == null)
+                    coord+= coordinatesFormatter.format(start.x)+":xxx;" + coordinatesFormatter.format(start.y);
+                else
+                    coord+= coordinatesFormatter.format(start.x)+":"+coordinatesFormatter.format(end.x) +";" +
+                            coordinatesFormatter.format(start.x) +"]";
+                break;
+            case Shaper:
+                if(start == null)
+                    coord+="xxx:xxx;xxx]";
+                else
+                if (end == null)
+                    coord+= coordinatesFormatter.format(start.x)+":xxx;" + coordinatesFormatter.format(start.y);
+                else
+                    coord+= coordinatesFormatter.format(start.x)+":"+coordinatesFormatter.format(end.x) +";" +
+                            coordinatesFormatter.format(start.x) +"]";
+                break;
         }
 
         return coord;
     }
 
     private String collectWidth(AreaTypes type){
-        String width = "width:";
-        DecimalFormat cwidthFormatter = new DecimalFormat("00");
+        String width = "";
+        DecimalFormat widthFormatter = new DecimalFormat("00");
         switch (type){
             case Meniscus:
-                if(menWidth == 0)
+                if(meniscusInf.width == 0)
                     width +="xx";
                 else
-                    width +=cwidthFormatter.format(menWidth);
+                    width +=widthFormatter.format(meniscusInf.width);
                 break;
             case Deviation:
-                if(devWidth == 0)
+                if(deviationInf.width == 0)
                     width +="xx";
                 else
-                    width +=cwidthFormatter.format(devWidth);
+                    width +=widthFormatter.format(meniscusInf.width);
+                break;
+            case Shaper:
+                if(shaperInf.width == 0)
+                    width +="xx";
+                else
+                    width +=widthFormatter.format(shaperInf.width);
                 break;
         }
         return width;
