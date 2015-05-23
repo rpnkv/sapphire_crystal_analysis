@@ -44,7 +44,6 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
            case Deviation:
                 tempDeviation = areaDescription;
                break;
-
            case Shaper:
                 tempShaper = areaDescription;
                break;
