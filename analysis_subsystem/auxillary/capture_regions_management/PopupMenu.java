@@ -1,4 +1,4 @@
-package analysis_subsystem.auxillary;
+package analysis_subsystem.auxillary.capture_regions_management;
 
 import javax.swing.*;
 

@@ -1,7 +1,7 @@
 package analysis_subsystem;
 
-import analysis_subsystem.auxillary.RegionSettingManager;
-import analysis_subsystem.auxillary.VideoFlowDecorator;
+import analysis_subsystem.auxillary.capture_regions_management.RegionSettingManager;
+import analysis_subsystem.auxillary.capture_regions_management.VideoFlowDecorator;
 import analysis_subsystem.gui.FrameAnalysisPanel;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
 import analysis_subsystem.interfaces.CaptureRegionsViewable;
@@ -18,6 +18,7 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     AnalysisPerformer analysisPerformer;
     ShapeDrawer drawer;
     VideoFlowDecorator videoFlowDecorator;
+    Thread analysisThread;
 
     public AnalysisFacade(ShapeDrawer drawer) {
         componentGUI = new FrameAnalysisPanel();
@@ -31,7 +32,9 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
 
     @Override
     public void performInstantAnalysis() {
-        System.out.println("instant");
+        analysisPerformer = new AnalysisPerformer(regionSettingManager.getMeniscusInf(),regionSettingManager.getDeviationInf(),
+                regionSettingManager.getShaperInf());
+        analysisThread = new Thread(analysisPerformer,"analysis thread");
     }
 
     @Override
@@ -48,6 +51,7 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     public void setActionListenable(ImagePanelActionListenable actionListenable, CaptureRegionsViewable regionsViewable) {
         regionSettingManager = new RegionSettingManager(actionListenable, regionsViewable);
         regionSettingManager.addCaptureCoordEditable(videoFlowDecorator);
+        regionSettingManager.addCaptureCoordEditable(analysisPerformer);
     }
 
     public void setDecorable(VideoFlowDecorable decorable) {

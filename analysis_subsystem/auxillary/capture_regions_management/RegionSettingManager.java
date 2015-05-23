@@ -1,4 +1,4 @@
-package analysis_subsystem.auxillary;
+package analysis_subsystem.auxillary.capture_regions_management;
 
 import analysis_subsystem.interfaces.CaptureCoordEditable;
 import analysis_subsystem.interfaces.CaptureRegionsViewable;
@@ -12,7 +12,7 @@ import java.awt.event.MouseWheelListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import static analysis_subsystem.auxillary.AreaTypes.*;
+import static analysis_subsystem.auxillary.capture_regions_management.AreaTypes.*;
 
 public class RegionSettingManager implements MouseListener,MouseWheelListener{
 
@@ -282,6 +282,19 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         }
         return text;
     }
+
+    public AreaDescription getMeniscusInf() {
+        return meniscusInf;
+    }
+
+    public AreaDescription getDeviationInf() {
+        return deviationInf;
+    }
+
+    public AreaDescription getShaperInf() {
+        return shaperInf;
+    }
+
     //region unused implemented methods
     @Override
     public void mousePressed(MouseEvent e) {

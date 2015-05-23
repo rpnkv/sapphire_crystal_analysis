@@ -1,6 +1,6 @@
 package capture_subsystem.auxillary;
 
-import analysis_subsystem.auxillary.RegionSettingManager;
+import analysis_subsystem.auxillary.capture_regions_management.RegionSettingManager;
 
 import javax.swing.*;
 
