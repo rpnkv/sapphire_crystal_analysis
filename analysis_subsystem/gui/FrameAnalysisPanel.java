@@ -1,6 +1,6 @@
 package analysis_subsystem.gui;
 
-import analysis_subsystem.auxillary.capture_regions_management.DiagramPanel;
+import analysis_subsystem.auxillary.analysis_result_visualisation.DiagramPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
