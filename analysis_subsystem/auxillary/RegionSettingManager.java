@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import static analysis_subsystem.auxillary.AreaTypes.Deviation;
 import static analysis_subsystem.auxillary.AreaTypes.Meniscus;
+import static analysis_subsystem.auxillary.AreaTypes.Shaper;
 
 public class RegionSettingManager implements MouseListener,MouseWheelListener{
 
@@ -61,7 +62,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
             case SHAPER_BEGIN :
                 shaperInf = new AreaDescription(AreaTypes.Shaper,
                         new Point((int) (e.getX()*widthFactor), (int) (e.getY()*heightFactor)));
-                state = DEVIATION_END;
+                state = SHAPER_END;
                 break;
             case MENISCUS_END :
                 meniscusInf.lenght = (int) (e.getY()*heightFactor - meniscusInf.begin.y);
@@ -103,19 +104,24 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         int rotation = (int)e.getPreciseWheelRotation();
         switch (state){
             case MENISCUS_WIDTH :
-                if (rotation < 0 && meniscusInf.width <2 || meniscusInf.width ==30)
+                if (rotation < 0 && meniscusInf.width <2)
                     return;
+                else
+                if (meniscusInf.width < 31)
                 meniscusInf.width += rotation;
+                informListeners(meniscusInf);
                 break;
             case DEVIATION_WIDTH :
-                if (rotation < 0 && deviationInf.width <2|| deviationInf.width ==30)
+                if (rotation < 0 && deviationInf.width <2|| deviationInf.width >= 30)
                     return;
                 deviationInf.width += rotation;
+                informListeners(deviationInf);
                 break;
             case SHAPER_WIDTH :
-                if (rotation < 0 && shaperInf.width <2|| shaperInf.width ==30)
+                if (rotation < 0 && shaperInf.width <2|| shaperInf.width >= 30)
                     return;
                 shaperInf.width += rotation;
+                informListeners(shaperInf);
                 break;
         }
         if(state != 0)
@@ -144,12 +150,13 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         text += "deviation" + collectCoord(Deviation) + ": ";
         text += collectWidth(Deviation) +";";
 
-        text += "shaper" + collectCoord(Deviation) + ": ";
-        text += collectWidth(Deviation) +";";
+        text += "shaper" + collectCoord(Shaper) + ": ";
+        text += collectWidth(Shaper) +".";
 
-        text +=  getEditableState() +".";
+        text += "Now editing: " +  getEditableState() +".";
 
         coordViewer.updateCaptureRegions(text);
+
     }
 
     private String collectCoord(AreaTypes type){
@@ -161,6 +168,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                     start = new Point(meniscusInf.begin);
                 }catch (NullPointerException ignored){}
                 try{
+                    if(meniscusInf.lenght != 0)
                     end = new Point(meniscusInf.begin.x,meniscusInf.lenght);
                 }catch (NullPointerException ignored){}
                 break;
@@ -169,7 +177,8 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                     start = new Point(deviationInf.begin);
                 }catch (NullPointerException ignored){}
                 try{
-                    end = new Point(deviationInf.begin.y,deviationInf.lenght);
+                    if (deviationInf.lenght !=0)
+                    end = new Point(deviationInf.lenght,deviationInf.begin.y);
                 }catch (NullPointerException ignored){}
                 break;
             case Shaper:
@@ -177,7 +186,8 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                     start = new Point(shaperInf.begin);
                 }catch (NullPointerException ignored){}
                 try{
-                    end = new Point(shaperInf.begin.y,shaperInf.lenght);
+                    if(shaperInf.lenght !=0)
+                    end = new Point(shaperInf.lenght,shaperInf.begin.y);
                 }catch (NullPointerException ignored){}
                 break;
         }
@@ -200,20 +210,20 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                     coord+="xxx:xxx;xxx]";
                 else
                 if (end == null)
-                    coord+= coordinatesFormatter.format(start.x)+":xxx;" + coordinatesFormatter.format(start.y);
+                    coord+= coordinatesFormatter.format(start.x)+":xxx;" + coordinatesFormatter.format(start.y) + "]";
                 else
                     coord+= coordinatesFormatter.format(start.x)+":"+coordinatesFormatter.format(end.x) +";" +
-                            coordinatesFormatter.format(start.x) +"]";
+                            coordinatesFormatter.format(start.y) +"]";
                 break;
             case Shaper:
                 if(start == null)
                     coord+="xxx:xxx;xxx]";
                 else
                 if (end == null)
-                    coord+= coordinatesFormatter.format(start.x)+":xxx;" + coordinatesFormatter.format(start.y);
+                    coord+= coordinatesFormatter.format(start.x)+":xxx;" + coordinatesFormatter.format(start.y) + "]";
                 else
                     coord+= coordinatesFormatter.format(start.x)+":"+coordinatesFormatter.format(end.x) +";" +
-                            coordinatesFormatter.format(start.x) +"]";
+                            coordinatesFormatter.format(start.y) +"]";
                 break;
         }
 
@@ -225,19 +235,19 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         DecimalFormat widthFormatter = new DecimalFormat("00");
         switch (type){
             case Meniscus:
-                if(meniscusInf.width == 0)
+                if(meniscusInf == null || meniscusInf.width == 0)
                     width +="xx";
                 else
                     width +=widthFormatter.format(meniscusInf.width);
                 break;
             case Deviation:
-                if(deviationInf.width == 0)
+                if(deviationInf == null ||deviationInf.width == 0)
                     width +="xx";
                 else
-                    width +=widthFormatter.format(meniscusInf.width);
+                    width +=widthFormatter.format(deviationInf.width);
                 break;
             case Shaper:
-                if(shaperInf.width == 0)
+                if(shaperInf == null || shaperInf.width == 0)
                     width +="xx";
                 else
                     width +=widthFormatter.format(shaperInf.width);
@@ -261,7 +271,13 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                 break;
             case DEVIATION_WIDTH :text = "deviation width";
                 break;
-            default: text = "null";
+            case SHAPER_BEGIN : text = "shaper begin";
+                break;
+            case SHAPER_END : text = "shaper end";
+                break;
+            case SHAPER_WIDTH : text = "shaper width";
+                break;
+            default: text = "nothing";
         }
         return text;
     }

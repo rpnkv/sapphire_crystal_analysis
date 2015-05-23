@@ -4,8 +4,6 @@ import analysis_subsystem.interfaces.CaptureCoordEditable;
 import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
 
-import java.awt.*;
-
 public class VideoFlowDecorator implements CaptureCoordEditable{
 
     VideoFlowDecorable videoFlowDecorable;
@@ -26,6 +24,7 @@ public class VideoFlowDecorator implements CaptureCoordEditable{
     private void eraseDecorators() {
         videoFlowDecorable.deleteDecorator(devDecName);
         videoFlowDecorable.deleteDecorator(menDecName);
+        videoFlowDecorable.deleteDecorator(shpDecName);
     }
 
     private void addDeviationDecorator(AreaDescription areaDescription) {
@@ -55,6 +54,7 @@ public class VideoFlowDecorator implements CaptureCoordEditable{
                 break;
             case Shaper:
                 addShaperDecorator(areaDescription);
+                break;
             case Erase:
                 eraseDecorators();
                 break;
