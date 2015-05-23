@@ -84,7 +84,6 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
                     capturePerformer.setImageSetable(upperDecorator.getInnerDecorator());
                 else
                     upperDecorator.deleteDecorator(alias);
-                System.out.println("decorator \'" +alias +"\' has been deleted.");
             }else
                 System.out.println("no decorators");
 

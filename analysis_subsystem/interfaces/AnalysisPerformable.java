@@ -3,6 +3,7 @@ package analysis_subsystem.interfaces;
 public interface AnalysisPerformable {
 
     void performInstantAnalysis();
-    void performAnalysisIteration();
+    void performIterativeAnalysis();
     void performAnalysis();
+    void stopAnalysis();
 }

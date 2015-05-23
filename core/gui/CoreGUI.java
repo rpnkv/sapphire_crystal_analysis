@@ -19,7 +19,7 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 	JMenu main,capture,analysis, monitoring,info;
 
 	JMenuItem cStart, cStop, cSettings;
-	JMenuItem aPerfInst, aPerfIter, aPerf;
+	JMenuItem aPerfInst, aPerfIter, aPerf, aStop;
 
 	CapturePerformable capturePerformable;
 	AnalysisPerformable analysisPerformable;
@@ -112,14 +112,19 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 		aPerfInst = new JMenuItem("Run instant analysis");
 		aPerfInst.addActionListener(e -> analysisPerformable.performInstantAnalysis());
 
-		aPerfIter = new JMenuItem("Run analysis iteration");
-		aPerfIter.addActionListener(e -> analysisPerformable.performAnalysisIteration());
+		aPerfIter = new JMenuItem("Run iterative analysis");
+		aPerfIter.addActionListener(e -> analysisPerformable.performIterativeAnalysis());
 
 		aPerf = new JMenuItem("Perform analysis");
 		aPerf.addActionListener(e -> analysisPerformable.performAnalysis());
+
+		aStop = new JMenuItem("Stop analysis");
+		aStop.addActionListener(e -> analysisPerformable.stopAnalysis());
+
 		analysis.add(aPerfInst);
 		analysis.add(aPerfIter);
 		analysis.add(aPerf);
+		analysis.add(aStop);
 	}
 
 

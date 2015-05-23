@@ -48,13 +48,18 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
     }
 
     @Override
-    public void performAnalysisIteration() {
-        analysisFacade.performAnalysisIteration();
+    public void performIterativeAnalysis() {
+        analysisFacade.performIterativeAnalysis();
     }
 
     @Override
     public void performAnalysis() {
         analysisFacade.performAnalysis();
+    }
+
+    @Override
+    public void stopAnalysis() {
+        analysisFacade.stopAnalysis();
     }
 
     @Override
