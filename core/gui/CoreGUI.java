@@ -19,7 +19,7 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 	JMenu main,capture,analysis, monitoring,info;
 
 	JMenuItem cStart, cStop, cSettings;
-	JMenuItem aPerfInst, aPerfIter, aPerf, aStop;
+	JMenuItem aPerfInst, aPerfIter, aPerf, aStop, aSetDefault;
 
 	CapturePerformable capturePerformable;
 	AnalysisPerformable analysisPerformable;
@@ -121,10 +121,14 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 		aStop = new JMenuItem("Stop analysis");
 		aStop.addActionListener(e -> analysisPerformable.stopAnalysis());
 
+		aSetDefault = new JMenuItem("Set default regions");
+		aSetDefault.addActionListener(e -> analysisPerformable.setDefaultCaptureAreas());
+
 		analysis.add(aPerfInst);
 		analysis.add(aPerfIter);
 		analysis.add(aPerf);
 		analysis.add(aStop);
+		analysis.add(aSetDefault);
 	}
 
 

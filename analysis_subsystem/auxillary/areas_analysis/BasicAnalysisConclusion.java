@@ -1,18 +1,18 @@
 package analysis_subsystem.auxillary.areas_analysis;
 
 public class BasicAnalysisConclusion {
-    short[] meniscusBrightness, deviationBrightness;
+    int[] meniscusBrightness, deviationBrightness;
 
-    public BasicAnalysisConclusion(short[] meniscusBrightness, short[] deviationBrightness) {
+    public BasicAnalysisConclusion(int[] meniscusBrightness, int[] deviationBrightness) {
         this.meniscusBrightness = meniscusBrightness;
         this.deviationBrightness = deviationBrightness;
     }
 
-    public short[] getDeviationBrightness() {
+    public int[] getDeviationBrightness() {
         return deviationBrightness;
     }
 
-    public short[] getMeniscusBrightness() {
+    public int[] getMeniscusBrightness() {
         return meniscusBrightness;
     }
 }

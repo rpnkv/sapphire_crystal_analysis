@@ -59,7 +59,7 @@ public class CaptureFacade implements CaptureSubsystemCommonInterface {
 
     @Override
     public BufferedImage getFrame() {
-        return null;
+        return frameSourceManager.getFrame();
     }
 
     @Override

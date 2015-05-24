@@ -6,7 +6,7 @@ import capture_subsystem.frame_sources.FrameSource;
 import capture_subsystem.frame_sources.camera.CameraFrameSource;
 import capture_subsystem.frame_sources.image.ImageFrameSource;
 import capture_subsystem.gui.CaptureSettingsFrame;
-import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.VideoFlowDecorable;
 import org.bytedeco.javacv.FrameGrabber;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 //класс, выполняющий управление источниками видеосигнала и предоставляющий
 //по требованию кадры
-public class FrameSourceManager implements FrameProvideable{
+public class FrameSourceManager implements FrameProvidable {
 
     public static final int FPS_MIN = 1;
     public static final int FPS_MAX = 24;
@@ -34,7 +34,7 @@ public class FrameSourceManager implements FrameProvideable{
         this.drawer = drawer;
         fps = FPS_INIT;
         initFrameSources();
-        currentFrameSource = frameSources.get(0);
+        currentFrameSource = frameSources.get(1);
     }
 
     private synchronized void initFrameSources() throws FrameGrabber.Exception {

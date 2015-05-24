@@ -4,7 +4,7 @@ public class AnalysisConclusion extends BasicAnalysisConclusion{
     private double meniscusWidth;
     private double crystalXDeviation;
 
-    public AnalysisConclusion(double meniscusHeight, double crystalXDeviation, short[] meniscusBr, short[] deviationBr){
+    public AnalysisConclusion(double meniscusHeight, double crystalXDeviation, int[] meniscusBr, int[] deviationBr){
         super(meniscusBr,deviationBr);
         this.meniscusWidth = meniscusHeight;
         this.crystalXDeviation = crystalXDeviation;

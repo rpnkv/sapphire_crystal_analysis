@@ -2,7 +2,7 @@ package analysis_subsystem.crystalMathModel;
 
 
 import capture_subsystem.frame_sources.FrameSource;
-import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.FrameProvidable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import static java.lang.Math.pow;
 /**
  * Created by ierus on 3/12/15.
  */
-public class MathModelFrameSource extends FrameSource implements FrameProvideable, ICustomizableGraphicMathModel {
+public class MathModelFrameSource extends FrameSource implements FrameProvidable, ICustomizableGraphicMathModel {
 
 	String alias = "Math model";
 	CrystalMathModel mathModel;

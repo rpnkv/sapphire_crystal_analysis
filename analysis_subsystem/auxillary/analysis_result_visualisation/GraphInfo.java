@@ -5,18 +5,18 @@ import java.awt.*;
 
 public class GraphInfo {
 
-    short[] brightnessValues;
+    int[] brightnessValues;
     int beginPixel;
     Color color;
     short width;
 
-    public GraphInfo(short[] brightnessValues, int beginPixel, Color color) {
+    public GraphInfo(int[] brightnessValues, int beginPixel, Color color) {
         this.brightnessValues = brightnessValues;
         this.beginPixel = beginPixel;
         this.color = color;
     }
 
-    public short[] getBrightnessValues() {
+    public int[] getBrightnessValues() {
         return brightnessValues;
     }
 
@@ -32,7 +32,7 @@ public class GraphInfo {
         return width;
     }
 
-    public void setBrightnessValues(short[] brightnessValues) {
+    public void setBrightnessValues(int[] brightnessValues) {
         this.brightnessValues = brightnessValues;
     }
 

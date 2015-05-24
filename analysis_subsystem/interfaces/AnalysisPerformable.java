@@ -6,4 +6,5 @@ public interface AnalysisPerformable {
     void performIterativeAnalysis();
     void performAnalysis();
     void stopAnalysis();
+    void setDefaultCaptureAreas();
 }

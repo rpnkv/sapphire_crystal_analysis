@@ -1,5 +1,6 @@
 package analysis_subsystem;
 
+import analysis_subsystem.auxillary.analysis_result_visualisation.GraphInfo;
 import analysis_subsystem.auxillary.areas_analysis.AnalysisConclusion;
 import analysis_subsystem.auxillary.areas_analysis.AnalysisPerformer;
 import analysis_subsystem.auxillary.areas_analysis.analysers.BasicFrameAnalyser;
@@ -11,30 +12,33 @@ import analysis_subsystem.gui.FrameAnalysisPanel;
 import analysis_subsystem.interfaces.AnalysisResultProcessable;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
 import analysis_subsystem.interfaces.CaptureRegionsViewable;
-import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
 import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class AnalysisFacade implements AnalysisSubsystemCommonInterface, AnalysisResultProcessable {
 
-    FrameAnalysisPanel componentGUI;
-    RegionSettingManager regionSettingManager;
-    AnalysisPerformer analysisPerformer;
-    ShapeDrawer drawer;
-    VideoFlowDecorator videoFlowDecorator;
+    FrameAnalysisPanel componentGUI; //component's GUI panel
+    RegionSettingManager regionSettingManager;//controls region setting
+    AnalysisPerformer analysisPerformer;//performs analysis
+    ShapeDrawer drawer;//bridge
+    VideoFlowDecorator videoFlowDecorator;//
     Thread analysisThread;
     FrameAnalyser frameAnalyser;
-    FrameProvideable frameProvider;
+    FrameProvidable frameProvider;
 
-    public AnalysisFacade(ShapeDrawer drawer, FrameProvideable frameProvider) {
+    public AnalysisFacade(ShapeDrawer drawer, FrameProvidable frameProvider) {
         componentGUI = new FrameAnalysisPanel(drawer);
         this.drawer = drawer;
         frameAnalyser = new BasicFrameAnalyser();
         this.frameProvider = frameProvider;
+
     }
 
     @Override
@@ -72,6 +76,11 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
     }
 
     @Override
+    public void setDefaultCaptureAreas() {
+        regionSettingManager.setDefaultCaptureRegions();
+    }
+
+    @Override
     public void setActionListenable(ImagePanelActionListenable actionListenable, CaptureRegionsViewable regionsViewable) {
         regionSettingManager = new RegionSettingManager(actionListenable, regionsViewable);
         regionSettingManager.addCaptureCoordEditable(videoFlowDecorator);
@@ -94,7 +103,12 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
 
     @Override
     public void processConclusion(AnalysisConclusion conclusion) {
-        System.out.println(conclusion);
+        ArrayList<GraphInfo> graphInfos = new ArrayList<>();
+        graphInfos.add(new GraphInfo(conclusion.getMeniscusBrightness(),
+                regionSettingManager.getMeniscusInf().getBegin().y, Color.red));
+        graphInfos.add(new GraphInfo(conclusion.getDeviationBrightness(),
+                regionSettingManager.getDeviationInf().getBegin().x, Color.blue));
+        componentGUI.getDiagramPanel().drawGraphs(graphInfos);
     }
 
     @Override

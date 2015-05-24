@@ -63,7 +63,6 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
                 resultProcessor.processException(e);
             }
 
-
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

@@ -2,7 +2,7 @@ package capture_subsystem.auxillary;
 
 
 import capture_subsystem.interfaces.CaptureGUIComponentsProvidable;
-import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.ImageSetable;
 
 import javax.swing.*;
@@ -12,13 +12,13 @@ public class CapturePerformer implements Runnable {
 
     BufferedImage frame;
     JTextArea outputArea;
-    FrameProvideable frameSource;
+    FrameProvidable frameSource;
     ImageSetable imageSetable;
     boolean performCapture;
     Integer fps;
 
     public CapturePerformer(CaptureGUIComponentsProvidable guiComponents,
-                            FrameProvideable frameSource,  Integer fps) {
+                            FrameProvidable frameSource,  Integer fps) {
         this.outputArea = guiComponents.getOutpArea();
         this.imageSetable = guiComponents.imageSetable();
         this.frameSource = frameSource;

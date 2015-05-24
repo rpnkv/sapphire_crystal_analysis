@@ -42,6 +42,17 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         widthFactor = 640.0/488.0;
         heightFactor = 480.0/366.0;
         this.coordViewer = coordViewer;
+        setDefaultCaptureRegions();
+    }
+
+    public void setDefaultCaptureRegions(){
+        meniscusInf = new AreaDescription(AreaTypes.Meniscus,new Point(250,350),100,3);
+        informListeners(meniscusInf);
+        deviationInf = new AreaDescription(AreaTypes.Deviation,new Point(100,200),50,4);
+        informListeners(deviationInf);
+        shaperInf = new AreaDescription(AreaTypes.Shaper, new Point(50,450),50,2);
+        informListeners(shaperInf);
+        updateCoordinates();
     }
 
     @Override

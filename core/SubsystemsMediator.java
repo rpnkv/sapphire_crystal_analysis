@@ -4,7 +4,7 @@ import analysis_subsystem.interfaces.AnalysisPerformable;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
 import capture_subsystem.interfaces.CapturePerformable;
 import capture_subsystem.interfaces.CaptureSubsystemCommonInterface;
-import capture_subsystem.interfaces.FrameProvideable;
+import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
 
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
-public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisPerformable, CapturePerformable, FrameProvideable {
+public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisPerformable, CapturePerformable, FrameProvidable {
 
     CaptureSubsystemCommonInterface captureFacade;
     AnalysisSubsystemCommonInterface analysisFacade;
@@ -62,6 +62,11 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
     @Override
     public void stopAnalysis() {
         analysisFacade.stopAnalysis();
+    }
+
+    @Override
+    public void setDefaultCaptureAreas() {
+        analysisFacade.setDefaultCaptureAreas();
     }
 
     @Override

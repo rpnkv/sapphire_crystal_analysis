@@ -3,6 +3,6 @@ package capture_subsystem.interfaces;
 import java.awt.image.BufferedImage;
 
 
-public interface FrameProvideable {
+public interface FrameProvidable {
     BufferedImage getFrame();
 }
