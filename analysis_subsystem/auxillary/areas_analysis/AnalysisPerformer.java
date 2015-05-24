@@ -1,13 +1,12 @@
 package analysis_subsystem.auxillary.areas_analysis;
 
+import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.exceptions.AnalysisException;
-import analysis_subsystem.interfaces.AnalysisPerformingProcessable;
+import analysis_subsystem.interfaces.AnalysisResultProcessable;
 import analysis_subsystem.interfaces.CaptureCoordEditable;
 
 public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
-    private static AnalysisPerformer instance;
-
     private AreaDescription meniscus;
     private AreaDescription deviation;
     private AreaDescription shaper;
@@ -17,22 +16,16 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
     private AreaDescription tempShaper;
 
     boolean analysisIsPerforming;
-    private AnalysisPerformingProcessable performingProcessor;
+    private AnalysisResultProcessable resultProcessor;
+    private FrameAnalyser frameAnalyser;
 
-    private AnalysisPerformer(AreaDescription meniscus, AreaDescription deviation,
-                              AreaDescription shaper, AnalysisPerformingProcessable performingProcessor) {
+    public AnalysisPerformer(AreaDescription meniscus, AreaDescription deviation,
+                              AreaDescription shaper, AnalysisResultProcessable performingProcessor, FrameAnalyser frameAnalyser) {
         this.tempMeniscus = meniscus;
         this.tempDeviation = deviation;
         this.tempShaper = shaper;
-        this.performingProcessor = performingProcessor;
-        analysisIsPerforming = false;
-    }
-
-    public static AnalysisPerformer getInstance(AreaDescription _meniscus, AreaDescription _deviation,
-                                         AreaDescription _shaper, AnalysisPerformingProcessable _performingProcessor){
-        if(instance == null)
-            instance = new AnalysisPerformer(_meniscus, _deviation, _shaper, _performingProcessor);
-        return instance;
+        this.resultProcessor = performingProcessor;
+        this.frameAnalyser = frameAnalyser;
     }
 
     @Override
@@ -64,11 +57,12 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
             return;
         do{
             checkoutForAreasChange();
+            try {
+                frameAnalyser.addImage(resultProcessor.getFrame());
+            } catch (AnalysisException e) {
+                resultProcessor.processException(e);
+            }
 
-            System.out.println("abalysis is performing");
-            System.out.println(meniscus);
-            System.out.println(deviation);
-            System.out.println(shaper);
 
             try {
                 Thread.sleep(1000);
@@ -76,6 +70,7 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
                 System.out.println(e.getMessage());
             }
         }while(analysisIsPerforming);
+        resultProcessor.processConclusion(frameAnalyser.getResults(0));
     }
 
     private void checkoutForAreasChange(){
@@ -85,6 +80,7 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
             deviation = tempDeviation;
         if (tempShaper != null)
             shaper = tempShaper;
+        frameAnalyser.initAnalyser(meniscus,deviation,shaper);
     }
 
     private boolean checkAreasForValid(){
@@ -96,8 +92,9 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
         if (tempShaper == null)
             throw new AnalysisException("Shaper coordinates aren't set");
 
+
         }catch (AnalysisException e){
-            performingProcessor.processException(e);
+            resultProcessor.processException(e);
             return false;
         }
     return true;

@@ -1,32 +1,40 @@
 package analysis_subsystem;
 
 import analysis_subsystem.auxillary.areas_analysis.AnalysisConclusion;
+import analysis_subsystem.auxillary.areas_analysis.AnalysisPerformer;
+import analysis_subsystem.auxillary.areas_analysis.analysers.BasicFrameAnalyser;
+import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 import analysis_subsystem.auxillary.capture_regions_management.RegionSettingManager;
 import analysis_subsystem.auxillary.capture_regions_management.VideoFlowDecorator;
-import analysis_subsystem.auxillary.areas_analysis.AnalysisPerformer;
 import analysis_subsystem.exceptions.AnalysisException;
 import analysis_subsystem.gui.FrameAnalysisPanel;
-import analysis_subsystem.interfaces.AnalysisPerformingProcessable;
+import analysis_subsystem.interfaces.AnalysisResultProcessable;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
 import analysis_subsystem.interfaces.CaptureRegionsViewable;
+import capture_subsystem.interfaces.FrameProvideable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
 import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
 
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 
-public class AnalysisFacade implements AnalysisSubsystemCommonInterface, AnalysisPerformingProcessable {
+public class AnalysisFacade implements AnalysisSubsystemCommonInterface, AnalysisResultProcessable {
 
-    JPanel componentGUI;
+    FrameAnalysisPanel componentGUI;
     RegionSettingManager regionSettingManager;
     AnalysisPerformer analysisPerformer;
     ShapeDrawer drawer;
     VideoFlowDecorator videoFlowDecorator;
     Thread analysisThread;
+    FrameAnalyser frameAnalyser;
+    FrameProvideable frameProvider;
 
-    public AnalysisFacade(ShapeDrawer drawer) {
-        componentGUI = new FrameAnalysisPanel();
+    public AnalysisFacade(ShapeDrawer drawer, FrameProvideable frameProvider) {
+        componentGUI = new FrameAnalysisPanel(drawer);
         this.drawer = drawer;
+        frameAnalyser = new BasicFrameAnalyser();
+        this.frameProvider = frameProvider;
     }
 
     @Override
@@ -36,8 +44,8 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
 
     @Override
     public void performInstantAnalysis() {
-        analysisPerformer = AnalysisPerformer.getInstance(regionSettingManager.getMeniscusInf(), regionSettingManager.getDeviationInf(),
-                regionSettingManager.getShaperInf(), this);
+        analysisPerformer = new AnalysisPerformer(regionSettingManager.getMeniscusInf(), regionSettingManager.getDeviationInf(),
+                regionSettingManager.getShaperInf(), this,frameAnalyser);
         analysisThread = new Thread(analysisPerformer,"analysis thread");
         regionSettingManager.addCaptureCoordEditable(analysisPerformer);
         analysisThread.start();
@@ -45,8 +53,8 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
 
     @Override
     public void performIterativeAnalysis() {
-        analysisPerformer = AnalysisPerformer.getInstance(regionSettingManager.getMeniscusInf(), regionSettingManager.getDeviationInf(),
-                regionSettingManager.getShaperInf(), this);
+        analysisPerformer = new AnalysisPerformer(regionSettingManager.getMeniscusInf(), regionSettingManager.getDeviationInf(),
+                regionSettingManager.getShaperInf(),this, frameAnalyser);
         analysisThread = new Thread(analysisPerformer,"analysis thread");
         regionSettingManager.addCaptureCoordEditable(analysisPerformer);
         analysisPerformer.permitAnalysis();
@@ -86,6 +94,11 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
 
     @Override
     public void processConclusion(AnalysisConclusion conclusion) {
-        System.out.println(conclusion.toString());
+        System.out.println(conclusion);
+    }
+
+    @Override
+    public BufferedImage getFrame() {
+        return frameProvider.getFrame();
     }
 }

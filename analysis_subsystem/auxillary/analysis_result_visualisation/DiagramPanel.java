@@ -1,17 +1,17 @@
 package analysis_subsystem.auxillary.analysis_result_visualisation;
 
 import capture_subsystem.gui.ImagePanel;
+import analysis_subsystem.interfaces.GraphDrawable;
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
-
-/**
- * Created by ierus on 4/2/15.
- */
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
+import java.util.ArrayList;
 
 //выполняет визуализацию графиков
-public class DiagramPanel extends ImagePanel implements IDiagramPanelListener, IGraphDrawer {
+public class DiagramPanel extends ImagePanel implements GraphDrawable{
 	BufferedImage defaultDiagramShape, diagramShape; //изображение - шаблон графика
 							//координатные оси, сетка и т.п.
 
@@ -21,8 +21,9 @@ public class DiagramPanel extends ImagePanel implements IDiagramPanelListener, I
 	private int lGrInt,lGrLngth,sGrInt,sGrLngth;//длинна линий и интервал между ними на координатной сетке
 
 	private int coordDelta;//величина, на которую
+	ShapeDrawer drawer;
 
-	public DiagramPanel(int width, int height) {
+	public DiagramPanel(int width, int height, ShapeDrawer drawer) {
 		super(width, height);
 		Dimension size = new Dimension(width,height);
 		setPreferredSize(size);
@@ -30,9 +31,10 @@ public class DiagramPanel extends ImagePanel implements IDiagramPanelListener, I
 		setMaximumSize(size);
 		setSize(size);
 		setLayout(null);
-		setBackground(Color.black);
+		setBackground(Color.gray);
 		initGridValues();
 		coordDelta = 2;
+		this.drawer = drawer;
 		redrawDiagramShape();
 		setImage(defaultDiagramShape);
 	}
@@ -184,94 +186,21 @@ public class DiagramPanel extends ImagePanel implements IDiagramPanelListener, I
 			g2d.drawString(String.valueOf(i),1, j);
 		g2d.dispose();
 	}
-	//endregion
-	//region grid draw controls
-	@Override
-	public int getlGrInt() {
-		return lGrInt;
-	}
-
-	@Override
-	public int getlGrLngth() {
-		return lGrLngth;
-	}
-
-	@Override
-	public int getsGrInt() {
-		return sGrInt;
-	}
-
-	@Override
-	public int getsGrLngth() {
-		return sGrLngth;
-	}
-
-	@Override
-	public int getCoordDelta() {
-		return coordDelta;
-	}
-
-	@Override
-	public boolean isDrawSGrid() {
-		return drawSGrid;
-	}
-
-	@Override
-	public boolean isDrawLGrid() {
-		return drawLGrid;
-	}
-
-	@Override
-	public void setDrawSGrid(boolean drawSGrid) {
-		this.drawSGrid = drawSGrid;
-	}
-
-	@Override
-	public void setDrawLGrid(boolean drawLGrid) {
-		this.drawLGrid = drawLGrid;
-	}
-
-	@Override
-	public void setlGrInt(int lGrInt) {
-		this.lGrInt = lGrInt;
-	}
-
-	@Override
-	public void setlGrLngth(int lGrLngth) {
-		this.lGrLngth = lGrLngth;
-	}
-
-	@Override
-	public void setsGrInt(int sGrInt) {
-		this.sGrInt = sGrInt;
-	}
-
-	@Override
-	public void setsGrLngth(int sGrLngth) {
-		this.sGrLngth = sGrLngth;
-	}
-
-	@Override
-	public void setCoordDelta(int coordDelta) {
-		this.coordDelta = coordDelta;
-	}
-	//endregion
 
 	@Override
 	public void drawGraphs(ArrayList<GraphInfo> graphSInfo) {
-		diagramShape = ImageProcessor.copyImage(defaultDiagramShape);
-		for(GraphInfo graphInfo : graphSInfo)
-		{
-			short[] brightnessValues = graphInfo.getBrightnessValues();
-			drawGraphLine(brightnessValues, graphInfo.getColor());
-			viewGraphCoord(graphInfo.getBeginPixel(), graphInfo.getColor(),brightnessValues.length);
-		}
+		diagramShape = deepCopy(defaultDiagramShape);
+		graphSInfo.forEach(graph -> {
+			short[] brightnessValues = graph.getBrightnessValues();
+			drawGraphLine(brightnessValues, graph.getColor());
+			viewGraphCoord(graph.getBeginPixel(), graph.getColor(), brightnessValues.length);
+		});
 		setImage(diagramShape);
 	}
 
 	@Override
 	public void drawGraph(GraphInfo graphInfo) {
-		diagramShape = ImageProcessor.copyImage(defaultDiagramShape);
+		diagramShape = deepCopy(defaultDiagramShape);
 		short[] brightnessValues = graphInfo.getBrightnessValues();
 		//redrawDiagramShape();
 		drawGraphLine(brightnessValues, graphInfo.getColor());
@@ -355,5 +284,12 @@ public class DiagramPanel extends ImagePanel implements IDiagramPanelListener, I
 						"; X2: " + newPoint.x + ", Y2:" + newPoint.y);
 			}
 		g2d.dispose();
+	}
+
+	private BufferedImage deepCopy(BufferedImage bi) {
+		ColorModel cm = bi.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		WritableRaster raster = bi.copyData(null);
+		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 }

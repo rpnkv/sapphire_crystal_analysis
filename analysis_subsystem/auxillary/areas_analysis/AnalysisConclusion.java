@@ -1,14 +1,13 @@
 package analysis_subsystem.auxillary.areas_analysis;
 
-public class AnalysisConclusion {
+public class AnalysisConclusion extends BasicAnalysisConclusion{
     private double meniscusWidth;
     private double crystalXDeviation;
-    private double shaperXDeviation;
 
-    public AnalysisConclusion(double meniscusWidth, double crystalXDeviation, double shaperXDeviation) {
-        this.meniscusWidth = meniscusWidth;
+    public AnalysisConclusion(double meniscusHeight, double crystalXDeviation, short[] meniscusBr, short[] deviationBr){
+        super(meniscusBr,deviationBr);
+        this.meniscusWidth = meniscusHeight;
         this.crystalXDeviation = crystalXDeviation;
-        this.shaperXDeviation = shaperXDeviation;
     }
 
     public double getMeniscusWidth() {
@@ -19,13 +18,9 @@ public class AnalysisConclusion {
         return crystalXDeviation;
     }
 
-    public double getShaperXDeviation() {
-        return shaperXDeviation;
-    }
-
     @Override
     public String toString() {
-        return "Analysis conclusion: menWidth:" + meniscusWidth + ", crystan deviation by x: " + crystalXDeviation +
-                "\nshaper deviation by x:" + shaperXDeviation+".";
+        return "Analysis conclusion: menWidth:" + meniscusWidth + ", crystal deviation by x: " + crystalXDeviation +
+                ".";
     }
 }

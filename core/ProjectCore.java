@@ -13,7 +13,7 @@ public class ProjectCore{
     public ProjectCore() {
         ShapeDrawer drawer = new JavaAPIShapeDrawer();
         CaptureFacade captureFacade = new CaptureFacade(drawer);
-        AnalysisFacade analysisFacade = new AnalysisFacade(drawer);
+        AnalysisFacade analysisFacade = new AnalysisFacade(drawer, mediator);
         mediator = new SubsystemsMediator(captureFacade, analysisFacade);
 
         gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade);

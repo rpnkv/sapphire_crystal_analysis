@@ -48,32 +48,41 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
     public void mouseClicked(MouseEvent e) {
         switch (state){
             case MENISCUS_BEGIN :
-                meniscusInf = new AreaDescription(AreaTypes.Meniscus, new Point(
-                        (int) (e.getX()*widthFactor), (int) (e.getY()* heightFactor)));
+                meniscusInf = new AreaDescription(AreaTypes.Meniscus, calcPointCoord(e));
                 state = MENISCUS_END;
                 break;
             case DEVIATION_BEGIN :
-                deviationInf = new AreaDescription(AreaTypes.Deviation,
-                        new Point((int) (e.getX()*widthFactor), (int) (e.getY()*heightFactor)));
+                deviationInf = new AreaDescription(AreaTypes.Deviation, calcPointCoord(e));
                 state = DEVIATION_END;
                 break;
             case SHAPER_BEGIN :
-                shaperInf = new AreaDescription(AreaTypes.Shaper,
-                        new Point((int) (e.getX()*widthFactor), (int) (e.getY()*heightFactor)));
+                shaperInf = new AreaDescription(AreaTypes.Shaper,calcPointCoord(e));
                 state = SHAPER_END;
                 break;
             case MENISCUS_END :
                 meniscusInf.lenght = (int) (e.getY()*heightFactor - meniscusInf.begin.y);
+                if (meniscusInf.lenght<0){
+                    meniscusInf.begin = calcPointCoord(e);
+                    meniscusInf.lenght = Math.abs(meniscusInf.lenght);
+                }
                 state = MENISCUS_WIDTH;
                 actionListenable.addMouseWheelListener(this);
                 break;
             case DEVIATION_END:
                 deviationInf.lenght = (int) ((e.getX() * widthFactor) - deviationInf.begin.x);
+                if (deviationInf.lenght<0){
+                    deviationInf.begin = calcPointCoord(e);
+                    deviationInf.lenght = Math.abs(deviationInf.lenght);
+                }
                 state = DEVIATION_WIDTH;
                 actionListenable.addMouseWheelListener(this);
                 break;
             case SHAPER_END :
                 shaperInf.lenght = (int) ((e.getX() * widthFactor) - shaperInf.begin.x);
+                if (shaperInf.lenght < 0){
+                    shaperInf.begin = calcPointCoord(e);
+                    shaperInf.lenght = Math.abs(shaperInf.lenght);
+                }
                 state =SHAPER_WIDTH;
                 actionListenable.addMouseWheelListener(this);
                 break;
@@ -99,6 +108,10 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         if(!descriptionIsValid){
             updateCoordinates();
         }
+    }
+
+    private Point calcPointCoord(MouseEvent e){
+        return new Point((int) (e.getX()*widthFactor), (int) (e.getY()* heightFactor));
     }
 
     @Override
@@ -170,7 +183,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                 }catch (NullPointerException ignored){}
                 try{
                     if(meniscusInf.lenght != 0)
-                    end = new Point(meniscusInf.begin.x,meniscusInf.lenght);
+                    end = new Point(meniscusInf.begin.x,meniscusInf.lenght+meniscusInf.getBegin().y);
                 }catch (NullPointerException ignored){}
                 break;
             case Deviation:
@@ -179,7 +192,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                 }catch (NullPointerException ignored){}
                 try{
                     if (deviationInf.lenght !=0)
-                    end = new Point(deviationInf.lenght,deviationInf.begin.y);
+                    end = new Point(deviationInf.lenght+deviationInf.getBegin().x,deviationInf.begin.y);
                 }catch (NullPointerException ignored){}
                 break;
             case Shaper:
@@ -188,7 +201,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
                 }catch (NullPointerException ignored){}
                 try{
                     if(shaperInf.lenght !=0)
-                    end = new Point(shaperInf.lenght,shaperInf.begin.y);
+                    end = new Point(shaperInf.lenght+shaperInf.getBegin().x,shaperInf.begin.y);
                 }catch (NullPointerException ignored){}
                 break;
         }

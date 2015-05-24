@@ -1,6 +1,7 @@
 package analysis_subsystem.gui;
 
 import analysis_subsystem.auxillary.analysis_result_visualisation.DiagramPanel;
+import core.auxillary.ShapeDrawers.ShapeDrawer;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -13,8 +14,8 @@ public class FrameAnalysisPanel extends JPanel {
 	JTextArea iterationsLog;
 	JScrollPane scrollPane;
 
-	public FrameAnalysisPanel() {
-		this.add(initDiagramPanel());
+	public FrameAnalysisPanel(ShapeDrawer drawer) {
+		this.add(initDiagramPanel(drawer));
 		this.add(initLogPanel());
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
@@ -34,10 +35,10 @@ public class FrameAnalysisPanel extends JPanel {
 		return logPanel;
 	}
 
-	private JPanel initDiagramPanel() {
+	private JPanel initDiagramPanel(ShapeDrawer drawer) {
 		JPanel diagramPanelWrap = new JPanel();
 		Border border = BorderFactory.createTitledBorder("Selection analysis result:");
-		diagramPanel = new DiagramPanel(495,315);
+		diagramPanel = new DiagramPanel(495,315,drawer);
 		diagramPanelWrap.add(diagramPanel);
 		diagramPanelWrap.setBorder(border);
 		return diagramPanelWrap;
