@@ -4,7 +4,6 @@ import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import monitoring_subsystem.interfaces.RequestResultsViewable;
 
 
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -66,16 +65,30 @@ public class DataBaseIntermediator {
     }
 
     public String[] getProducts(){
-        String[] products = null;
-        switch (currentCustomer){
-            case "IMI":
-                products = new String[]{"IMI crystal 1", "IMI crystal 2"};
-                break;
-            case "Motor-Sich":
-                products = new String[]{"Motor crystal 1", "Motor crystal 2"};
-                break;
+        try {
+            ResultSet productsSet = statementPreparer.getProducts(connection, currentCustomer);
+            LinkedList<String> products = new LinkedList<>();
+            while (productsSet.next())
+                products.add(productsSet.getString(1));
+            return products.toArray(new String[products.size()]);
+        } catch (SQLException e) {
+            resultsViewer.append("Products kinds for \'" + currentCustomer +"\' failed. \n" + e.getMessage() + "\n" );
         }
-        return products;
+        return  new String[]{"No products"};
+    }
+
+    public void viewProducts(){
+        try {
+            ResultSet productsSet = statementPreparer.getProductsFull(connection);
+            while (productsSet.next())
+                resultsViewer.append("id: " + productsSet.getInt(1) + ", shape: " + productsSet.getString(2) +
+                        ", kind: " + productsSet.getString(3) + ",\n customer: " +
+                        statementPreparer.getCustomerName(connection,productsSet.getInt(4)) + ", date: " +
+                        productsSet.getDate(5).toString() +".\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Products view failed. \n" + e.getMessage() + "\n" );
+        }
+
     }
 
     public void getCustomers(){
@@ -129,8 +142,12 @@ public class DataBaseIntermediator {
         }
     }
 
-    public void addProduct(String s){
-        System.out.println("product" + s +"added."+"\n");
+    public void addProduct(String shape, String kind){
+        try {
+            statementPreparer.addProduct(connection,kind,shape,currentCustomer);
+        } catch (SQLException e) {
+            resultsViewer.append("Product adding failed. " + e.getMessage()+ "\n");
+        }
     }
 
     public void deleteCustomer(String selectedItem) {
@@ -142,4 +159,14 @@ public class DataBaseIntermediator {
             resultsViewer.append("Customer removing failed. " + e.getMessage());
         }
     }
+
+    public void deleteProduct(){
+        try {
+            statementPreparer.deleteProduct(connection, currentProduct);
+            resultsViewer.append("Product \'" + currentProduct +"\' deleted. \n");
+        } catch (SQLException e) {
+            resultsViewer.append("Deleting product \'" + currentProduct +"\' wasn't performed. \n" + e.getMessage());
+        }
+    }
+
 }

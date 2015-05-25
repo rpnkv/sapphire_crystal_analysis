@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DatabaseFrame extends JFrame{
-
+    AddingFrame addingFrame;
     DataBaseIntermediator databaseIntermediator;
     JPanel customerPanel, productPanel, viewPanel, lowerPanel, upperPanel;
     JComboBox<String> customerCB, productCB;
@@ -47,7 +47,14 @@ public class DatabaseFrame extends JFrame{
 
         JPanel customersBtnSubpanel = new JPanel();
         custAddBtn = new JButton("Add");
-        custAddBtn.addActionListener(e -> new AddingFrame(ADD_CUSTOMER));
+        custAddBtn.addActionListener(e ->{
+            if(addingFrame == null)
+            addingFrame = new AddingFrame(ADD_CUSTOMER);
+            else{
+                addingFrame.dispose();
+                addingFrame = new AddingFrame(ADD_CUSTOMER);
+            }
+        });
         customersBtnSubpanel.add(custAddBtn);
         custDelBtn = new JButton("Delete");
         custDelBtn.addActionListener(e-> deleteCustomer());
@@ -74,13 +81,20 @@ public class DatabaseFrame extends JFrame{
 
         JPanel productsBtnSubpanel = new JPanel();
         prodAddBtn = new JButton("Add");
-        prodAddBtn.addActionListener(e -> new AddingFrame(ADD_PRODUCT));
+        prodAddBtn.addActionListener(e -> {
+            if(addingFrame == null)
+                addingFrame = new AddingFrame(ADD_PRODUCT);
+            else{
+                addingFrame.dispose();
+                addingFrame = new AddingFrame(ADD_PRODUCT);
+            }
+        });
         productsBtnSubpanel.add(prodAddBtn);
         prodDelBtn = new JButton("Delete");
-        prodDelBtn.addActionListener(e->System.out.println(e.getSource()));
+        prodDelBtn.addActionListener(e->deleteProduct());
         productsBtnSubpanel.add(prodDelBtn);
-        prodUpdBtn = new JButton("Update");
-        prodUpdBtn.addActionListener(e-> System.out.println(e.getSource()));
+        prodUpdBtn = new JButton("View all");
+        prodUpdBtn.addActionListener(e-> databaseIntermediator.viewProducts());
         productsBtnSubpanel.add(prodUpdBtn);
         productPanel.add(productsBtnSubpanel);
     }
@@ -92,15 +106,21 @@ public class DatabaseFrame extends JFrame{
                 updateCustomers();
                 break;
             case ADD_PRODUCT:
-                databaseIntermediator.addProduct(name);
+                databaseIntermediator.addProduct(name, adress);
                 updateProducts();
                 break;
         }
+        addingFrame = null;
     }
 
     private void deleteCustomer() {
         databaseIntermediator.deleteCustomer((String)(customerCB.getSelectedItem()));
         updateCustomers();
+        updateProducts();
+    }
+
+    private void deleteProduct(){
+        databaseIntermediator.deleteProduct();
         updateProducts();
     }
 
@@ -125,6 +145,13 @@ public class DatabaseFrame extends JFrame{
 
     public JTextArea getOutpArea() {
         return outpArea;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if(addingFrame != null)
+            addingFrame.dispose();
     }
 
     //region components intializing
@@ -172,28 +199,20 @@ public class DatabaseFrame extends JFrame{
     //endregion
 
     class AddingFrame extends JFrame{
+        JTextField field1, field2;
+        JLabel label1, label2;
         JButton ok;
-        JTextField newName, newAddress;
-        String editingParamName;
-        JLabel nameLabel, addressLabel;
 
+        String editingParamName;
         int type;
         public AddingFrame(int type) throws HeadlessException {
             defineParamName(type);
-            setTitle(editingParamName + " adding.");
+            setTitle(editingParamName + " adding");
             initTextFields();
             initLabels();
             initButton();
-
-            setLayout(new FlowLayout(FlowLayout.RIGHT,0,2));
-            add(nameLabel);
-            add(newName);
-            add(addressLabel);
-            add(newAddress);
-            add(ok);
-            setSize(370, 100);
-            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setVisible(true);
+            addComponents();
+            initFrameParams();
         }
 
         private void defineParamName(int type) {
@@ -204,45 +223,66 @@ public class DatabaseFrame extends JFrame{
                     break;
                 case ADD_PRODUCT:
                     editingParamName =  "Product";
+                    break;
                 default: editingParamName =   "Unknown";
             }
         }
 
         private void initButton(){
             ok = new JButton("Done");
+
             ok.addActionListener(e -> {
-                if(newName.getText().equals("") || newName.getText().length()<4){
+                if(field1.getText().equals("") || field1.getText().length()<4){
                     JOptionPane.showMessageDialog(null,
                             editingParamName + " must have at least 4 characters.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }else
-                if(newName.getText().length()>20){
+                if(field1.getText().length()>20){
                     JOptionPane.showMessageDialog(null,
                             editingParamName + " must 20 characters.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    addString(newName.getText(), newAddress.getText(),type);
+                    addString(field1.getText(), field2.getText(),type);
                     dispose();
                 }
             });
         }
 
         private void initTextFields(){
-            newName = new JTextField(20);
-            newAddress = new JTextField(20);
-            if(type == ADD_PRODUCT)
-                newAddress.setEnabled(false);
+            field1 = new JTextField(20);
+            field2 = new JTextField(20);
         }
 
         private void initLabels(){
-            nameLabel = new JLabel(" name:");
-            addressLabel = new JLabel(" addr:");
-            if(type == ADD_PRODUCT)
-                addressLabel.setEnabled(false);
+            switch (type){
+                case ADD_CUSTOMER:
+                    label1 = new JLabel("Name:");
+                    label2 = new JLabel("Address:");
+                    break;
+                case ADD_PRODUCT:
+                    label1 = new JLabel("Shape:");
+                    label2 = new JLabel("Kind:");
+                    break;
+            }
+        }
+
+        private void addComponents(){
+            add(label1);
+            add(field1);
+            add(label2);
+            add(field2);
+            add(ok);
+        }
+
+        private void initFrameParams(){
+            setLayout(new FlowLayout(FlowLayout.RIGHT,0,2));
+            setSize(300, 100);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setVisible(true);
         }
     }
 }
