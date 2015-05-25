@@ -68,8 +68,8 @@ public class ConnectionSettingsFrame extends JFrame{
     }
 
     private void addButtons() {
-        buttonsPanel.add(conenct);
         buttonsPanel.add(disconnect);
+        buttonsPanel.add(conenct);
         mainPanel.add(buttonsPanel);
     }
 }

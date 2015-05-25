@@ -38,9 +38,9 @@ public class DatabaseFrame extends JFrame{
 
         JPanel customerSubpanel = new JPanel();
         customerSubpanel.add(new JLabel("Customer:"));
-        customerCB = new JComboBox<>(databaseIntermediator.getCustomers());
+        customerCB = new JComboBox<>(databaseIntermediator.getCustomersNames());
         customerCB.setSelectedIndex(0);
-        customerCB.addActionListener(e-> updateCustomer((String) customerCB.getSelectedItem()));
+        customerCB.addActionListener(e-> updateProducts((String) customerCB.getSelectedItem()));
         customerSubpanel.add(customerCB);
         customerPanel.add(customerSubpanel);
 
@@ -49,10 +49,10 @@ public class DatabaseFrame extends JFrame{
         custAddBtn.addActionListener(e -> new AddingFrame(ADD_CUSTOMER));
         customersBtnSubpanel.add(custAddBtn);
         custDelBtn = new JButton("Delete");
-        custDelBtn.addActionListener(e->System.out.println(e.getSource()));
+        custDelBtn.addActionListener(e-> deleteCustomer());
         customersBtnSubpanel.add(custDelBtn);
-        custUpdBtn = new JButton("Update");
-        custUpdBtn.addActionListener(e ->System.out.println(e.getSource()));
+        custUpdBtn = new JButton("View all");
+        custUpdBtn.addActionListener(e ->databaseIntermediator.getCustomers());
         customersBtnSubpanel.add(custUpdBtn);
         customerPanel.add(customersBtnSubpanel);
     }
@@ -137,10 +137,29 @@ public class DatabaseFrame extends JFrame{
         }
     }
 
-    private void updateCustomer(String customerName){
-        DefaultComboBoxModel model = new DefaultComboBoxModel( databaseIntermediator.getProdusts(customerName) );
-        productCB.setModel( model );
+    private void updateProducts(String customerName){
+        String[] products = databaseIntermediator.getProdusts(customerName);
+        DefaultComboBoxModel model;
+        if(products != null)
+            model = new DefaultComboBoxModel( products );
+
+        else
+            model = new DefaultComboBoxModel(new String[] {"No products"});
+
+        productCB.setModel(model);
         databaseIntermediator.setCurrentProduct(productCB.getItemAt(0));
+    }
+
+
+    private void deleteCustomer() {
+        databaseIntermediator.deleteCustomer((String)(customerCB.getSelectedItem()));
+        updateCustomers();
+        updateProducts(customerCB.getItemAt(0));
+    }
+
+    private void updateCustomers(){
+        DefaultComboBoxModel model = new DefaultComboBoxModel(databaseIntermediator.getCustomersNames());
+        customerCB.setModel(model);
     }
 
     public JTextArea getOutpArea() {

@@ -31,9 +31,10 @@ public class DataBaseIntermediator {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);
             connected = true;
-        } catch (ClassNotFoundException e) {
-            System.out.println(e);
+
         } catch (SQLException e) {
+            System.out.println(e);
+        } catch (ClassNotFoundException e) {
             System.out.println(e);
         }
         statusEditable.setConnectionStatus(connected);
@@ -67,21 +68,31 @@ public class DataBaseIntermediator {
         return products;
     }
 
-    public String[] getCustomers(){
+    public void getCustomers(){
+        try {
+            ResultSet customersSet = statementPreparer.getCustomers(connection);
+            while (customersSet.next()) {
+                String customer = "id: " + customersSet.getInt(1) + ", name: " + customersSet.getString(2) + ", adress:" +
+                        customersSet.getString(3) + ";";
+                resultsViewer.append(customer+"\n");
+            }
+        } catch (SQLException e) {
+            resultsViewer.append("Customers getting failed. " + e.getMessage()+"\n" );
+        }
+    }
+
+    public String[] getCustomersNames(){
         try {
             ResultSet customersSet = statementPreparer.getCustomers(connection);
             LinkedList<String> customers = new LinkedList<>();
             while (customersSet.next()){
-                String customer = "id: "+  customersSet.getInt(1) +", name: "+  customersSet.getString(2) +", adress:"+
-                        customersSet.getString(3)+";";
+                String customer = customersSet.getString(2);
                 customers.add(customer);
             }
             String[] customersString = new String[customers.size()];
-            for(int i = 0; i < customersString.length;i++)
-                customersString[i] = customers.get(i);
-            return customersString;
+            return customers.toArray(customersString);
         } catch (SQLException e) {
-            resultsViewer.append("Customers getting failed. " + e.getMessage() );
+            resultsViewer.append("Customers getting failed. " + e.getMessage()+"\n" );
         }
         return new String[]{"no customers"};
     }
@@ -98,12 +109,21 @@ public class DataBaseIntermediator {
     public void addCustomer(String name, String adress) {
         try {
             statementPreparer.addCustomer(name,adress, connection);
-            resultsViewer.append("Customer \'" + name + "\', with adress: " + adress + "was added.");
+            resultsViewer.append("Customer \'" + name + "\', with adress: " + adress + "was added."+"\n");
         } catch (SQLException e) {
-            resultsViewer.append("Customer adding failed. " + e.getMessage());
+            resultsViewer.append("Customer adding failed. " + e.getMessage()+"\n");
         }
     }
     public void addProduct(String s){
-        System.out.println("product" + s +"added.");
+        System.out.println("product" + s +"added."+"\n");
+    }
+
+    public void deleteCustomer(String selectedItem) {
+        try{
+            statementPreparer.deleteCustomer(connection,selectedItem);
+            resultsViewer.append("Customer \'" + selectedItem +"\' removed."+"\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Customer removing failed. " + e.getMessage());
+        }
     }
 }
