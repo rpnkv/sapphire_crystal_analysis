@@ -5,6 +5,7 @@ import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import monitoring_subsystem.auxillary.DatabaseIntermediator;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ConnectionSettingsFrame extends JFrame{
     public final String URL = "jdbc:mysql://localhost:3306/dist_sys_cp", username = "root", password = "04d0h";
@@ -14,26 +15,31 @@ public class ConnectionSettingsFrame extends JFrame{
     JButton conenct,disconnect;
     JTextField urlField, userField, passwordField;
 
-    JPanel buttonsPanel;
+    JPanel buttonsPanel, mainPanel;
 
     public ConnectionSettingsFrame(DatabaseIntermediator intermediator, ConnectionStatusEditable statusEditable) {
         super("DB connection settings");
-        setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
         intermediator = new DatabaseIntermediator();
         this.intermediator = intermediator;
         this.statusEditable = statusEditable;
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         initTextFields();
         initButtons();
         addTextFields();
         addButtons();
-        setSize(400,200);
+        add(mainPanel);
+        setSize(320,180);
         setVisible(true);
     }
 
     private void initTextFields() {
-        urlField = new JTextField(URL);
-        userField = new JTextField(username);
-        passwordField = new JTextField(password);
+        urlField = new JTextField(22);
+        urlField.setText(URL);
+        userField = new JTextField(20);
+        userField.setText(username);
+        passwordField = new JTextField(20);
+        passwordField.setText(password);
     }
 
     private void initButtons() {
@@ -53,21 +59,22 @@ public class ConnectionSettingsFrame extends JFrame{
         JPanel urlPanel = new JPanel();
         urlPanel.add(new JLabel("URL:"));
         urlPanel.add(urlField);
-        add(urlPanel);
+        mainPanel.add(urlPanel);
 
         JPanel usernamePanel = new JPanel();
         usernamePanel.add(new JLabel("username:"));
         usernamePanel.add(userField);
-        add(usernamePanel);
+        mainPanel.add(usernamePanel);
 
         JPanel passPanel = new JPanel();
         passPanel.add(new JLabel("password"));
         passPanel.add(passwordField);
-        add(passPanel);
+        mainPanel.add(passPanel);
     }
 
     private void addButtons() {
         buttonsPanel.add(conenct);
         buttonsPanel.add(disconnect);
+        mainPanel.add(buttonsPanel);
     }
 }
