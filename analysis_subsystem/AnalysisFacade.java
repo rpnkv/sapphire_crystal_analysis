@@ -16,6 +16,7 @@ import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
 import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
+import monitoring_subsystem.interfaces.MeasureSaveable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,13 +33,17 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
     Thread analysisThread;
     FrameAnalyser frameAnalyser;
     FrameProvidable frameProvider;
+    MeasureSaveable measureSaver;
 
     public AnalysisFacade(ShapeDrawer drawer, FrameProvidable frameProvider) {
         componentGUI = new FrameAnalysisPanel(drawer);
         this.drawer = drawer;
         frameAnalyser = new BasicFrameAnalyser();
         this.frameProvider = frameProvider;
+    }
 
+    public void setMeasureSaver(MeasureSaveable measureSaver) {
+        this.measureSaver = measureSaver;
     }
 
     @Override

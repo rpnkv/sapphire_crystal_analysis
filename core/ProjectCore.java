@@ -20,6 +20,7 @@ public class ProjectCore{
 
         gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade, mediator);
         analysisFacade.setActionListenable(mediator,gui);
+        analysisFacade.setMeasureSaver(mediator);
         monitoringFacade.setConnectionStatusEditable(gui);
     }
 

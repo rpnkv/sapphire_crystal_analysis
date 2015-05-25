@@ -2,6 +2,7 @@ package monitoring_subsystem;
 
 import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import monitoring_subsystem.auxillary.DataBaseIntermediator;
+import monitoring_subsystem.auxillary.Measure;
 import monitoring_subsystem.gui.ConnectionSettingsFrame;
 import monitoring_subsystem.gui.DatabaseFrame;
 import monitoring_subsystem.interfaces.MonitoringSubsystemCommonInterface;
@@ -44,5 +45,15 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
             System.out.println("View component isn't initialized. Your message:\n" + text);
         }
 
+    }
+
+    @Override
+    public boolean saveMeasure(Measure measure) {
+        return intermediator.saveMeasure(measure);
+    }
+
+    @Override
+    public boolean isReadyToAnalysisLogging() {
+        return intermediator.isReadyToAnalysisLogging();
     }
 }
