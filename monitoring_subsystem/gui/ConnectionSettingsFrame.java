@@ -9,19 +9,16 @@ import java.awt.*;
 
 public class ConnectionSettingsFrame extends JFrame{
     public final String URL = "jdbc:mysql://localhost:3306/dist_sys_cp", username = "root", password = "04d0h";
-    DatabaseIntermediator intermediator;
-    ConnectionStatusEditable statusEditable;
+    DatabaseIntermediator databaseIntermediator;
 
     JButton conenct,disconnect;
     JTextField urlField, userField, passwordField;
 
     JPanel buttonsPanel, mainPanel;
 
-    public ConnectionSettingsFrame(DatabaseIntermediator intermediator, ConnectionStatusEditable statusEditable) {
+    public ConnectionSettingsFrame(DatabaseIntermediator intermediator) {
         super("DB connection settings");
-        intermediator = new DatabaseIntermediator();
-        this.intermediator = intermediator;
-        this.statusEditable = statusEditable;
+        databaseIntermediator = intermediator;
         mainPanel = new JPanel();
         mainPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         initTextFields();
@@ -30,6 +27,7 @@ public class ConnectionSettingsFrame extends JFrame{
         addButtons();
         add(mainPanel);
         setSize(320,180);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 
@@ -49,10 +47,8 @@ public class ConnectionSettingsFrame extends JFrame{
         buttonsPanel.add(conenct);
         buttonsPanel.add(disconnect);
         conenct.addActionListener(e ->
-            statusEditable.setConnectionStatus(intermediator.createConnection(urlField.getText(),
-                    userField.getText(), passwordField.getText()))
-        );
-        conenct.addActionListener(e -> {intermediator.disposeConnection(); intermediator = null;});
+            databaseIntermediator.createConnection(urlField.getText(), userField.getText(), passwordField.getText()));
+        disconnect.addActionListener(e -> databaseIntermediator.disposeConnection());
     }
 
     private void addTextFields() {

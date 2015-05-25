@@ -139,7 +139,7 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 
 	private void monitoringMenuInit() {
 		mConfConn = new JMenuItem("Configurate connection");
-		mConfConn.addActionListener(e -> monitoringPerformable.showConnectionFrame(this));
+		mConfConn.addActionListener(e -> monitoringPerformable.showConnectionFrame());
 
 		mShowMonForm = new JMenuItem("Show monitoring frame");
 		mShowMonForm.addActionListener(e -> monitoringPerformable.showDBFrame());

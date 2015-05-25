@@ -2,7 +2,6 @@ package core;
 
 import analysis_subsystem.interfaces.AnalysisPerformable;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
-import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import capture_subsystem.interfaces.CapturePerformable;
 import capture_subsystem.interfaces.CaptureSubsystemCommonInterface;
 import capture_subsystem.interfaces.FrameProvidable;
@@ -98,8 +97,8 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
 
 
     @Override
-    public void showConnectionFrame(ConnectionStatusEditable statusEditable) {
-        monitoringFacade.showConnectionFrame(statusEditable);
+    public void showConnectionFrame() {
+        monitoringFacade.showConnectionFrame();
     }
 
     @Override

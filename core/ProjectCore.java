@@ -18,8 +18,9 @@ public class ProjectCore{
         MonitoringFacade monitoringFacade = new MonitoringFacade();
         mediator = new SubsystemsMediator(captureFacade, analysisFacade, monitoringFacade);
 
-        gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade, monitoringFacade);
+        gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade, mediator);
         analysisFacade.setActionListenable(mediator,gui);
+        monitoringFacade.setConnectionStatusEditable(gui);
     }
 
     public static void main(String[] args) {

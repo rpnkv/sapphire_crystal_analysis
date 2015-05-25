@@ -13,13 +13,16 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
     DatabaseFrame dbFrame;
     DatabaseIntermediator intermediator;
 
+    public void setConnectionStatusEditable(ConnectionStatusEditable statusEditable){
+        intermediator = new DatabaseIntermediator(statusEditable);
+    }
 
     @Override
-    public void showConnectionFrame(ConnectionStatusEditable statusEditable) {
+    public void showConnectionFrame() {
         SwingUtilities.invokeLater(() -> {
             if(connFrame!= null)
                 connFrame.dispose();
-            connFrame = new ConnectionSettingsFrame(intermediator,statusEditable);
+            connFrame = new ConnectionSettingsFrame(intermediator);
         });
     }
 
@@ -28,7 +31,7 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
         SwingUtilities.invokeLater(() -> {
             if(dbFrame!= null)
                 dbFrame.dispose();
-            dbFrame = new DatabaseFrame();
+            dbFrame = new DatabaseFrame(intermediator);
         });
     }
 
