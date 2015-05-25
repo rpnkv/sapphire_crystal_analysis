@@ -19,6 +19,7 @@ public class DatabaseFrame extends JFrame{
     public DatabaseFrame(DataBaseIntermediator databaseIntermediator) throws HeadlessException {
         super("Database log");
         this.databaseIntermediator = databaseIntermediator;
+        databaseIntermediator.initDefaultValues();
         setLayout(new BorderLayout());
         initCustomerPanel();
         initProductPanel();
@@ -40,7 +41,7 @@ public class DatabaseFrame extends JFrame{
         customerSubpanel.add(new JLabel("Customer:"));
         customerCB = new JComboBox<>(databaseIntermediator.getCustomersNames());
         customerCB.setSelectedIndex(0);
-        customerCB.addActionListener(e-> updateProducts((String) customerCB.getSelectedItem()));
+        customerCB.addActionListener(e-> updateProducts());
         customerSubpanel.add(customerCB);
         customerPanel.add(customerSubpanel);
 
@@ -64,8 +65,10 @@ public class DatabaseFrame extends JFrame{
 
         JPanel productSubpanel = new JPanel();
         productSubpanel.add(new JLabel("Product:"));
-        productCB = new JComboBox<>(databaseIntermediator.getProdusts((String) customerCB.getSelectedItem()));
+        productCB = new JComboBox<>(databaseIntermediator.getProducts());
         productCB.setSelectedIndex(0);
+        productCB.addActionListener(e -> databaseIntermediator.setCurrentProduct((String) productCB.getSelectedItem()));
+
         productSubpanel.add(productCB);
         productPanel.add(productSubpanel);
 
@@ -82,6 +85,49 @@ public class DatabaseFrame extends JFrame{
         productPanel.add(productsBtnSubpanel);
     }
 
+    private void addString(String name, String adress, int code){
+        switch (code){
+            case ADD_CUSTOMER:
+                databaseIntermediator.addCustomer(name, adress);
+                updateCustomers();
+                break;
+            case ADD_PRODUCT:
+                databaseIntermediator.addProduct(name);
+                updateProducts();
+                break;
+        }
+    }
+
+    private void deleteCustomer() {
+        databaseIntermediator.deleteCustomer((String)(customerCB.getSelectedItem()));
+        updateCustomers();
+        updateProducts();
+    }
+
+    private void updateCustomers(){
+        DefaultComboBoxModel model = new DefaultComboBoxModel(databaseIntermediator.getCustomersNames());
+        customerCB.setModel(model);
+    }
+
+    private void updateProducts(){
+        databaseIntermediator.setCurrentCustomer((String) customerCB.getSelectedItem());
+        String[] products = databaseIntermediator.getProducts();
+        DefaultComboBoxModel model;
+        if(products != null)
+            model = new DefaultComboBoxModel( products );
+
+        else
+            model = new DefaultComboBoxModel(new String[] {"No products"});
+
+        productCB.setModel(model);
+        databaseIntermediator.setCurrentProduct(productCB.getItemAt(0));
+    }
+
+    public JTextArea getOutpArea() {
+        return outpArea;
+    }
+
+    //region components intializing
     private void initUpperPanel() {
         upperPanel = new JPanel();
         upperPanel.add(customerPanel);
@@ -123,101 +169,80 @@ public class DatabaseFrame extends JFrame{
         lowerPanel.add(loadAllMeas);
         add(lowerPanel,BorderLayout.SOUTH);
     }
-
-    private void addString(String name, String adress, int code){
-        switch (code){
-            case ADD_CUSTOMER:
-                databaseIntermediator.addCustomer(name, adress);
-                customerCB.addItem(name);
-                break;
-            case ADD_PRODUCT:
-                databaseIntermediator.addProduct(name);
-                productCB.addItem(name);
-                break;
-        }
-    }
-
-    private void updateProducts(String customerName){
-        String[] products = databaseIntermediator.getProdusts(customerName);
-        DefaultComboBoxModel model;
-        if(products != null)
-            model = new DefaultComboBoxModel( products );
-
-        else
-            model = new DefaultComboBoxModel(new String[] {"No products"});
-
-        productCB.setModel(model);
-        databaseIntermediator.setCurrentProduct(productCB.getItemAt(0));
-    }
-
-
-    private void deleteCustomer() {
-        databaseIntermediator.deleteCustomer((String)(customerCB.getSelectedItem()));
-        updateCustomers();
-        updateProducts(customerCB.getItemAt(0));
-    }
-
-    private void updateCustomers(){
-        DefaultComboBoxModel model = new DefaultComboBoxModel(databaseIntermediator.getCustomersNames());
-        customerCB.setModel(model);
-    }
-
-    public JTextArea getOutpArea() {
-        return outpArea;
-    }
+    //endregion
 
     class AddingFrame extends JFrame{
         JButton ok;
-        JTextField newName, newAdress;
+        JTextField newName, newAddress;
+        String editingParamName;
+        JLabel nameLabel, addressLabel;
+
         int type;
-        String editParamName = "";
         public AddingFrame(int type) throws HeadlessException {
+            defineParamName(type);
+            setTitle(editingParamName + " adding.");
+            initTextFields();
+            initLabels();
+            initButton();
+
+            setLayout(new FlowLayout(FlowLayout.RIGHT,0,2));
+            add(nameLabel);
+            add(newName);
+            add(addressLabel);
+            add(newAddress);
+            add(ok);
+            setSize(370, 100);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setVisible(true);
+        }
+
+        private void defineParamName(int type) {
+            this.type = type;
             switch (type){
                 case ADD_CUSTOMER:
-                    editParamName = "Customer";
+                    editingParamName = "Customer";
                     break;
                 case ADD_PRODUCT:
-                    editParamName = "Product";
-                    break;
+                    editingParamName =  "Product";
+                default: editingParamName =   "Unknown";
             }
-            setTitle(editParamName + " adding.");
-            this.type = type;
-            newName = new JTextField(20);
-            newAdress = new JTextField(20);
-            if(type == ADD_PRODUCT)
-                newAdress.setEnabled(false);
+        }
+
+        private void initButton(){
             ok = new JButton("Done");
             ok.addActionListener(e -> {
                 if(newName.getText().equals("") || newName.getText().length()<4){
                     JOptionPane.showMessageDialog(null,
-                            editParamName + "must have at least 4 characters.",
+                            editingParamName + " must have at least 4 characters.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }else
                 if(newName.getText().length()>20){
                     JOptionPane.showMessageDialog(null,
-                            editParamName + "must 20 characters.",
+                            editingParamName + " must 20 characters.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    addString(newName.getText(),newAdress.getText(),type);
+                    addString(newName.getText(), newAddress.getText(),type);
                     dispose();
                 }
             });
-            setLayout(new FlowLayout(FlowLayout.RIGHT,0,2));
-            add(new JLabel(editParamName + " name:"));
-            add(newName);
-            add(new JLabel(editParamName + " addr:"));
-            add(newAdress);
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new BorderLayout());
-            buttonPanel.add(ok,BorderLayout.EAST);
-            add(buttonPanel);
-            setSize(370, 100);
-            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            setVisible(true);
+        }
+
+        private void initTextFields(){
+            newName = new JTextField(20);
+            newAddress = new JTextField(20);
+            if(type == ADD_PRODUCT)
+                newAddress.setEnabled(false);
+        }
+
+        private void initLabels(){
+            nameLabel = new JLabel(" name:");
+            addressLabel = new JLabel(" addr:");
+            if(type == ADD_PRODUCT)
+                addressLabel.setEnabled(false);
         }
     }
 }

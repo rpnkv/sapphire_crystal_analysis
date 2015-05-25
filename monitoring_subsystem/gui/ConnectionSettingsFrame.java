@@ -45,8 +45,12 @@ public class ConnectionSettingsFrame extends JFrame{
         buttonsPanel = new JPanel();
         buttonsPanel.add(conenct);
         buttonsPanel.add(disconnect);
-        conenct.addActionListener(e ->
-            databaseIntermediator.createConnection(urlField.getText(), userField.getText(), passwordField.getText()));
+        conenct.addActionListener(e ->{
+            boolean connected = databaseIntermediator.createConnection(urlField.getText(),
+                    userField.getText(), passwordField.getText());
+            if(connected)
+                dispose();
+        });
         disconnect.addActionListener(e -> databaseIntermediator.disposeConnection());
     }
 

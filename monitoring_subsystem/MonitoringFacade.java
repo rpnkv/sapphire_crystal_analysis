@@ -38,6 +38,11 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
 
     @Override
     public void append(String text) {
-        dbFrame.getOutpArea().append(text);
+        try{
+            dbFrame.getOutpArea().append(text);
+        }catch (NullPointerException e){
+            System.out.println("View component isn't initialized. Your message:\n" + text);
+        }
+
     }
 }

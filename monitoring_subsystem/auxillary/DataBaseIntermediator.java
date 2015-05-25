@@ -26,6 +26,11 @@ public class DataBaseIntermediator {
         connected = false;
     }
 
+    public void initDefaultValues(){
+        setCurrentCustomer(getCustomersNames()[0]);
+        setCurrentProduct(getProducts()[0]);
+    }
+
     public boolean createConnection(String url, String user, String pass) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -55,9 +60,14 @@ public class DataBaseIntermediator {
         return connected;
     }
 
-    public String[] getProdusts(String customerName){
+    public boolean isReadyToAnalysisLogging(){
+        assert currentProduct != null;
+        return  ((currentProduct != null|| !currentProduct.equals("No products")) && currentCustomer != null && connected);
+    }
+
+    public String[] getProducts(){
         String[] products = null;
-        switch (customerName){
+        switch (currentCustomer){
             case "IMI":
                 products = new String[]{"IMI crystal 1", "IMI crystal 2"};
                 break;
@@ -99,21 +109,26 @@ public class DataBaseIntermediator {
 
     public void setCurrentProduct(String currentProduct) {
         this.currentProduct = currentProduct;
+        if(resultsViewer != null)
+        resultsViewer.append("Current product updated: " + currentProduct+ "\n");
     }
 
     public void setCurrentCustomer(String currentCustomer) {
         this.currentCustomer = currentCustomer;
+        if(resultsViewer != null)
+        resultsViewer.append("Current customer updated: " + currentCustomer + "\n");
     }
-
 
     public void addCustomer(String name, String adress) {
         try {
             statementPreparer.addCustomer(name,adress, connection);
             resultsViewer.append("Customer \'" + name + "\', with adress: " + adress + "was added."+"\n");
+            setCurrentCustomer(name);
         } catch (SQLException e) {
             resultsViewer.append("Customer adding failed. " + e.getMessage()+"\n");
         }
     }
+
     public void addProduct(String s){
         System.out.println("product" + s +"added."+"\n");
     }
@@ -122,6 +137,7 @@ public class DataBaseIntermediator {
         try{
             statementPreparer.deleteCustomer(connection,selectedItem);
             resultsViewer.append("Customer \'" + selectedItem +"\' removed."+"\n");
+            setCurrentCustomer(getCustomersNames()[0]);
         } catch (SQLException e) {
             resultsViewer.append("Customer removing failed. " + e.getMessage());
         }
