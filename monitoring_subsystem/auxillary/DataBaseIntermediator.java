@@ -1,6 +1,7 @@
 package monitoring_subsystem.auxillary;
 
 import analysis_subsystem.interfaces.ConnectionStatusEditable;
+import monitoring_subsystem.interfaces.MeasureSaveable;
 import monitoring_subsystem.interfaces.RequestResultsViewable;
 
 
@@ -10,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-public class DataBaseIntermediator {
+public class DataBaseIntermediator implements MeasureSaveable{
     private ConnectionStatusEditable statusEditable;
     private boolean connected;
     private Connection connection;
@@ -57,6 +58,17 @@ public class DataBaseIntermediator {
 
     public boolean isConnected() {
         return connected;
+    }
+
+    @Override
+    public boolean saveMeasure(Measure measure) {
+        try {
+            statementPreparer.saveMeasure(connection,currentProduct,measure);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean isReadyToAnalysisLogging(){

@@ -12,7 +12,7 @@ public class DatabaseFrame extends JFrame{
     JPanel customerPanel, productPanel, viewPanel, lowerPanel, upperPanel;
     JComboBox<String> customerCB, productCB;
     JButton custAddBtn, custDelBtn, custUpdBtn, prodAddBtn, prodDelBtn, prodUpdBtn,
-            loadMenMeas, loadDevMeas, loadAllMeas, clearArea;
+            loadMenMeas, loadDevMeas, loadAllMeas, clearArea, clearMeasures;
     JTextArea outpArea;
     final int ADD_CUSTOMER = 1, ADD_PRODUCT =2;
 
@@ -185,6 +185,9 @@ public class DatabaseFrame extends JFrame{
 
         loadAllMeas = new JButton("All measures");
         loadAllMeas.addActionListener(e-> System.out.println(e.getActionCommand()));
+
+        clearMeasures = new JButton("Clear all");
+        clearMeasures.addActionListener(e -> System.out.println("This button will clear all measures soon :)"));
     }
 
     private void initLowerPanel() {
@@ -194,6 +197,7 @@ public class DatabaseFrame extends JFrame{
         lowerPanel.add(loadMenMeas);
         lowerPanel.add(loadDevMeas);
         lowerPanel.add(loadAllMeas);
+        lowerPanel.add(clearMeasures);
         add(lowerPanel,BorderLayout.SOUTH);
     }
     //endregion
