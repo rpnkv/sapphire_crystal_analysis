@@ -1,22 +1,21 @@
 package monitoring_subsystem.gui;
 
 
-import analysis_subsystem.interfaces.ConnectionStatusEditable;
-import monitoring_subsystem.auxillary.DatabaseIntermediator;
+import monitoring_subsystem.auxillary.DataBaseIntermediator;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ConnectionSettingsFrame extends JFrame{
     public final String URL = "jdbc:mysql://localhost:3306/dist_sys_cp", username = "root", password = "04d0h";
-    DatabaseIntermediator databaseIntermediator;
+    DataBaseIntermediator databaseIntermediator;
 
     JButton conenct,disconnect;
     JTextField urlField, userField, passwordField;
 
     JPanel buttonsPanel, mainPanel;
 
-    public ConnectionSettingsFrame(DatabaseIntermediator intermediator) {
+    public ConnectionSettingsFrame(DataBaseIntermediator intermediator) {
         super("DB connection settings");
         databaseIntermediator = intermediator;
         mainPanel = new JPanel();

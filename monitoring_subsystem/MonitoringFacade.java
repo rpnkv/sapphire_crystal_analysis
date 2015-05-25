@@ -1,7 +1,7 @@
 package monitoring_subsystem;
 
 import analysis_subsystem.interfaces.ConnectionStatusEditable;
-import monitoring_subsystem.auxillary.DatabaseIntermediator;
+import monitoring_subsystem.auxillary.DataBaseIntermediator;
 import monitoring_subsystem.gui.ConnectionSettingsFrame;
 import monitoring_subsystem.gui.DatabaseFrame;
 import monitoring_subsystem.interfaces.MonitoringSubsystemCommonInterface;
@@ -11,10 +11,11 @@ import javax.swing.*;
 public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
     ConnectionSettingsFrame connFrame;
     DatabaseFrame dbFrame;
-    DatabaseIntermediator intermediator;
+    DataBaseIntermediator intermediator;
+
 
     public void setConnectionStatusEditable(ConnectionStatusEditable statusEditable){
-        intermediator = new DatabaseIntermediator(statusEditable);
+        intermediator = new DataBaseIntermediator(statusEditable, this);
     }
 
     @Override
@@ -35,4 +36,8 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
         });
     }
 
+    @Override
+    public void append(String text) {
+        dbFrame.getOutpArea().append(text);
+    }
 }

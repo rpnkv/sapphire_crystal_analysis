@@ -1,21 +1,22 @@
 package monitoring_subsystem.gui;
 
 
-import monitoring_subsystem.auxillary.DatabaseIntermediator;
+import monitoring_subsystem.auxillary.DataBaseIntermediator;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DatabaseFrame extends JFrame{
 
-    DatabaseIntermediator databaseIntermediator;
+    DataBaseIntermediator databaseIntermediator;
     JPanel customerPanel, productPanel, viewPanel, lowerPanel, upperPanel;
     JComboBox<String> customerCB, productCB;
-    JButton custAddBtn, custDelBtn, custUpdBtn, prodAddBtn, prodDelBtn, prodUpdBtn, loadMenMeas, loadDevMeas, loadAllMeas;
+    JButton custAddBtn, custDelBtn, custUpdBtn, prodAddBtn, prodDelBtn, prodUpdBtn,
+            loadMenMeas, loadDevMeas, loadAllMeas, clearArea;
     JTextArea outpArea;
     final int ADD_CUSTOMER = 1, ADD_PRODUCT =2;
 
-    public DatabaseFrame(DatabaseIntermediator databaseIntermediator) throws HeadlessException {
+    public DatabaseFrame(DataBaseIntermediator databaseIntermediator) throws HeadlessException {
         super("Database log");
         this.databaseIntermediator = databaseIntermediator;
         setLayout(new BorderLayout());
@@ -39,7 +40,7 @@ public class DatabaseFrame extends JFrame{
         customerSubpanel.add(new JLabel("Customer:"));
         customerCB = new JComboBox<>(databaseIntermediator.getCustomers());
         customerCB.setSelectedIndex(0);
-        customerCB.addActionListener(e-> databaseIntermediator.setCurrentCustomer((String) customerCB.getSelectedItem()));
+        customerCB.addActionListener(e-> updateCustomer((String) customerCB.getSelectedItem()));
         customerSubpanel.add(customerCB);
         customerPanel.add(customerSubpanel);
 
@@ -63,7 +64,7 @@ public class DatabaseFrame extends JFrame{
 
         JPanel productSubpanel = new JPanel();
         productSubpanel.add(new JLabel("Product:"));
-        productCB = new JComboBox<>(databaseIntermediator.getProdusts());
+        productCB = new JComboBox<>(databaseIntermediator.getProdusts((String) customerCB.getSelectedItem()));
         productCB.setSelectedIndex(0);
         productSubpanel.add(productCB);
         productPanel.add(productSubpanel);
@@ -100,6 +101,9 @@ public class DatabaseFrame extends JFrame{
     }
 
     private void initLowerButtons() {
+        clearArea = new JButton("Clear");
+        clearArea.addActionListener(e-> outpArea.setText(""));
+
         loadMenMeas = new JButton("Menisc");
         loadMenMeas.addActionListener(e -> System.out.println(e.getActionCommand()));
 
@@ -113,16 +117,17 @@ public class DatabaseFrame extends JFrame{
     private void initLowerPanel() {
         lowerPanel = new JPanel();
         lowerPanel.setBorder(BorderFactory.createTitledBorder("Measures view:"));
+        lowerPanel.add(clearArea);
         lowerPanel.add(loadMenMeas);
         lowerPanel.add(loadDevMeas);
         lowerPanel.add(loadAllMeas);
         add(lowerPanel,BorderLayout.SOUTH);
     }
 
-    private void addString(String name, int code){
+    private void addString(String name, String adress, int code){
         switch (code){
             case ADD_CUSTOMER:
-                databaseIntermediator.addCustomer(name);
+                databaseIntermediator.addCustomer(name, adress);
                 customerCB.addItem(name);
                 break;
             case ADD_PRODUCT:
@@ -132,9 +137,19 @@ public class DatabaseFrame extends JFrame{
         }
     }
 
+    private void updateCustomer(String customerName){
+        DefaultComboBoxModel model = new DefaultComboBoxModel( databaseIntermediator.getProdusts(customerName) );
+        productCB.setModel( model );
+        databaseIntermediator.setCurrentProduct(productCB.getItemAt(0));
+    }
+
+    public JTextArea getOutpArea() {
+        return outpArea;
+    }
+
     class AddingFrame extends JFrame{
         JButton ok;
-        JTextField newName;
+        JTextField newName, newAdress;
         int type;
         String editParamName = "";
         public AddingFrame(int type) throws HeadlessException {
@@ -149,6 +164,9 @@ public class DatabaseFrame extends JFrame{
             setTitle(editParamName + " adding.");
             this.type = type;
             newName = new JTextField(20);
+            newAdress = new JTextField(20);
+            if(type == ADD_PRODUCT)
+                newAdress.setEnabled(false);
             ok = new JButton("Done");
             ok.addActionListener(e -> {
                 if(newName.getText().equals("") || newName.getText().length()<4){
@@ -165,18 +183,20 @@ public class DatabaseFrame extends JFrame{
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    addString(newName.getText(),type);
+                    addString(newName.getText(),newAdress.getText(),type);
                     dispose();
                 }
             });
-            setLayout(new FlowLayout());
+            setLayout(new FlowLayout(FlowLayout.RIGHT,0,2));
             add(new JLabel(editParamName + " name:"));
             add(newName);
+            add(new JLabel(editParamName + " addr:"));
+            add(newAdress);
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BorderLayout());
             buttonPanel.add(ok,BorderLayout.EAST);
             add(buttonPanel);
-            setSize(370, 90);
+            setSize(370, 100);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             setVisible(true);
         }
