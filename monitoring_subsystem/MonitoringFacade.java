@@ -1,15 +1,35 @@
 package monitoring_subsystem;
 
-import core.interfaces.GUIPanelProvidable;
+import analysis_subsystem.interfaces.ConnectionStatusEditable;
+import monitoring_subsystem.auxillary.DatabaseIntermediator;
+import monitoring_subsystem.gui.ConnectionSettingsFrame;
+import monitoring_subsystem.gui.DatabaseFrame;
+import monitoring_subsystem.interfaces.MonitoringSubsystemCommonInterface;
 
 import javax.swing.*;
 
-/**
- * Created by ierus on 5/18/15.
- */
-public class MonitoringFacade implements GUIPanelProvidable {
+public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
+    ConnectionSettingsFrame connFrame;
+    DatabaseFrame dbFrame;
+    DatabaseIntermediator intermediator;
+
+
     @Override
-    public JPanel getGUIPanel() {
-        return null;
+    public void showConnectionFrame(ConnectionStatusEditable statusEditable) {
+        SwingUtilities.invokeLater(() -> {
+            if(connFrame!= null)
+                connFrame.dispose();
+            connFrame = new ConnectionSettingsFrame(intermediator,statusEditable);
+        });
     }
+
+    @Override
+    public void showDBFrame() {
+        SwingUtilities.invokeLater(() -> {
+            if(dbFrame!= null)
+                dbFrame.dispose();
+            dbFrame = new DatabaseFrame();
+        });
+    }
+
 }

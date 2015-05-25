@@ -6,10 +6,8 @@ import analysis_subsystem.auxillary.areas_analysis.AnalysisConclusion;
 import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.auxillary.capture_regions_management.AreaTypes;
 import analysis_subsystem.exceptions.AnalysisException;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import java.awt.*;
-import java.awt.dnd.InvalidDnDOperationException;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +25,9 @@ public abstract class FrameAnalyser {
             this.areaDescriptions.add(area);
             this.itermediateValues.put(area.getAreaType(),new long[area.getLenght()]);
         }
+        iterCount = 0;
     }
+
 
     public void addImage(BufferedImage image) throws AnalysisException{
         iterCount++;
@@ -50,6 +50,7 @@ public abstract class FrameAnalyser {
         long[] dev = (long[]) this.itermediateValues.get(AreaTypes.Deviation);
         return new AnalysisConclusion(calcMeniscusHeight(),calcCrystalXDeviation(),
                 getTotalBrightness(men),getTotalBrightness(dev));
+
     }
 
 

@@ -4,6 +4,7 @@ import analysis_subsystem.interfaces.AnalysisPerformable;
 import analysis_subsystem.interfaces.CaptureRegionsViewable;
 import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import capture_subsystem.interfaces.CapturePerformable;
+import monitoring_subsystem.interfaces.ConnectionFramesProvidable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,14 +21,17 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 
 	JMenuItem cStart, cStop, cSettings;
 	JMenuItem aPerfInst, aPerfIter, aPerf, aStop, aSetDefault;
+	JMenuItem mConfConn, mShowMonForm;
 
 	CapturePerformable capturePerformable;
 	AnalysisPerformable analysisPerformable;
+	ConnectionFramesProvidable monitoringPerformable;
 
 	JLabel lblConnectionStatus, lblRegionInteractive;
 
 	public CoreGUI(JPanel capturePanel, JPanel analysisPanel,
-				   CapturePerformable capturePerformable, AnalysisPerformable analysisPerformable) throws HeadlessException {
+				   CapturePerformable capturePerformable,
+				   AnalysisPerformable analysisPerformable, ConnectionFramesProvidable monitoringPerformable) throws HeadlessException {
 		super("Crystal analysis");
 		this.setSize(1030, 600);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -35,6 +39,7 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 
 		this.capturePerformable = capturePerformable;
 		this.analysisPerformable = analysisPerformable;
+		this.monitoringPerformable = monitoringPerformable;
 
 		initMenu();
 		this.capturePanel = capturePanel;
@@ -133,7 +138,14 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 
 
 	private void monitoringMenuInit() {
+		mConfConn = new JMenuItem("Configurate connection");
+		mConfConn.addActionListener(e -> monitoringPerformable.showConnectionFrame(this));
 
+		mShowMonForm = new JMenuItem("Show monitoring frame");
+		mShowMonForm.addActionListener(e -> monitoringPerformable.showDBFrame());
+
+		monitoring.add(mConfConn);
+		monitoring.add(mShowMonForm);
 	}
 
 	private void infoMenuInit(){

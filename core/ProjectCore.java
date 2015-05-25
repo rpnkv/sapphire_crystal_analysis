@@ -5,6 +5,7 @@ import capture_subsystem.CaptureFacade;
 import core.auxillary.ShapeDrawers.JavaAPIShapeDrawer;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
 import core.gui.CoreGUI;
+import monitoring_subsystem.MonitoringFacade;
 
 public class ProjectCore{
     CoreGUI gui;
@@ -14,9 +15,10 @@ public class ProjectCore{
         ShapeDrawer drawer = new JavaAPIShapeDrawer();
         CaptureFacade captureFacade = new CaptureFacade(drawer);
         AnalysisFacade analysisFacade = new AnalysisFacade(drawer, captureFacade);
-        mediator = new SubsystemsMediator(captureFacade, analysisFacade);
+        MonitoringFacade monitoringFacade = new MonitoringFacade();
+        mediator = new SubsystemsMediator(captureFacade, analysisFacade, monitoringFacade);
 
-        gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade);
+        gui = new CoreGUI(captureFacade.getGUIPanel(),analysisFacade.getGUIPanel(),captureFacade,analysisFacade, monitoringFacade);
         analysisFacade.setActionListenable(mediator,gui);
     }
 

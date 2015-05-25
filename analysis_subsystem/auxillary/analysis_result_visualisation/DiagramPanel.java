@@ -202,7 +202,7 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 	public void drawGraph(GraphInfo graphInfo) {
 		diagramShape = deepCopy(defaultDiagramShape);
 		int[] brightnessValues = graphInfo.getBrightnessValues();
-		//redrawDiagramShape();
+		redrawDiagramShape();
 		drawGraphLine(brightnessValues, graphInfo.getColor());
 		viewGraphCoord(graphInfo.getBeginPixel(), graphInfo.getColor(),brightnessValues.length);
 		setImage(diagramShape);

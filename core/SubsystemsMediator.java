@@ -2,25 +2,32 @@ package core;
 
 import analysis_subsystem.interfaces.AnalysisPerformable;
 import analysis_subsystem.interfaces.AnalysisSubsystemCommonInterface;
+import analysis_subsystem.interfaces.ConnectionStatusEditable;
 import capture_subsystem.interfaces.CapturePerformable;
 import capture_subsystem.interfaces.CaptureSubsystemCommonInterface;
 import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.ImagePanelActionListenable;
+import monitoring_subsystem.MonitoringFacade;
+import monitoring_subsystem.interfaces.ConnectionFramesProvidable;
+import monitoring_subsystem.interfaces.MonitoringSubsystemCommonInterface;
 
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
-public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisPerformable, CapturePerformable, FrameProvidable {
+public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisPerformable,
+        CapturePerformable, FrameProvidable, ConnectionFramesProvidable {
 
     CaptureSubsystemCommonInterface captureFacade;
     AnalysisSubsystemCommonInterface analysisFacade;
+    MonitoringSubsystemCommonInterface monitoringFacade;
 
     public SubsystemsMediator(CaptureSubsystemCommonInterface captureFacade,
-                              AnalysisSubsystemCommonInterface analysisFacade) {
+                              AnalysisSubsystemCommonInterface analysisFacade, MonitoringFacade monitoringFacade) {
         this.captureFacade = captureFacade;
         this.analysisFacade = analysisFacade;
+        this.monitoringFacade = monitoringFacade;
         analysisFacade.setDecorable(captureFacade);
     }
 
@@ -87,5 +94,16 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
     @Override
     public BufferedImage getFrame() {
         return captureFacade.getFrame();
+    }
+
+
+    @Override
+    public void showConnectionFrame(ConnectionStatusEditable statusEditable) {
+        monitoringFacade.showConnectionFrame(statusEditable);
+    }
+
+    @Override
+    public void showDBFrame() {
+        monitoringFacade.showDBFrame();
     }
 }
