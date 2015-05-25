@@ -74,3 +74,4 @@ public class ConnectionSettingsFrame extends JFrame{
         mainPanel.add(buttonsPanel);
     }
 }
+

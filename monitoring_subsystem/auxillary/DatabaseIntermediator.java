@@ -65,4 +65,10 @@ public class DatabaseIntermediator {
     }
 
 
+    public void addCustomer(String s) {
+        System.out.println("customer " + s + " added.");
+    }
+    public void addProduct(String s){
+        System.out.println("product" + s +"added.");
+    }
 }

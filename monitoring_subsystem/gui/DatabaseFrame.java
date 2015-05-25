@@ -13,6 +13,7 @@ public class DatabaseFrame extends JFrame{
     JComboBox<String> customerCB, productCB;
     JButton custAddBtn, custDelBtn, custUpdBtn, prodAddBtn, prodDelBtn, prodUpdBtn, loadMenMeas, loadDevMeas, loadAllMeas;
     JTextArea outpArea;
+    final int ADD_CUSTOMER = 1, ADD_PRODUCT =2;
 
     public DatabaseFrame(DatabaseIntermediator databaseIntermediator) throws HeadlessException {
         super("Database log");
@@ -38,12 +39,13 @@ public class DatabaseFrame extends JFrame{
         customerSubpanel.add(new JLabel("Customer:"));
         customerCB = new JComboBox<>(databaseIntermediator.getCustomers());
         customerCB.setSelectedIndex(0);
+        customerCB.addActionListener(e-> databaseIntermediator.setCurrentCustomer((String) customerCB.getSelectedItem()));
         customerSubpanel.add(customerCB);
         customerPanel.add(customerSubpanel);
 
         JPanel customersBtnSubpanel = new JPanel();
         custAddBtn = new JButton("Add");
-        custAddBtn.addActionListener(e -> System.out.println(e.getSource()));
+        custAddBtn.addActionListener(e -> new AddingFrame(ADD_CUSTOMER));
         customersBtnSubpanel.add(custAddBtn);
         custDelBtn = new JButton("Delete");
         custDelBtn.addActionListener(e->System.out.println(e.getSource()));
@@ -68,7 +70,7 @@ public class DatabaseFrame extends JFrame{
 
         JPanel productsBtnSubpanel = new JPanel();
         prodAddBtn = new JButton("Add");
-        prodAddBtn.addActionListener(e ->System.out.println(e.getSource()));
+        prodAddBtn.addActionListener(e -> new AddingFrame(ADD_PRODUCT));
         productsBtnSubpanel.add(prodAddBtn);
         prodDelBtn = new JButton("Delete");
         prodDelBtn.addActionListener(e->System.out.println(e.getSource()));
@@ -116,4 +118,68 @@ public class DatabaseFrame extends JFrame{
         lowerPanel.add(loadAllMeas);
         add(lowerPanel,BorderLayout.SOUTH);
     }
+
+    private void addString(String name, int code){
+        switch (code){
+            case ADD_CUSTOMER:
+                databaseIntermediator.addCustomer(name);
+                customerCB.addItem(name);
+                break;
+            case ADD_PRODUCT:
+                databaseIntermediator.addProduct(name);
+                productCB.addItem(name);
+                break;
+        }
+    }
+
+    class AddingFrame extends JFrame{
+        JButton ok;
+        JTextField newName;
+        int type;
+        String editParamName = "";
+        public AddingFrame(int type) throws HeadlessException {
+            switch (type){
+                case ADD_CUSTOMER:
+                    editParamName = "Customer";
+                    break;
+                case ADD_PRODUCT:
+                    editParamName = "Product";
+                    break;
+            }
+            setTitle(editParamName + " adding.");
+            this.type = type;
+            newName = new JTextField(20);
+            ok = new JButton("Done");
+            ok.addActionListener(e -> {
+                if(newName.getText().equals("") || newName.getText().length()<4){
+                    JOptionPane.showMessageDialog(null,
+                            editParamName + "must have at least 4 characters.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }else
+                if(newName.getText().length()>20){
+                    JOptionPane.showMessageDialog(null,
+                            editParamName + "must 20 characters.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }else{
+                    addString(newName.getText(),type);
+                    dispose();
+                }
+            });
+            setLayout(new FlowLayout());
+            add(new JLabel(editParamName + " name:"));
+            add(newName);
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BorderLayout());
+            buttonPanel.add(ok,BorderLayout.EAST);
+            add(buttonPanel);
+            setSize(370, 90);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setVisible(true);
+        }
+    }
 }
+
