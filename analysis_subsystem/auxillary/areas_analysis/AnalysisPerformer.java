@@ -4,6 +4,7 @@ import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.exceptions.AnalysisException;
 import analysis_subsystem.interfaces.AnalysisResultProcessable;
+import analysis_subsystem.interfaces.AnalysisResultViewable;
 import analysis_subsystem.interfaces.CaptureCoordEditable;
 
 public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
@@ -17,15 +18,28 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
 
     boolean analysisIsPerforming;
     private AnalysisResultProcessable resultProcessor;
+    private AnalysisResultViewable resultViewer;
     private FrameAnalyser frameAnalyser;
 
+    int iterLength, frames;
+
     public AnalysisPerformer(AreaDescription meniscus, AreaDescription deviation,
-                              AreaDescription shaper, AnalysisResultProcessable performingProcessor, FrameAnalyser frameAnalyser) {
+                              AreaDescription shaper, AnalysisResultProcessable performingProcessor,
+                             FrameAnalyser frameAnalyser, AnalysisResultViewable resultViewer,
+                             int ... params) throws NullPointerException{
         this.tempMeniscus = meniscus;
         this.tempDeviation = deviation;
         this.tempShaper = shaper;
         this.resultProcessor = performingProcessor;
         this.frameAnalyser = frameAnalyser;
+        this.resultViewer = resultViewer;
+        if (params == null || params.length <2){
+            iterLength = 500;
+            frames = 1;
+        }else{
+            iterLength = params[0];
+            frames = params[1];
+        }
     }
 
     @Override
@@ -64,7 +78,7 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
             }
                 resultProcessor.processConclusion(frameAnalyser.getResults(0));
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1000/iterLength);
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }

@@ -6,6 +6,7 @@ import analysis_subsystem.auxillary.capture_regions_management.AreaTypes;
 import analysis_subsystem.exceptions.AnalysisException;
 
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 public class BasicFrameAnalyser extends FrameAnalyser{
 
@@ -29,12 +30,14 @@ public class BasicFrameAnalyser extends FrameAnalyser{
 
     @Override
     int calcMeniscusHeight() {
-        return 15;
+        Random rand = new Random();
+        return rand.nextInt((20 - 5) + 1) + 20;
     }
 
     @Override
     int calcCrystalXDeviation() {
-        return 2;
+        Random rand = new Random();
+        return rand.nextInt((7 + 7) + 1) -7;
     }
 
     @Override

@@ -58,7 +58,7 @@ public abstract class FrameAnalyser {
         int[] collection = new int[length];
 
         for(int i = start.y; i < length+start.y; i++)
-            collection[i-start.y] = new Color(image.getRGB(i,i)).getRed();
+            collection[i-start.y] = new Color(image.getRGB(start.x,i)).getRed();
         return collection;
     }
 

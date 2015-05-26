@@ -2,6 +2,8 @@ package analysis_subsystem.gui;
 
 import analysis_subsystem.auxillary.analysis_result_visualisation.DiagramPanel;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
+import monitoring_subsystem.auxillary.*;
+import monitoring_subsystem.auxillary.PopupMenu;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -25,7 +27,8 @@ public class FrameAnalysisPanel extends JPanel {
 		JPanel logPanel = new JPanel();
 		logPanel.setLayout(new BorderLayout());
 		iterationsLog = new JTextArea(5,41);
-		iterationsLog.setFocusable(false);
+		iterationsLog.setEditable(false);
+		iterationsLog.setComponentPopupMenu(new PopupMenu(iterationsLog));
 		scrollPane = new JScrollPane(iterationsLog);
 
 		iterationsLog.setLineWrap(true);

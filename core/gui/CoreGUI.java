@@ -121,7 +121,7 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 		aPerfIter.addActionListener(e -> analysisPerformable.performIterativeAnalysis());
 
 		aPerf = new JMenuItem("Perform analysis");
-		aPerf.addActionListener(e -> analysisPerformable.performAnalysis());
+		aPerf.addActionListener(e -> analysisPerformable.setAnalysisParams());
 
 		aStop = new JMenuItem("Stop analysis");
 		aStop.addActionListener(e -> analysisPerformable.stopAnalysis());

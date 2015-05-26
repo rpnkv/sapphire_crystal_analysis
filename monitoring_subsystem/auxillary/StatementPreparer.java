@@ -20,14 +20,14 @@ class StatementPreparer {
             GET_PRODUCTS = "SELECT kind FROM dist_sys_cp.product\n" +
             "where id_customer = ?;",
             DELETE_PRODUCT = "delete from dist_sys_cp.product where product.kind = ?;",
-            SAVE_MEASURE = "INSERT INTO dist_sys_cp.measure (id_product,time) VALUES " +
-                    "(?,?)",
+            SAVE_MEASURE = "INSERT INTO dist_sys_cp.measure (id_product,time) VALUES \n" +
+                    "((select product.id_product from dist_sys_cp.product where kind = ?),?);",
             SAVE_MENISCUS_MEASURE = "INSERT INTO dist_sys_cp.menisk(id_measure,height,x_menisk,y_top_menisk,y_bot_menisk)\n" +
                     "VALUES ((SELECT max(measure.id_measure) FROM dist_sys_cp.measure\n" +
                     "WHERE measure.id_product = (SELECT product.id_product FROM dist_sys_cp.product\n" +
                     "WHERE product.kind = ?)),?,?,?,?);",
             SAVE_DEVIATION_MEASURE = "INSERT INTO dist_sys_cp.deviation" +
-                    "(id_measure,deviation,y_cryst,x_cryst_left,x_cryst_right,y_shaper,y_shaper_left,y_shaper_right)\n" +
+                    "(id_measure,deviation,y_cryst,x_cryst_left,x_cryst_right,y_shaper,x_shaper_left,x_shaper_right)\n" +
                     "VALUES ((SELECT max(measure.id_measure) FROM dist_sys_cp.measure\n" +
                     "WHERE measure.id_product = (SELECT product.id_product FROM dist_sys_cp.product\n" +
                     "WHERE product.kind = ?)),?,?,?,?,?,?,?);",
@@ -35,24 +35,24 @@ class StatementPreparer {
                     "from dist_sys_cp.measure, deviation\n" +
                     "where measure.id_product = (select id_product from dist_sys_cp.product \n" +
                     "\t\t\t\t\t\t\twhere product.kind = ?)\n" +
-                    "group by measure.id_measure;",
+                    "group by deviation.deviation;",
             SELECT_DEVIATION_MEASURE_TOTAL = "SELECT DISTINCT deviation.id_measure, time, deviation, y_cryst, x_cryst_left," +
                     " x_cryst_right, y_shaper, x_shaper_left, x_shaper_right \n" +
                     "FROM dist_sys_cp.measure, deviation\n" +
                     "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
                     "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
-                    "GROUP BY measure.id_measure;",
+                    "GROUP BY deviation.deviation;",
             SELECT_MENISCUS_MEASURE_SIMPLE = "SELECT DISTINCT menisk.id_measure, time, height\n" +
                     "FROM dist_sys_cp.measure, menisk\n" +
                     "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
                     "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
-                    "GROUP BY measure.id_measure;",
+                    "GROUP BY meniscus.meniscus;",
             SELECT_MENISCUS_MEASURE_TOTAL = "SELECT DISTINCT menisk.id_measure, time, height, x_menisk, y_top_menisk," +
                     "y_bot_menisk \n" +
                     "FROM dist_sys_cp.measure, menisk\n" +
                     "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
                     "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
-                    "GROUP BY measure.id_measure;",
+                    "GROUP BY meniscus.meniscus;",
             SELECT_ALL_MEASURES_SIMPLE = "SELECT DISTINCT measure.id_measure, time, height, deviation \n" +
                     "FROM dist_sys_cp.measure, menisk, deviation\n" +
                     "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +

@@ -63,8 +63,13 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
     }
 
     @Override
-    public void performAnalysis() {
-        analysisFacade.performAnalysis();
+    public void setAnalysisParams() {
+      analysisFacade.setAnalysisParams();
+    }
+
+    @Override
+    public void performAnalysis(int iterLength, int frameNumber) {
+        analysisFacade.performAnalysis(iterLength,frameNumber);
     }
 
     @Override
@@ -117,4 +122,5 @@ public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisP
     public boolean isReadyToAnalysisLogging() {
         return monitoringFacade.isReadyToAnalysisLogging();
     }
+
 }

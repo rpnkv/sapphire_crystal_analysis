@@ -1,20 +1,20 @@
 package analysis_subsystem.auxillary.areas_analysis;
 
 public class AnalysisConclusion extends BasicAnalysisConclusion{
-    private double meniscusWidth;
-    private double crystalXDeviation;
+    private int meniscusWidth;
+    private int crystalXDeviation;
 
-    public AnalysisConclusion(double meniscusHeight, double crystalXDeviation, int[] meniscusBr, int[] deviationBr){
+    public AnalysisConclusion(int meniscusHeight, int crystalXDeviation, int[] meniscusBr, int[] deviationBr){
         super(meniscusBr,deviationBr);
         this.meniscusWidth = meniscusHeight;
         this.crystalXDeviation = crystalXDeviation;
     }
 
-    public double getMeniscusWidth() {
+    public int getMeniscusWidth() {
         return meniscusWidth;
     }
 
-    public double getCrystalXDeviation() {
+    public int getCrystalXDeviation() {
         return crystalXDeviation;
     }
 

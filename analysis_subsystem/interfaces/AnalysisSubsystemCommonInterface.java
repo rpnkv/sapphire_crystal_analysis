@@ -4,7 +4,8 @@ import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.interfaces.GUIPanelProvidable;
 
 public interface AnalysisSubsystemCommonInterface extends
-        GUIPanelProvidable, AnalysisPerformable, ImagePanelListenersProvideable, ShapeDrawerProvidable {
+        GUIPanelProvidable, AnalysisPerformable, ImagePanelListenersProvideable,
+        ShapeDrawerProvidable, AnalysisResultViewable {
 
         void setDecorable(VideoFlowDecorable decorable);
 
