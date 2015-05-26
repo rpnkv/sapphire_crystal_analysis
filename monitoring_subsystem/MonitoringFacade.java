@@ -31,6 +31,11 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
     @Override
     public void showDBFrame() {
         SwingUtilities.invokeLater(() -> {
+            if(!intermediator.isConnected()){
+                JOptionPane.showMessageDialog(null,"You cannot use DB while connection is not established.", "Error!",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if(dbFrame!= null)
                 dbFrame.dispose();
             dbFrame = new DatabaseFrame(intermediator);
@@ -45,6 +50,11 @@ public class MonitoringFacade implements MonitoringSubsystemCommonInterface {
             System.out.println("View component isn't initialized. Your message:\n" + text);
         }
 
+    }
+
+    @Override
+    public void clearArea() {
+        dbFrame.getOutpArea().setText("");
     }
 
     @Override

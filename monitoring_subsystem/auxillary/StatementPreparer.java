@@ -30,7 +30,35 @@ class StatementPreparer {
                     "(id_measure,deviation,y_cryst,x_cryst_left,x_cryst_right,y_shaper,y_shaper_left,y_shaper_right)\n" +
                     "VALUES ((SELECT max(measure.id_measure) FROM dist_sys_cp.measure\n" +
                     "WHERE measure.id_product = (SELECT product.id_product FROM dist_sys_cp.product\n" +
-                    "WHERE product.kind = ?)),?,?,?,?,?,?,?);";
+                    "WHERE product.kind = ?)),?,?,?,?,?,?,?);",
+            SELECT_DEVIATION_MEASURE_SIMPLE = "select distinct deviation.id_measure, time, deviation \n" +
+                    "from dist_sys_cp.measure, deviation\n" +
+                    "where measure.id_product = (select id_product from dist_sys_cp.product \n" +
+                    "\t\t\t\t\t\t\twhere product.kind = ?)\n" +
+                    "group by measure.id_measure;",
+            SELECT_DEVIATION_MEASURE_TOTAL = "SELECT DISTINCT deviation.id_measure, time, deviation, y_cryst, x_cryst_left," +
+                    " x_cryst_right, y_shaper, x_shaper_left, x_shaper_right \n" +
+                    "FROM dist_sys_cp.measure, deviation\n" +
+                    "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
+                    "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
+                    "GROUP BY measure.id_measure;",
+            SELECT_MENISCUS_MEASURE_SIMPLE = "SELECT DISTINCT menisk.id_measure, time, height\n" +
+                    "FROM dist_sys_cp.measure, menisk\n" +
+                    "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
+                    "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
+                    "GROUP BY measure.id_measure;",
+            SELECT_MENISCUS_MEASURE_TOTAL = "SELECT DISTINCT menisk.id_measure, time, height, x_menisk, y_top_menisk," +
+                    "y_bot_menisk \n" +
+                    "FROM dist_sys_cp.measure, menisk\n" +
+                    "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
+                    "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
+                    "GROUP BY measure.id_measure;",
+            SELECT_ALL_MEASURES_SIMPLE = "SELECT DISTINCT measure.id_measure, time, height, deviation \n" +
+                    "FROM dist_sys_cp.measure, menisk, deviation\n" +
+                    "WHERE measure.id_product = (SELECT id_product FROM dist_sys_cp.product \n" +
+                    "\t\t\t\t\t\t\tWHERE product.kind = ?)\n" +
+                    "GROUP BY measure.id_measure;",
+            DELETE_MEASURES = "";
 
 
     public void addCustomer(@NotNull String name, String adress, Connection connection) throws SQLException {
@@ -122,5 +150,41 @@ class StatementPreparer {
         deviationStatement.setInt(7,measure.getxShaperLeft());
         deviationStatement.setInt(8,measure.getxShaperRignt());
         deviationStatement.execute();
+    }
+
+    public ResultSet getMeniscusSimple(Connection connection, String product) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_MENISCUS_MEASURE_SIMPLE);
+        statement.setString(1, product);
+        return statement.executeQuery();
+    }
+
+    public ResultSet getMeniscusTotal(Connection connection, String product) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_MENISCUS_MEASURE_TOTAL);
+        statement.setString(1, product);
+        return statement.executeQuery();
+    }
+
+    public ResultSet getDeviationSimple(Connection connection, String product) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_DEVIATION_MEASURE_SIMPLE);
+        statement.setString(1, product);
+        return statement.executeQuery();
+    }
+
+    public ResultSet getDeviationTotal(Connection connection, String product) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_DEVIATION_MEASURE_TOTAL);
+        statement.setString(1, product);
+        return statement.executeQuery();
+    }
+
+    public ResultSet getAllSimple(Connection connection, String product) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_ALL_MEASURES_SIMPLE);
+        statement.setString(1, product);
+        return statement.executeQuery();
+    }
+
+    public boolean deleteAllMeasures(Connection connection, String product) throws SQLException{
+        PreparedStatement statement = connection.prepareStatement(DELETE_MEASURES);
+        statement.setString(1,product);
+        return statement.execute();
     }
 }

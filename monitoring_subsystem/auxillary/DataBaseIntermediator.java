@@ -181,4 +181,116 @@ public class DataBaseIntermediator implements MeasureSaveable{
         }
     }
 
+    public void showMeniscusMeasures(Boolean detailed) {
+        if(detailed)
+            showMeniscusMeasuresTotal();
+        else
+            showMeniscusMeasuresSimple();
+    }
+
+    private void showMeniscusMeasuresSimple(){
+        try {
+            ResultSet result = statementPreparer.getMeniscusSimple(connection,currentProduct);
+            resultsViewer.clearArea();
+            resultsViewer.append(padLeft("ID",3) +padLeft("time",15) + padLeft("height",15) + "\n");
+            while (result.next())
+                resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +
+                padLeft(String.valueOf(result.getTime(2)),15) + padLeft(String.valueOf(result.getInt(3)),15) + "\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Cannot view meniscus simple measures.\n" + e.getMessage());
+        }
+    }
+
+    private void showMeniscusMeasuresTotal(){
+        try {
+            ResultSet result = statementPreparer.getMeniscusTotal(connection, currentProduct);
+            resultsViewer.clearArea();
+            resultsViewer.append(padLeft("ID",3) +padLeft("time",15) + padLeft("height",12)  + padLeft("x_menisk",11)
+                    + padLeft("y_top",11)  + padLeft("y_bot",11)+ "\n");
+            while (result.next())
+                resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +//id
+                        padLeft(String.valueOf(result.getTime(2)),15) +
+                        padLeft(String.valueOf(result.getInt(3)),10) +
+                        padLeft(String.valueOf(result.getInt(4)),14) +
+                        padLeft(String.valueOf(result.getInt(5)),12) +
+                        padLeft(String.valueOf(result.getInt(6)),12) + "\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Cannot view meniscus total measures.\n" + e.getMessage());
+        }
+    }
+
+    public void showDeviationMeasures(Boolean detailed) {
+        if(detailed)
+            showDeviationMeasuresTotal();
+        else
+            showDeviationMeasuresSimple();
+    }
+
+    private void showDeviationMeasuresSimple(){
+        try {
+            ResultSet result = statementPreparer.getDeviationSimple(connection, currentProduct);
+            resultsViewer.clearArea();
+            resultsViewer.append(padLeft("ID",3) +padLeft("time",15) + padLeft("deviation",15) + "\n");
+            while (result.next())
+                resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +
+                        padLeft(String.valueOf(result.getTime(2)),15) + padLeft(String.valueOf(result.getInt(3)),15) + "\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Cannot view deviation simple measures.\n" + e.getMessage());
+        }
+    }
+
+    private void showDeviationMeasuresTotal(){
+        try {
+            ResultSet result = statementPreparer.getDeviationTotal(connection, currentProduct);
+            resultsViewer.clearArea();
+            resultsViewer.append(padLeft("ID",3) +padLeft("time",15) + padLeft("deviation",12)  + padLeft("y_cryst",11)
+                    + padLeft("x_cr_l",11) + padLeft("x_cr_r",11) + padLeft("y_shp",11) + padLeft("y_shp_l",11)
+                    + padLeft("y_shp_r",11) + "\n");
+            while (result.next())
+                resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +//id
+                        padLeft(String.valueOf(result.getTime(2)),15) +
+                        padLeft(String.valueOf(result.getInt(3)),10) +
+                        padLeft(String.valueOf(result.getInt(4)),10) +
+                        padLeft(String.valueOf(result.getInt(5)),15) +
+                        padLeft(String.valueOf(result.getInt(6)),12) +
+                        padLeft(String.valueOf(result.getInt(7)),12) +
+                        padLeft(String.valueOf(result.getInt(8)),12)+
+                        padLeft(String.valueOf(result.getInt(9)),12) + "\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Cannot view deviation total measures.\n" + e.getMessage());
+        }
+    }
+
+    public void showAllMeasures() {
+        try {
+            ResultSet result = statementPreparer.getAllSimple(connection, currentProduct);
+            resultsViewer.clearArea();
+            resultsViewer.append(padLeft("ID",3) +padLeft("time",15) +
+                    padLeft("height",15) + padLeft("deviation",15) + "\n");
+            while (result.next())
+                resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +
+                        padLeft(String.valueOf(result.getTime(2)),15) +
+                        padLeft(String.valueOf(result.getInt(3)),15)+
+                        padLeft(String.valueOf(result.getInt(4)),15) + "\n");
+        } catch (SQLException e) {
+            resultsViewer.append("Cannot view all simple measures.\n" + e.getMessage());
+        }
+    }
+
+    public void deleteMeasures(Boolean detailed) {
+        try{
+            statementPreparer.deleteAllMeasures(connection,currentProduct);
+        } catch (SQLException e) {
+            System.out.println("I don't wanna mess with measures.\n" + e.getMessage());
+        }
+    }
+
+    private String padRight(String s, int n) {
+        return String.format("%1$-" + n + "s", s);
+    }
+
+    private static String padLeft(String s, int n) {
+        return String.format("%1$" + n + "s", s);
+    }
+
 }

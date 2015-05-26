@@ -1,7 +1,8 @@
 package monitoring_subsystem.gui;
 
 
-import monitoring_subsystem.auxillary.DataBaseIntermediator;
+import monitoring_subsystem.auxillary.*;
+import monitoring_subsystem.auxillary.PopupMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,8 @@ public class DatabaseFrame extends JFrame{
     JPanel customerPanel, productPanel, viewPanel, lowerPanel, upperPanel;
     JComboBox<String> customerCB, productCB;
     JButton custAddBtn, custDelBtn, custUpdBtn, prodAddBtn, prodDelBtn, prodUpdBtn,
-            loadMenMeas, loadDevMeas, loadAllMeas, clearArea, clearMeasures;
+            loadMenMeas, loadDevMeas, loadAllMeas, clearMeasures;
+    JCheckBox detailedMeasChkBx;
     JTextArea outpArea;
     final int ADD_CUSTOMER = 1, ADD_PRODUCT =2;
 
@@ -165,8 +167,9 @@ public class DatabaseFrame extends JFrame{
     private void initViewPanel() {
         viewPanel = new JPanel();
         viewPanel.setBorder(BorderFactory.createTitledBorder("Output:"));
-        outpArea = new JTextArea(16,46);
+        outpArea = new JTextArea(15,46);
         outpArea.setEditable(false);
+        outpArea.setComponentPopupMenu(new PopupMenu(outpArea));
         JScrollPane scroll = new JScrollPane(outpArea);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         viewPanel.add(scroll);
@@ -174,31 +177,30 @@ public class DatabaseFrame extends JFrame{
     }
 
     private void initLowerButtons() {
-        clearArea = new JButton("Clear");
-        clearArea.addActionListener(e-> outpArea.setText(""));
-
         loadMenMeas = new JButton("Menisc");
-        loadMenMeas.addActionListener(e -> System.out.println(e.getActionCommand()));
+        loadMenMeas.addActionListener(e -> databaseIntermediator.showMeniscusMeasures(detailedMeasChkBx.isSelected()));
 
         loadDevMeas = new JButton("Deviation");
-        loadDevMeas.addActionListener(e-> System.out.println(e.getActionCommand()));
+        loadDevMeas.addActionListener(e-> databaseIntermediator.showDeviationMeasures(detailedMeasChkBx.isSelected()));
 
         loadAllMeas = new JButton("All measures");
-        loadAllMeas.addActionListener(e-> System.out.println(e.getActionCommand()));
+        loadAllMeas.addActionListener(e-> databaseIntermediator.showAllMeasures());
 
         clearMeasures = new JButton("Clear all");
-        clearMeasures.addActionListener(e -> System.out.println("This button will clear all measures soon :)"));
+        clearMeasures.addActionListener(e -> databaseIntermediator.deleteMeasures(detailedMeasChkBx.isSelected()));
+
+        detailedMeasChkBx = new JCheckBox("Detailed inf");
     }
 
     private void initLowerPanel() {
         lowerPanel = new JPanel();
         lowerPanel.setBorder(BorderFactory.createTitledBorder("Measures view:"));
-        lowerPanel.add(clearArea);
         lowerPanel.add(loadMenMeas);
         lowerPanel.add(loadDevMeas);
         lowerPanel.add(loadAllMeas);
+        lowerPanel.add(detailedMeasChkBx);
         lowerPanel.add(clearMeasures);
-        add(lowerPanel,BorderLayout.SOUTH);
+        add(lowerPanel, BorderLayout.SOUTH);
     }
     //endregion
 
