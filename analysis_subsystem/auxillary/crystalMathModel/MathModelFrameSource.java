@@ -8,12 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sin;
+
 public class MathModelFrameSource extends FrameSource implements FrameProvidable, ICustomizableGraphicMathModel {
 
 	String alias = "Math model";
 	CrystalMathModel mathModel;
 
-	private short crBorderBr, crCoreBr, menBr, shprBr;
+	private short crBorderBr, crCoreBr, menBr, shprBr, bckGrndBr;
 
 	private int menUpBlur, menDwnBlur, crystDownBlur, crystBordBlur;
 
@@ -25,7 +28,7 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		crCoreBr = 110;
 		menBr = 200;
 		shprBr = 180;
-
+		bckGrndBr = 53;
 		menUpBlur = menDwnBlur = crystDownBlur = crystBordBlur = 50;
 	}
 
@@ -44,11 +47,47 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 				mathModel.getFrameHeight(),BufferedImage.TYPE_3BYTE_BGR);
 		int[] menUpperBorderBr =
 				new int[mathModel.getFrameWidth() - (mathModel.getFrameWidth() - mathModel.getCrystWidth())];
+		int[] menBottomBorderBr =
+				new int[mathModel.getFrameWidth() - (mathModel.getFrameWidth() - mathModel.getShapeWidth())];
 
+		builtBackground(frame);
 		builtCrystalBody(frame, menUpperBorderBr);
-		builtMeniscus(frame, menUpperBorderBr);
-		builtShaper(frame);
+		builtMeniscus(frame, menUpperBorderBr, menBottomBorderBr);
+		builtShaper(frame, menBottomBorderBr);
+		builtCrystalBorder(frame);
+		builtMeniscusEdge(frame, menBottomBorderBr);
 		return frame;
+	}
+
+	private void builtCrystalBorder(BufferedImage frame) {
+		int brdXRight = mathModel.frameWidth - mathModel.crystWidth;
+		int brdXLeft = (int) (brdXRight - 25*(100/(double)crystBordBlur));
+
+		for(int i = 0; i < mathModel.getCrystHeight() + (mathModel.getMenHeight()); i++)
+			drawHorizontalBlurLine(frame,brdXLeft,i,
+					getBrValuesBySin(brdXLeft,brdXRight,bckGrndBr,crBorderBr));
+	}
+
+	private void builtMeniscusEdge(BufferedImage frame, int[] menBottomBorderBr) {
+		int[] minYCoord = new int[mathModel.getShapeWidth() - mathModel.getCrystWidth()];
+		int edgeXLeft = mathModel.getFrameWidth() - mathModel.getShapeWidth();
+		int edgeXRight = mathModel.getFrameWidth() - mathModel.getCrystWidth();
+
+		for(int i = 0; i < minYCoord.length;i++)
+			minYCoord[i] = 420- (int) (pow((i), 2)  * 0.025);
+
+		for(int i = edgeXLeft; i < edgeXRight; i++){
+			drawVerticalBlurLine(frame, i, minYCoord[i - edgeXLeft],
+					getBrValuesBySin(minYCoord[i - edgeXLeft], 420, menBr, menBottomBorderBr[i - edgeXLeft]));
+		}
+
+
+	}
+
+	private void builtBackground(BufferedImage frame) {
+		Color backgroundColor = new Color(bckGrndBr,bckGrndBr,bckGrndBr);
+		for(int i = 0; i< mathModel.frameHeight ;i++)
+			drawHorizontalLine(frame,0,i,mathModel.getFrameWidth(),backgroundColor);
 	}
 
 	private void builtCrystalBody(BufferedImage frame, int[] menUpperBorderBr) {
@@ -66,8 +105,8 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 			menUpperBorderBr[i] = menBr - (menBr - coreBrValues[i])/2;
 
 		for(int i = crystXBeg; i<crystXEnd; i++)
-			drawMeniscusBlurLine(frame,i,mathModel.crystHeight-blurAreaHeight,
-					getBrValuesBySin(0,blurAreaHeight+1,coreBrValues[i- crystXBeg],menUpperBorderBr[i- crystXBeg]));
+			drawVerticalBlurLine(frame, i, mathModel.crystHeight - blurAreaHeight,
+					getBrValuesBySin(0, blurAreaHeight + 1, coreBrValues[i - crystXBeg], menUpperBorderBr[i - crystXBeg]));
 
 	}
 
@@ -92,7 +131,7 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 			frame.setRGB(x,y,color.getRGB());
 	}
 
-	private void builtMeniscus(BufferedImage frame, int[] menUpperBorderBr) {
+	private void builtMeniscus(BufferedImage frame, int[] menUpperBorderBr, int[] menBottomBorderBr) {
 		int menTopY = mathModel.getCrystHeight();
 		int menBlurTopY = menTopY+ (int) (mathModel.getMenHeight()/2*(double)(menUpBlur)/100);
 
@@ -106,11 +145,14 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		for(int i = menBlurTopY; i < menBlurBotY;i++)
 			drawHorizontalLine(frame,mathModel.frameWidth - mathModel.crystWidth,i,mathModel.getCrystWidth(),meniscusColor);
 
+		for(int i = 0; i < menBottomBorderBr.length; i++)
+			menBottomBorderBr[i] = menBr - ((menBr - shprBr)/2);
+
 		for (int i = menLeftX; i < menRightX; i++){
-			drawMeniscusBlurLine(frame,i,menTopY,
-					getBrValuesBySin(menTopY,menBlurTopY,menUpperBorderBr[i-menLeftX],menBr));
-			drawMeniscusBlurLine(frame,i,menBlurBotY, reversBrValues(
-					getBrValuesBySin(menBlurBotY,menBotY,shprBr,menBr)));
+			drawVerticalBlurLine(frame, i, menTopY,
+					getBrValuesBySin(menTopY, menBlurTopY, menUpperBorderBr[i - menLeftX], menBr));
+			drawVerticalBlurLine(frame, i, menBlurBotY, reversBrValues(
+					getBrValuesBySin(menBlurBotY, menBotY, menBottomBorderBr[i - menLeftX], menBr)));
 		}
 	}
 
@@ -121,7 +163,14 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		return reversedValues;
 	}
 
-	private void drawMeniscusBlurLine(BufferedImage frame, int x, int y, int[] bright){
+	private void drawHorizontalBlurLine(BufferedImage frame, int x, int y, int[] bright){
+		for(int i = 0; i < bright.length;i++){
+			Color color = new Color(bright[i],bright[i],bright[i]);
+			frame.setRGB(x+i,y,color.getRGB());
+		}
+	}
+
+	private void drawVerticalBlurLine(BufferedImage frame, int x, int y, int[] bright){
 		for(int i = 0; i < bright.length;i++){
 			Color color = new Color(bright[i],bright[i],bright[i]);
 			frame.setRGB(x,y+i,color.getRGB());
@@ -133,24 +182,22 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 			frame.setRGB(i,y,color.getRGB());
 	}
 
-	private void builtShaper(BufferedImage frame) {
-		Color color = new Color(shprBr,shprBr,shprBr);
+	private void builtShaper(BufferedImage frame, int[] menBottomBorderBr) {
+		int shpTopY = mathModel.getFrameHeight() - mathModel.getShapeHeight();
+		int shpBlurTopY = (int) (mathModel.getFrameHeight()- mathModel.getShapeHeight()
+				+ (mathModel.getMenHeight()/2*(double)(menDwnBlur)/100));
 
+		int shpXRight = mathModel.getFrameWidth();
+		int shpXLeft = shpXRight - mathModel.getShapeWidth();
 
-		int shapeYbegin = mathModel.getFrameHeight() - mathModel.getShapeHeight();
-		int shapeYend = mathModel.getFrameHeight();
+		for (int i = shpXLeft; i< shpXRight;i++)
+			drawVerticalBlurLine(frame, i, shpTopY,
+					getBrValuesBySin(shpTopY, shpBlurTopY,
+							menBottomBorderBr[i - shpXLeft], shprBr));
 
-		int shapeXbegin = mathModel.getFrameWidth() - mathModel.getShapeWidth();
-		int shapeXend = mathModel.getFrameWidth();
-
-		int i = 0, j = 0;
-		try{
-			for(i = shapeYbegin; i< shapeYend; i++)
-				for(j = shapeXbegin; j< shapeXend; j++)
-					frame.setRGB(j,i,color.getRGB());
-		}catch (RuntimeException e){
-			System.out.println( i + ", " + j);
-		}
+		Color shaperColor = new Color(shprBr,shprBr,shprBr);
+		for(int i = shpBlurTopY; i < mathModel.getFrameHeight();i++)
+			drawHorizontalLine(frame,mathModel.frameWidth - mathModel.shapeWidth,i,mathModel.getShapeWidth(),shaperColor);
 
 	}
 
@@ -171,12 +218,10 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		return brValues;
 	}
 
-
 	@Override
 	public String toString() {
 		return alias;
 	}
-
 
 	//region brightness values setters and getters
 	@Override
