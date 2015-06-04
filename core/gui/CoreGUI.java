@@ -98,7 +98,9 @@ public class CoreGUI extends JFrame implements ConnectionStatusEditable, Capture
 	}
 
 	private void mainMenuInit(){
-
+		JMenuItem exit = new JMenuItem("Exit");
+		main.add(exit);
+		exit.addActionListener(e -> System.exit(0));
 	}
 
 	private void captureMenuInit(){

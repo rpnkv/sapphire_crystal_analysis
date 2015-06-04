@@ -1,17 +1,18 @@
 package monitoring_subsystem.auxillary;
 
 import analysis_subsystem.interfaces.ConnectionStatusEditable;
-import monitoring_subsystem.interfaces.MeasureSaveable;
+import monitoring_subsystem.interfaces.MeasureSavable;
 import monitoring_subsystem.interfaces.RequestResultsViewable;
 
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-public class DataBaseIntermediator implements MeasureSaveable{
+public class DataBaseIntermediator implements MeasureSavable {
     private ConnectionStatusEditable statusEditable;
     private boolean connected;
     private Connection connection;
@@ -38,7 +39,7 @@ public class DataBaseIntermediator implements MeasureSaveable{
             connected = true;
 
         } catch (SQLException e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(null, e.getMessage(),"Connection failed", JOptionPane.ERROR_MESSAGE);
         } catch (ClassNotFoundException e) {
             System.out.println(e);
         }
@@ -209,7 +210,7 @@ public class DataBaseIntermediator implements MeasureSaveable{
                     + padLeft("y_top",11)  + padLeft("y_bot",11)+ "\n");
             while (result.next())
                 resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +//id
-                        padLeft(String.valueOf(result.getTime(2)),15) +
+                        padLeft(String.valueOf(result.getTime(2)),10) +
                         padLeft(String.valueOf(result.getInt(3)),10) +
                         padLeft(String.valueOf(result.getInt(4)),14) +
                         padLeft(String.valueOf(result.getInt(5)),12) +
@@ -248,7 +249,7 @@ public class DataBaseIntermediator implements MeasureSaveable{
                     + padLeft("y_shp_r",11) + "\n");
             while (result.next())
                 resultsViewer.append(padLeft(String.valueOf(result.getInt(1)),3) +//id
-                        padLeft(String.valueOf(result.getTime(2)),15) +
+                        padLeft(String.valueOf(result.getTime(2)),10) +
                         padLeft(String.valueOf(result.getInt(3)),10) +
                         padLeft(String.valueOf(result.getInt(4)),10) +
                         padLeft(String.valueOf(result.getInt(5)),15) +

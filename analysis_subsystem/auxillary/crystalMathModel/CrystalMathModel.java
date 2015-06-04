@@ -1,4 +1,4 @@
-package analysis_subsystem.crystalMathModel;
+package analysis_subsystem.auxillary.crystalMathModel;
 
 /**
  * Created by ierus on 3/12/15.

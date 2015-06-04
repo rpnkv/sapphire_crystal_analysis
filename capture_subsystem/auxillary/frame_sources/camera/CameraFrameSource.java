@@ -1,6 +1,6 @@
-package capture_subsystem.frame_sources.camera;
+package capture_subsystem.auxillary.frame_sources.camera;
 
-import capture_subsystem.frame_sources.FrameSource;
+import capture_subsystem.auxillary.frame_sources.FrameSource;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 

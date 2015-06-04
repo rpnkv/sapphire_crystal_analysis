@@ -18,7 +18,7 @@ import capture_subsystem.interfaces.ImagePanelActionListenable;
 import capture_subsystem.interfaces.VideoFlowDecorable;
 import core.auxillary.ShapeDrawers.ShapeDrawer;
 import monitoring_subsystem.auxillary.Measure;
-import monitoring_subsystem.interfaces.MeasureSaveable;
+import monitoring_subsystem.interfaces.MeasureSavable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
     Thread analysisThread;
     FrameAnalyser frameAnalyser;
     FrameProvidable frameProvider;
-    MeasureSaveable measureSaver;
+    MeasureSavable measureSaver;
     boolean saveResults = false;
 
     public AnalysisFacade(ShapeDrawer drawer, FrameProvidable frameProvider) {
@@ -47,7 +47,7 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
         this.frameProvider = frameProvider;
     }
 
-    public void setMeasureSaver(MeasureSaveable measureSaver) {
+    public void setMeasureSaver(MeasureSavable measureSaver) {
         this.measureSaver = measureSaver;
     }
 
@@ -128,11 +128,6 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface, Analysi
 
     public void setDecorable(VideoFlowDecorable decorable) {
         videoFlowDecorator = new VideoFlowDecorator(decorable, drawer);
-    }
-
-    @Override
-    public ShapeDrawer getShapeDrawer() {
-        return drawer;
     }
 
     @Override

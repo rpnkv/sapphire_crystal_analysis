@@ -9,7 +9,7 @@ import capture_subsystem.interfaces.ImagePanelActionListenable;
 import monitoring_subsystem.MonitoringFacade;
 import monitoring_subsystem.auxillary.Measure;
 import monitoring_subsystem.interfaces.ConnectionFramesProvidable;
-import monitoring_subsystem.interfaces.MeasureSaveable;
+import monitoring_subsystem.interfaces.MeasureSavable;
 import monitoring_subsystem.interfaces.MonitoringSubsystemCommonInterface;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
 public class SubsystemsMediator implements ImagePanelActionListenable, AnalysisPerformable,
-        CapturePerformable, FrameProvidable, ConnectionFramesProvidable, MeasureSaveable {
+        CapturePerformable, FrameProvidable, ConnectionFramesProvidable, MeasureSavable {
 
     CaptureSubsystemCommonInterface captureFacade;
     AnalysisSubsystemCommonInterface analysisFacade;

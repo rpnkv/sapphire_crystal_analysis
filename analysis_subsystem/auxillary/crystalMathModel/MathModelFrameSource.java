@@ -1,7 +1,7 @@
-package analysis_subsystem.crystalMathModel;
+package analysis_subsystem.auxillary.crystalMathModel;
 
 
-import capture_subsystem.frame_sources.FrameSource;
+import capture_subsystem.auxillary.frame_sources.FrameSource;
 import capture_subsystem.interfaces.FrameProvidable;
 
 import javax.swing.*;
@@ -10,15 +10,15 @@ import java.awt.image.BufferedImage;
 
 import static java.lang.Math.pow;
 
-/**
- * Created by ierus on 3/12/15.
- */
 public class MathModelFrameSource extends FrameSource implements FrameProvidable, ICustomizableGraphicMathModel {
 
 	String alias = "Math model";
 	CrystalMathModel mathModel;
 
 	private short crBorderBr, crCoreBr, menBr, shprBr;
+
+	private int menUpBlur, menDwnBlur, crystDownBlur, crystBordBlur;
+
 
 	public MathModelFrameSource(int frameWidth, int frameHeight){
 		super("Math model");
@@ -27,6 +27,8 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		crCoreBr = 110;
 		menBr = 200;
 		shprBr = 180;
+
+		menUpBlur = menDwnBlur = crystDownBlur = crystBordBlur = 50;
 	}
 
 	@Override
@@ -168,6 +170,38 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 	@Override
 	public short getShaperBorderBrightness() {
 		return shprBr;
+	}
+
+	public int getMenUpBlur() {
+		return menUpBlur;
+	}
+
+	public int getMenDwnBlur() {
+		return menDwnBlur;
+	}
+
+	public int getCrystBordBlur() {
+		return crystBordBlur;
+	}
+
+	public int getCrystDownBlur() {
+		return crystDownBlur;
+	}
+
+	public void setMenUpBlur(int menUpBlur) {
+		this.menUpBlur = menUpBlur;
+	}
+
+	public void setMenDwnBlur(int menDwnBlur) {
+		this.menDwnBlur = menDwnBlur;
+	}
+
+	public void setCrystDownBlur(int crystDownBlur) {
+		this.crystDownBlur = crystDownBlur;
+	}
+
+	public void setCrystBordBlur(int crystBordBlur) {
+		this.crystBordBlur = crystBordBlur;
 	}
 
 	//endregion

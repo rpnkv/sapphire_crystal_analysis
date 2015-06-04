@@ -5,7 +5,7 @@ import core.interfaces.GUIPanelProvidable;
 
 public interface AnalysisSubsystemCommonInterface extends
         GUIPanelProvidable, AnalysisPerformable, ImagePanelListenersProvideable,
-        ShapeDrawerProvidable, AnalysisResultViewable {
+        AnalysisResultViewable {
 
         void setDecorable(VideoFlowDecorable decorable);
 

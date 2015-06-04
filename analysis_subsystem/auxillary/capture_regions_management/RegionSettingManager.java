@@ -42,7 +42,7 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         widthFactor = 640.0/488.0;
         heightFactor = 480.0/366.0;
         this.coordViewer = coordViewer;
-        setDefaultCaptureRegions();
+        //setDefaultCaptureRegions();
     }
 
     public void setDefaultCaptureRegions(){

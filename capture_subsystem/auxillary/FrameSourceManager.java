@@ -1,10 +1,10 @@
 package capture_subsystem.auxillary;
 
 import core.auxillary.ShapeDrawers.ShapeDrawer;
-import analysis_subsystem.crystalMathModel.MathModelFrameSource;
-import capture_subsystem.frame_sources.FrameSource;
-import capture_subsystem.frame_sources.camera.CameraFrameSource;
-import capture_subsystem.frame_sources.image.ImageFrameSource;
+import analysis_subsystem.auxillary.crystalMathModel.MathModelFrameSource;
+import capture_subsystem.auxillary.frame_sources.FrameSource;
+import capture_subsystem.auxillary.frame_sources.camera.CameraFrameSource;
+import capture_subsystem.auxillary.frame_sources.image.ImageFrameSource;
 import capture_subsystem.gui.CaptureSettingsFrame;
 import capture_subsystem.interfaces.FrameProvidable;
 import capture_subsystem.interfaces.VideoFlowDecorable;

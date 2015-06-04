@@ -1,4 +1,4 @@
-package capture_subsystem.frame_sources.image;
+package capture_subsystem.auxillary.frame_sources.image;
 
 import javax.swing.*;
 

@@ -1,7 +1,7 @@
-package capture_subsystem.frame_sources.image;
+package capture_subsystem.auxillary.frame_sources.image;
 
 
-import capture_subsystem.frame_sources.FrameSource;
+import capture_subsystem.auxillary.frame_sources.FrameSource;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
