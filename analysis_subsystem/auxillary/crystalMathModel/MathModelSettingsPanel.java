@@ -62,7 +62,7 @@ public class MathModelSettingsPanel extends JPanel {
 
     private void initBlrValPnl() {
         blrValPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel spinnersPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,20,0));
+        JPanel spinnersPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,33,0));
         blrValPnl.add(new JLabel("Blur:"));
         spinnersPanel.add(initNewSpinner(5, 100,customizableGraphicMathModel.getMenUpBlur(),10,e ->
                 customizableGraphicMathModel.setMenUpBlur((int) ((JSpinner) e.getSource()).getValue())));
@@ -72,6 +72,7 @@ public class MathModelSettingsPanel extends JPanel {
                 customizableGraphicMathModel.setCrystDownBlur((int) ((JSpinner) e.getSource()).getValue())));
         spinnersPanel.add(initNewSpinner(5, 100, customizableGraphicMathModel.getCrystBordBlur(), 5, e ->
                 customizableGraphicMathModel.setCrystBordBlur((int) ((JSpinner) e.getSource()).getValue())));
+
         blrValPnl.add(spinnersPanel);
     }
 
