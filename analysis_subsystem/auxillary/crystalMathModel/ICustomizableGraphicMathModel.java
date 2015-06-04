@@ -18,8 +18,8 @@ public interface ICustomizableGraphicMathModel {
 
     short getCrystalBorderBrightness();
     short getCrystalCoreBrightness();
-    short getMeniscuslBorderBrightness();
-    short getShaperBorderBrightness();
+    short getMeniscusBrightness();
+    short getShaperBrightness();
     int getMenUpBlur();
     int getMenDwnBlur();
     int getCrystBordBlur();

@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class MathModelSettingsPanel extends JPanel {
 
@@ -44,9 +43,9 @@ public class MathModelSettingsPanel extends JPanel {
                 customizableGraphicMathModel.setCrystalCoreBrightness((short) (int)((JSpinner) e.getSource()).getValue())));
         spinnersPanel.add(initNewSpinner(0,255,customizableGraphicMathModel.getCrystalBorderBrightness(),5,e ->
                 customizableGraphicMathModel.setCrystalBorderBrightness((short) (int)((JSpinner) e.getSource()).getValue())));
-        spinnersPanel.add(initNewSpinner(0,255,customizableGraphicMathModel.getMeniscuslBorderBrightness(),5,e ->
+        spinnersPanel.add(initNewSpinner(0,255,customizableGraphicMathModel.getMeniscusBrightness(),5,e ->
                 customizableGraphicMathModel.setMeniscusBrightness((short) (int)((JSpinner) e.getSource()).getValue())));
-        spinnersPanel.add(initNewSpinner(0, 255, customizableGraphicMathModel.getShaperBorderBrightness(), 5, e ->
+        spinnersPanel.add(initNewSpinner(0, 255, customizableGraphicMathModel.getShaperBrightness(), 5, e ->
                 customizableGraphicMathModel.setShaperBrightness((short) (int) ((JSpinner) e.getSource()).getValue())));
         brValPnl.add(spinnersPanel);
     }
@@ -65,13 +64,13 @@ public class MathModelSettingsPanel extends JPanel {
         blrValPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel spinnersPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,20,0));
         blrValPnl.add(new JLabel("Blur:"));
-        spinnersPanel.add(initNewSpinner(0, 100,customizableGraphicMathModel.getMenUpBlur(),10,e ->
+        spinnersPanel.add(initNewSpinner(5, 100,customizableGraphicMathModel.getMenUpBlur(),10,e ->
                 customizableGraphicMathModel.setMenUpBlur((int) ((JSpinner) e.getSource()).getValue())));
-        spinnersPanel.add(initNewSpinner(0, 100,customizableGraphicMathModel.getMenDwnBlur(),10,e ->
+        spinnersPanel.add(initNewSpinner(5, 100,customizableGraphicMathModel.getMenDwnBlur(),10,e ->
                 customizableGraphicMathModel.setMenDwnBlur((int) ((JSpinner) e.getSource()).getValue())));
-        spinnersPanel.add(initNewSpinner(0, 100,customizableGraphicMathModel.getCrystBordBlur(),5,e ->
-                customizableGraphicMathModel.setCrystBordBlur((int) ((JSpinner) e.getSource()).getValue())));
-        spinnersPanel.add(initNewSpinner(0, 100, customizableGraphicMathModel.getCrystBordBlur(), 5, e ->
+        spinnersPanel.add(initNewSpinner(5, 100,customizableGraphicMathModel.getCrystDownBlur(),5,e ->
+                customizableGraphicMathModel.setCrystDownBlur((int) ((JSpinner) e.getSource()).getValue())));
+        spinnersPanel.add(initNewSpinner(5, 100, customizableGraphicMathModel.getCrystBordBlur(), 5, e ->
                 customizableGraphicMathModel.setCrystBordBlur((int) ((JSpinner) e.getSource()).getValue())));
         blrValPnl.add(spinnersPanel);
     }
