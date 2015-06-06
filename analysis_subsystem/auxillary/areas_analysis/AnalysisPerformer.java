@@ -4,10 +4,11 @@ import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.exceptions.AnalysisException;
 import analysis_subsystem.interfaces.AnalysisResultProcessable;
-import analysis_subsystem.interfaces.AnalysisResultViewable;
 import analysis_subsystem.interfaces.CaptureCoordEditable;
 
-public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
+import java.util.ArrayList;
+
+public class AnalysisPerformer implements Runnable, CaptureCoordEditable {
     private AreaDescription meniscus;
     private AreaDescription deviation;
     private AreaDescription shaper;
@@ -18,43 +19,24 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
 
     boolean analysisIsPerforming;
     private AnalysisResultProcessable resultProcessor;
-    private AnalysisResultViewable resultViewer;
     private FrameAnalyser frameAnalyser;
 
-    int iterLength, frames;
+    private int iterLength, frames;
 
-    public AnalysisPerformer(AreaDescription meniscus, AreaDescription deviation,
-                              AreaDescription shaper, AnalysisResultProcessable performingProcessor,
-                             FrameAnalyser frameAnalyser, AnalysisResultViewable resultViewer,
-                             int ... params) throws NullPointerException{
-        this.tempMeniscus = meniscus;
-        this.tempDeviation = deviation;
-        this.tempShaper = shaper;
-        this.resultProcessor = performingProcessor;
+    public AnalysisPerformer(ArrayList<AreaDescription> areaDescriptions, FrameAnalyser frameAnalyser,
+                             AnalysisResultProcessable resultProcessor, int ... params) throws NullPointerException{
+        this.tempMeniscus = areaDescriptions.get(0);
+        this.tempDeviation = areaDescriptions.get(1);
+        this.tempShaper = areaDescriptions.get(2);
+        this.resultProcessor = resultProcessor;
         this.frameAnalyser = frameAnalyser;
-        this.resultViewer = resultViewer;
         if (params == null || params.length <2){
-            iterLength = 500;
-            frames = 1;
+            iterLength = 4;
+            frames = 16;
         }else{
             iterLength = params[0];
             frames = params[1];
         }
-    }
-
-    @Override
-    public void setCaptureCoord(AreaDescription areaDescription) {
-       switch (areaDescription.getAreaType()){
-           case Meniscus:
-                tempMeniscus = areaDescription;
-               break;
-           case Deviation:
-                tempDeviation = areaDescription;
-               break;
-           case Shaper:
-                tempShaper = areaDescription;
-               break;
-       }
     }
 
     public void permitAnalysis(){
@@ -70,20 +52,29 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
         if(!checkAreasForValid())
             return;
         do{
-            checkoutForAreasChange();
-            try {
-                frameAnalyser.addImage(resultProcessor.getFrame());
+            try{
+                performFrameSample();
+            } catch (InterruptedException e) {
+                resultProcessor.viewException("Analysis thread interrupted.",e.getMessage());
+                return;
             } catch (AnalysisException e) {
                 resultProcessor.processException(e);
+                return;
             }
-                resultProcessor.processConclusion(frameAnalyser.getResults(0));
-            try {
-                Thread.sleep(1000/iterLength);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
+
+            resultProcessor.processConclusion(frameAnalyser.getResults(0));
         }while(analysisIsPerforming);
-        resultProcessor.processConclusion(frameAnalyser.getResults(0));
+    }
+
+    private void performFrameSample() throws InterruptedException, AnalysisException {
+        final int limit = frames, sleepLenght = iterLength*1000/frames;
+        int framesCount = 0;
+        do{
+            framesCount++;
+            checkoutForAreasChange();
+            frameAnalyser.addImage(resultProcessor.getFrame());
+            Thread.sleep(sleepLenght);
+        }while (analysisIsPerforming && framesCount<=limit);
     }
 
     private void checkoutForAreasChange(){
@@ -111,5 +102,42 @@ public class AnalysisPerformer implements CaptureCoordEditable, Runnable {
             return false;
         }
     return true;
+    }
+
+    public AreaDescription getMeniscus() {
+        return meniscus;
+    }
+
+    public AreaDescription getDeviation() {
+        return deviation;
+    }
+
+    public AreaDescription getShaper() {
+        return shaper;
+    }
+
+    public int getIterLength() {
+        return iterLength;
+    }
+
+    public int getFrames() {
+        return frames;
+    }
+
+    @Override
+    public void setCaptureCoord(AreaDescription areaDescription) {
+        switch (areaDescription.getAreaType()){
+            case Deviation:
+                tempDeviation = areaDescription;
+                break;
+            case Meniscus:
+                tempMeniscus = areaDescription;
+                break;
+            case Shaper:
+                tempShaper = areaDescription;
+                break;
+            case Erase:
+                break;
+        }
     }
 }

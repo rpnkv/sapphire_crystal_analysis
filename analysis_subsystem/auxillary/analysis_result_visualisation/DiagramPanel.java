@@ -192,7 +192,7 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 		diagramShape = deepCopy(defaultDiagramShape);
 		graphSInfo.forEach(graph -> {
 			int[] brightnessValues = graph.getBrightnessValues();
-			drawGraphLine(brightnessValues, graph.getColor());
+			drawGraphLine(brightnessValues, graph.getColor(), graph.getWidth());
 			viewGraphCoord(graph.getBeginPixel(), graph.getColor(), brightnessValues.length);
 		});
 		setImage(diagramShape);
@@ -203,7 +203,7 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 		diagramShape = deepCopy(defaultDiagramShape);
 		int[] brightnessValues = graphInfo.getBrightnessValues();
 		redrawDiagramShape();
-		drawGraphLine(brightnessValues, graphInfo.getColor());
+		drawGraphLine(brightnessValues, graphInfo.getColor(), graphInfo.getWidth());
 		viewGraphCoord(graphInfo.getBeginPixel(), graphInfo.getColor(),brightnessValues.length);
 		setImage(diagramShape);
 	}
@@ -259,11 +259,11 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 			return false;
 	}
 
-	private void drawGraphLine(int[] brightnessValues, Color color){
+	private void drawGraphLine(int[] brightnessValues, Color color, int width){
 		Point prevPoint = new Point(25,275-brightnessValues[0]);
 		Point newPoint = new Point();
 		Graphics2D g2d = diagramShape.createGraphics();
-		g2d.setStroke(new BasicStroke(1));
+		g2d.setStroke(new BasicStroke(width));
 		g2d.setColor(color);
 
 

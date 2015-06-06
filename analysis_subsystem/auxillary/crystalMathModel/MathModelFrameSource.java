@@ -168,13 +168,6 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		}
 	}
 
-	private int[] reversBrValues(int[] brValues){
-		int[] reversedValues = new int[brValues.length];
-		for(int i = 0; i < brValues.length; i++)
-			reversedValues[i] = brValues[(brValues.length-1)-i];
-		return reversedValues;
-	}
-
 	private void drawHorizontalBlurLine(BufferedImage frame, int x, int y, int[] bright){
 		for(int i = 0; i < bright.length;i++){
 			Color color = new Color(bright[i],bright[i],bright[i]);
@@ -264,8 +257,6 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		}
 		return brValues;
 	}
-
-
 
 	@Override
 	public String toString() {

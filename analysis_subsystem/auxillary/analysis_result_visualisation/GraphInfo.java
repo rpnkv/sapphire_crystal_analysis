@@ -16,6 +16,13 @@ public class GraphInfo {
         this.color = color;
     }
 
+    public GraphInfo(int[] brightnessValues, int beginPixel, Color color, short width) {
+        this.brightnessValues = brightnessValues;
+        this.beginPixel = beginPixel;
+        this.color = color;
+        this.width = width;
+    }
+
     public int[] getBrightnessValues() {
         return brightnessValues;
     }

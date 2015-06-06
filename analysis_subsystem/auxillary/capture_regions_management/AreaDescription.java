@@ -37,6 +37,7 @@ public class AreaDescription {
         return width;
     }
 
+
     @Override
     public String toString() {
         return "Area name:" + areaType + ", begin coord:" + begin.toString() +", length: "+ lenght +", width:" + width;

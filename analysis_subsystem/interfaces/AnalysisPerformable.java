@@ -1,6 +1,6 @@
 package analysis_subsystem.interfaces;
 
-public interface AnalysisPerformable extends ControliableAnalysisPerformable{
+public interface AnalysisPerformable{
 
     void performInstantAnalysis();
     void performIterativeAnalysis();

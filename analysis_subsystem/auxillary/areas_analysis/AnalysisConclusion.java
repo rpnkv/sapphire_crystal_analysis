@@ -1,17 +1,17 @@
 package analysis_subsystem.auxillary.areas_analysis;
 
 public class AnalysisConclusion extends BasicAnalysisConclusion{
-    private int meniscusWidth;
+    private int meniscusHeight;
     private int crystalXDeviation;
 
     public AnalysisConclusion(int meniscusHeight, int crystalXDeviation, int[] meniscusBr, int[] deviationBr){
         super(meniscusBr,deviationBr);
-        this.meniscusWidth = meniscusHeight;
+        this.meniscusHeight = meniscusHeight;
         this.crystalXDeviation = crystalXDeviation;
     }
 
-    public int getMeniscusWidth() {
-        return meniscusWidth;
+    public int getMeniscusHeight() {
+        return meniscusHeight;
     }
 
     public int getCrystalXDeviation() {
@@ -20,7 +20,6 @@ public class AnalysisConclusion extends BasicAnalysisConclusion{
 
     @Override
     public String toString() {
-        return "Analysis conclusion: menWidth:" + meniscusWidth + ", crystal deviation by x: " + crystalXDeviation +
-                ".";
+        return "Conclusion: menisk height:" + meniscusHeight + ", edge deviation by x: " + crystalXDeviation;
     }
 }

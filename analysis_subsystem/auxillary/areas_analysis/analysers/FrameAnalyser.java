@@ -48,7 +48,7 @@ public abstract class FrameAnalyser {
     public AnalysisConclusion getResults(int iterCount){
         long[] men = (long[]) this.itermediateValues.get(AreaTypes.Meniscus);
         long[] dev = (long[]) this.itermediateValues.get(AreaTypes.Deviation);
-        return new AnalysisConclusion(calcMeniscusHeight(),calcCrystalXDeviation(),
+        return new AnalysisConclusion(calcMeniscusHeight(), calcCrystalEdgeXCoord(),
                 getTotalBrightness(men),getTotalBrightness(dev));
 
     }
@@ -84,7 +84,7 @@ public abstract class FrameAnalyser {
     }
 
     abstract int calcMeniscusHeight();
-    abstract int calcCrystalXDeviation();
+    abstract int calcCrystalEdgeXCoord();
     abstract int[] getTotalBrightness(long[] intermediateValues);
 
 }

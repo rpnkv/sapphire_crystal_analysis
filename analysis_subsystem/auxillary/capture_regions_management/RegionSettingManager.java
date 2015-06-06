@@ -167,6 +167,13 @@ public class RegionSettingManager implements MouseListener,MouseWheelListener{
         this.captureCoordEditables.add(captureCoordEditable);
     }
 
+    public boolean removeCaptureCoordEditable(CaptureCoordEditable coordEditable){
+        boolean result = captureCoordEditables.contains(coordEditable);
+        if(result)
+            captureCoordEditables.remove(coordEditable);
+        return result;
+    }
+
     private void updateCoordinates(){
         String text = "Capture coordinates: ";
 
