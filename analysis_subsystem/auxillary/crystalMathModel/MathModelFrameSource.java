@@ -59,7 +59,6 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		} catch (InvalidArgumentException e) {
 			e.printStackTrace();
 		}
-
 		return frame;
 	}
 
@@ -86,8 +85,6 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 					getBrValuesBySin(minYCoord[i - edgeXLeft], mathModel.frameHeight - mathModel.shapeHeight,
 							menBr, menBottomBorderBr[i - edgeXLeft]));
 		}
-
-
 	}
 
 	private double calcMeniscusEdgeQuotient(){
@@ -104,7 +101,7 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 			drawHorizontalLine(frame,0,i,mathModel.getFrameWidth(),backgroundColor);
 	}
 
-	private void builtCrystalBody(BufferedImage frame, int[] menUpperBorderBr) throws InvalidArgumentException {
+	private void builtCrystalBody(BufferedImage frame, int[] menUpperBorderBr) {
 		int crystXBeg = mathModel.getFrameWidth() - mathModel.getCrystWidth();
 		int crystXEnd = mathModel.getFrameWidth();
 		int blurAreaHeight = (int) (mathModel.getMenHeight()/2*(double)(crystDownBlur)/100);
@@ -213,7 +210,6 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 		Color shaperColor = new Color(shprBr,shprBr,shprBr);
 		for(int i = shpBlurTopY; i < mathModel.getFrameHeight();i++)
 			drawHorizontalLine(frame,mathModel.frameWidth - mathModel.shapeWidth,i,mathModel.getShapeWidth(),shaperColor);
-
 	}
 
 	private int[] getBrValuesBySin(int xMin,int xMax,int yMin, int yMax){
@@ -235,6 +231,39 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 
 	private int[] getBrValuesBySinQuarter(int xMin,int xMax,int yMin, int yMax, int quarter) throws InvalidArgumentException {
 		int[] brValues = new int[xMax - xMin];
+
+		double x1 = (double) xMin, x2 = (double)xMax, y1 = (double)yMin, y2 = (double) yMax, shiftL, shiftU;
+
+		switch (quarter){
+			case 1:
+				shiftL = Math.PI/2;
+				shiftU = 0;
+				break;
+			case 2:
+				shiftL = 3*Math.PI/2;
+				shiftU = Math.sin(Math.PI / 2);
+				break;
+			case 3:
+				shiftL = Math.PI;
+				shiftU = Math.sin(Math.PI / 2);
+				break;
+			case 4:
+				shiftL = Math.PI;
+				shiftU = Math.sin(Math.PI / 2);
+				break;
+			default:throw new InvalidArgumentException(new String[]{"qarter value out of range 1-4 :" + quarter});
+		}
+		double sinStart = Math.PI  + shiftL, frstSin = Math.sin(Math.asin(1)+Math.PI) + shiftU,
+				v = (2/(y2-y1))/2, q = (Math.PI/(x2-x1))/2;
+
+		for(double i = sinStart; i < sinStart+Math.PI/2; i+=q){
+			int x = (int) ((i-sinStart)/q + x1);
+			int y = (int) ((Math.sin(i)-frstSin)/v + y1);
+			if(x-xMin < brValues.length)
+				brValues[x-xMin] = y;
+		}
+		return brValues;
+	}
 
 		double x1 = (double) xMin, x2 = (double)xMax, y1 = (double)yMin, y2 = (double) yMax, shiftL, shiftU;
 
