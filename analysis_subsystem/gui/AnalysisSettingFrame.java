@@ -1,7 +1,6 @@
 package analysis_subsystem.gui;
 
 import analysis_subsystem.auxillary.areas_analysis.AnalysisController;
-import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -90,7 +89,7 @@ public class AnalysisSettingFrame extends JFrame {
         dbPnl = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JCheckBox checkBox = new JCheckBox("save measures to database");
         checkBox.setSelected(analysisController.isSaveCoordToDB());
-        checkBox.addActionListener(e -> analysisController.setSaveCoordToDB(checkBox.isSelected()));
+        checkBox.addActionListener(e -> checkBox.setSelected(analysisController.setSaveCoordToDB(checkBox.isSelected())));
         dbPnl.add(checkBox);
     }
 
@@ -140,6 +139,29 @@ public class AnalysisSettingFrame extends JFrame {
     }
 
     private boolean attemptToStartAnalysis(){
+        if(perTxtFld.getText().equals("") || frmsTxtFld.getText().equals("")){
+            analysisController.viewException("Cannot start analysis","Analysis params are invalid");
+            return false;
+        }
+
+        int length = Integer.parseInt(perTxtFld.getText()), frames = Integer.parseInt(frmsTxtFld.getText());
+
+        if(length < frames){
+            analysisController.viewException("Cannot start analysis","Analysis params are invalid");
+            return false;
+        }
+        if(analysisController.isAnalysisPerforming()){
+            int n = JOptionPane.showConfirmDialog(
+                    null,
+                    "Would you like to restart it with new params?",
+                    "Analysis is already performing",
+                    JOptionPane.YES_NO_OPTION);
+            if(n == 1)
+                return false;
+        }
+
+        analysisController.startAnalysis(length,frames);
+
         return true;
     }
 

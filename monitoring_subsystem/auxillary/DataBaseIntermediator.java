@@ -74,7 +74,14 @@ public class DataBaseIntermediator implements MeasureSavable {
 
     public boolean isReadyToAnalysisLogging(){
         assert currentProduct != null;
-        return  ((currentProduct != null|| !currentProduct.equals("No products")) && currentCustomer != null && connected);
+        boolean productIsSelected, customerIsSelected;
+        try {
+            productIsSelected = !currentProduct.equals("No products");
+            customerIsSelected = currentCustomer != null;
+        }catch (NullPointerException e){
+            return false;
+        }
+        return (connected && productIsSelected && customerIsSelected);
     }
 
     public String[] getProducts(){

@@ -115,4 +115,8 @@ public class AnalysisFacade implements AnalysisSubsystemCommonInterface {
     public boolean removeCaptureCoordEditable(CaptureCoordEditable coordEditable){
         return regionSettingManager.removeCaptureCoordEditable(coordEditable);
     }
+
+    public MeasureSavable getMeasureSaver() {
+        return measureSaver;
+    }
 }

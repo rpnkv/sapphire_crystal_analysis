@@ -22,7 +22,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
     private AnalysisPerformer analysisPerformer;
     private AnalysisFacade facade;
     private Thread analysisThread;
-    private boolean saveCoordToDB;
+    private boolean saveCoordToDB, analysisPerforming = false;
 
     private LinkedList<FrameAnalyser> frameAnalysers;
 
@@ -58,7 +58,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
         Measure measure = new Measure(conclusion.getMeniscusHeight(), conclusion.getCrystalXDeviation(),
                 analysisPerformer.getMeniscus(), analysisPerformer.getDeviation(),
                 analysisPerformer.getShaper());
-
+        facade.getMeasureSaver().saveMeasure(measure);
     }
 
     @Override
@@ -86,6 +86,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
         if(!facade.removeCaptureCoordEditable(analysisPerformer))
             viewException("Analysis error","Analysis performer wasn't registered.");
         facade.viewResult("Analysis stopped");
+        analysisPerforming = false;
     }
 
     @Override
@@ -106,12 +107,14 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
         analysisPerformer = new AnalysisPerformer(facade.getCurrentCaptureCoord(),frameAnalysers.get(0),this);
         analysisThread = new Thread(analysisPerformer,"Analysis thread");
         analysisThread.start();
+        analysisPerforming = true;
         facade.viewResult("Instant analysis started..");
         new Thread(()->{
             try {
                 Thread.sleep(900);
                 facade.viewResult("Instant analysis completed");
                 analysisPerformer.forbidAnalysis();
+                analysisPerforming = false;
             } catch (InterruptedException e) {
                 viewException(e);
             }
@@ -124,6 +127,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
         facade.addCaptureCoordEditable(analysisPerformer);
         analysisPerformer.permitAnalysis();
         analysisThread.start();
+        analysisPerforming = true;
         facade.viewResult("Iterative analysis started with parameters: iteration period = "+
                 analysisPerformer.getIterLength() + "sec.," +
                 "\n frame picking per iteration = " + analysisPerformer.getFrames() +" frames");
@@ -133,6 +137,18 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
         if (settingFrame != null)
             settingFrame.dispose();
         SwingUtilities.invokeLater(() -> new AnalysisSettingFrame(this));
+    }
+
+    public void startAnalysis(int lenght, int frames){
+        analysisPerformer = new AnalysisPerformer(facade.getCurrentCaptureCoord(),frameAnalysers.get(0),this,lenght,frames);
+        analysisThread = new Thread(analysisPerformer,"Analysis thread");
+        facade.addCaptureCoordEditable(analysisPerformer);
+        analysisPerformer.permitAnalysis();
+        analysisThread.start();
+        analysisPerforming = true;
+        facade.viewResult("Custom analysis started with parameters: iteration period = "+
+                analysisPerformer.getIterLength() + "sec.," +
+                "\n frame picking per iteration = " + analysisPerformer.getFrames() +" frames");
     }
 
     public LinkedList<FrameAnalyser> getFrameAnalysers() {
@@ -150,11 +166,19 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
         });
     }
 
-    public void setSaveCoordToDB(boolean saveCoordToDB) {
-        this.saveCoordToDB = saveCoordToDB;
+    public boolean setSaveCoordToDB(boolean saveCoordToDB) {
+        if(facade.getMeasureSaver().isReadyToAnalysisLogging()){
+            this.saveCoordToDB = saveCoordToDB;
+            return saveCoordToDB;
+        }else
+            return false;
     }
 
     public boolean isSaveCoordToDB() {
         return saveCoordToDB;
+    }
+
+    public boolean isAnalysisPerforming() {
+        return analysisPerforming;
     }
 }
