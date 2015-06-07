@@ -6,6 +6,7 @@ import analysis_subsystem.auxillary.areas_analysis.analysers.BasicFrameAnalyser;
 import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.exceptions.AnalysisException;
+import analysis_subsystem.gui.AnalysisSettingFrame;
 import analysis_subsystem.interfaces.AnalysisResultProcessable;
 import analysis_subsystem.interfaces.CaptureCoordEditable;
 import monitoring_subsystem.auxillary.Measure;
@@ -24,6 +25,8 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
     private boolean saveCoordToDB;
 
     private LinkedList<FrameAnalyser> frameAnalysers;
+
+    private AnalysisSettingFrame settingFrame;
 
     public AnalysisController(AnalysisFacade facade) {
         this.facade = facade;
@@ -65,7 +68,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
 
     @Override
     public void setCaptureCoord(AreaDescription areaDescription) {
-
+        analysisPerformer.setCaptureCoord(areaDescription);
     }
 
     public void abortAnalysis(){
@@ -127,7 +130,9 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
     }
 
     public void initTunableAnalysis() {
-        System.out.println("tuneable");
+        if (settingFrame != null)
+            settingFrame.dispose();
+        SwingUtilities.invokeLater(() -> new AnalysisSettingFrame(this));
     }
 
     public LinkedList<FrameAnalyser> getFrameAnalysers() {
@@ -136,5 +141,20 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
 
     public void setDefaultAnalyser (FrameAnalyser analyser){
         frameAnalysers.set(0,analyser);
+    }
+
+    public void setDefaultAnalyser(String analyserName){
+        frameAnalysers.forEach(analyser ->{
+            if(analyser.toString().equals(analyserName))
+                setDefaultAnalyser(analyser);
+        });
+    }
+
+    public void setSaveCoordToDB(boolean saveCoordToDB) {
+        this.saveCoordToDB = saveCoordToDB;
+    }
+
+    public boolean isSaveCoordToDB() {
+        return saveCoordToDB;
     }
 }

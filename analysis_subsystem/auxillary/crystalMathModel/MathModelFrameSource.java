@@ -344,8 +344,28 @@ public class MathModelFrameSource extends FrameSource implements FrameProvidable
 	}
 
 	@Override
+	public void setFramesAmountBeforeChange(int framesAmountBeforeChange) {
+
+	}
+
+	@Override
+	public void setChange(boolean change) {
+
+	}
+
+	@Override
 	public int getMenHeight() {
 		return mathModel.getMenHeight();
+	}
+
+	@Override
+	public int getFramesAmountBeforeChange() {
+		return 0;
+	}
+
+	@Override
+	public boolean getChange() {
+		return false;
 	}
 
 	//endregion

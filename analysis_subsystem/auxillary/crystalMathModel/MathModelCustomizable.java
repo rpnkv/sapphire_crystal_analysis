@@ -1,10 +1,5 @@
 package analysis_subsystem.auxillary.crystalMathModel;
 
-import javax.swing.event.ChangeEvent;
-
-/**
- * Created by ierus on 4/3/15.
- */
 public interface MathModelCustomizable {
 
     void setCrystalBorderBrightness(short val);
@@ -16,6 +11,8 @@ public interface MathModelCustomizable {
     void setCrystDownBlur(int crystDownBlur);
     void setCrystBordBlur(int crystBordBlur);
     void setMenHeight(int menHeight);
+    void setFramesAmountBeforeChange(int framesAmountBeforeChange);
+    void setChange(boolean change);
 
     short getCrystalBorderBrightness();
     short getCrystalCoreBrightness();
@@ -26,4 +23,6 @@ public interface MathModelCustomizable {
     int getCrystBordBlur();
     int getCrystDownBlur();
     int getMenHeight();
+    int getFramesAmountBeforeChange();
+    boolean getChange();
 }

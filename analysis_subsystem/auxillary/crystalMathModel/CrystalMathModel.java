@@ -1,8 +1,6 @@
 package analysis_subsystem.auxillary.crystalMathModel;
 
-/**
- * Created by ierus on 3/12/15.
- */
+
 public class CrystalMathModel {
 
     private int frameHeight;

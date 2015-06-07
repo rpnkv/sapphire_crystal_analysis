@@ -5,10 +5,15 @@ import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.auxillary.capture_regions_management.AreaTypes;
 import analysis_subsystem.exceptions.AnalysisException;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class BasicFrameAnalyser extends FrameAnalyser{
+    public BasicFrameAnalyser() {
+        super("Basic frame analyser");
+    }
+
     @Override
     void addNewValuesFromImage(BufferedImage image, AreaTypes type, long[] intermediateArray) throws AnalysisException {
         AreaDescription area = getAreaDescription(type);
@@ -125,5 +130,8 @@ public class BasicFrameAnalyser extends FrameAnalyser{
         return brightness;
     }
 
-
+    @Override
+    public JPanel getSettingsPanel() {
+        return null;
+    }
 }

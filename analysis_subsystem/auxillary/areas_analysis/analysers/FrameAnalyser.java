@@ -7,6 +7,7 @@ import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
 import analysis_subsystem.auxillary.capture_regions_management.AreaTypes;
 import analysis_subsystem.exceptions.AnalysisException;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -16,8 +17,12 @@ import java.util.Map;
 public abstract class FrameAnalyser {
     Map itermediateValues = new HashMap<AreaTypes, long[]>();
     ArrayList<AreaDescription> areaDescriptions;
-
+    String alias;
     protected int iterCount;
+
+    public FrameAnalyser(String alias) {
+        this.alias = alias;
+    }
 
     public void initAnalyser(AreaDescription... areaDescriptions){
         this.areaDescriptions = new ArrayList<>();
@@ -86,5 +91,10 @@ public abstract class FrameAnalyser {
     abstract int calcMeniscusHeight();
     abstract int calcCrystalEdgeXCoord();
     abstract int[] getTotalBrightness(long[] intermediateValues);
+    public abstract JPanel getSettingsPanel();
 
+    @Override
+    public String toString() {
+        return alias;
+    }
 }
