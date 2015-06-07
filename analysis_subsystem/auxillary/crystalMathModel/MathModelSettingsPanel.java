@@ -7,12 +7,12 @@ import java.awt.*;
 
 public class MathModelSettingsPanel extends JPanel {
 
-    ICustomizableGraphicMathModel customizableGraphicMathModel;
-    JPanel brTtlPnl, brValPnl, blrTtlPnl, blrValPnl;
+    MathModelCustomizable customizableGraphicMathModel;
+    JPanel brTtlPnl, brValPnl, blrTtlPnl, blrValPnl, mdlCnfPnl;
 
     int spinnerStep;
 
-    public MathModelSettingsPanel(ICustomizableGraphicMathModel customizableGraphicMathModel) throws HeadlessException {
+    public MathModelSettingsPanel(MathModelCustomizable customizableGraphicMathModel) throws HeadlessException {
         this.customizableGraphicMathModel = customizableGraphicMathModel;
         JPanel corePanel = new JPanel();
         corePanel.setLayout(new BoxLayout(corePanel, BoxLayout.Y_AXIS));
@@ -21,7 +21,15 @@ public class MathModelSettingsPanel extends JPanel {
         initbrValPnl();
         initBlrTtlPnl();
         initBlrValPnl();
+        intMdlCnfPnl();
         initPanel();
+    }
+
+    private void intMdlCnfPnl() {
+        mdlCnfPnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        mdlCnfPnl.add(new JLabel("Meniscus height: "));
+        mdlCnfPnl.add(initNewSpinner(10,60,40,1,e ->
+            customizableGraphicMathModel.setMenHeight((short) (int)((JSpinner) e.getSource()).getValue())));
     }
 
     private void initBrTtlPnl() {
@@ -81,6 +89,7 @@ public class MathModelSettingsPanel extends JPanel {
         add(brValPnl);
         add(blrTtlPnl);
         add(blrValPnl);
+        add(mdlCnfPnl);
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         this.setSize(380,150);
         this.setVisible(true);

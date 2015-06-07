@@ -5,10 +5,10 @@ package analysis_subsystem.auxillary.crystalMathModel;
  */
 public class CrystalMathModel {
 
-    int frameHeight;
-    int frameWidth;
+    private int frameHeight;
+    private int frameWidth;
 
-    int menHeight,crystHeight,crystWidth, shapeWidth, shapeHeight;
+    private int menHeight,crystHeight,crystWidth, shapeWidth, shapeHeight;
 
     public CrystalMathModel(int frameWidth, int frameHeight) {
         this.frameHeight = frameHeight;
@@ -50,5 +50,10 @@ public class CrystalMathModel {
 
     public int getShapeHeight() {
         return shapeHeight;
+    }
+
+    public void setMenHeight(int menHeight) {
+        this.menHeight = menHeight;
+        crystHeight = frameHeight - (menHeight+ shapeHeight);
     }
 }

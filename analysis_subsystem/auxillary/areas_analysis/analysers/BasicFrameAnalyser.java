@@ -76,7 +76,7 @@ public class BasicFrameAnalyser extends FrameAnalyser{
     }
 
     private int getMeniscusEnd(int[] meniscusBrightness, int meniscusBegin) {
-        int value = meniscusBrightness[meniscusBegin+1];
+        int value;
         for(int i = meniscusBegin+1; i < meniscusBrightness.length; i++){
             value = meniscusBrightness[i+1];
             if (meniscusBrightness[i] != value)
@@ -86,7 +86,7 @@ public class BasicFrameAnalyser extends FrameAnalyser{
     }
 
     private int getMeniscusBegin(int[] meniscusBrightness, int crystalBodyEnd) {
-        int value = meniscusBrightness[crystalBodyEnd];
+        int value;
         for(int i = crystalBodyEnd+1; i < meniscusBrightness.length; i++){
             value = meniscusBrightness[i+1];
             if (meniscusBrightness[i] == value)
