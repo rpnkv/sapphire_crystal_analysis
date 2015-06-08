@@ -2,6 +2,7 @@ package analysis_subsystem.auxillary.areas_analysis;
 
 import analysis_subsystem.AnalysisFacade;
 import analysis_subsystem.auxillary.analysis_result_visualisation.GraphInfo;
+import analysis_subsystem.auxillary.analysis_result_visualisation.GraphTypes;
 import analysis_subsystem.auxillary.areas_analysis.analysers.BasicFrameAnalyser;
 import analysis_subsystem.auxillary.areas_analysis.analysers.FrameAnalyser;
 import analysis_subsystem.auxillary.capture_regions_management.AreaDescription;
@@ -12,9 +13,8 @@ import analysis_subsystem.interfaces.CaptureCoordEditable;
 import monitoring_subsystem.auxillary.Measure;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 
 public class AnalysisController implements AnalysisResultProcessable, CaptureCoordEditable{
@@ -27,7 +27,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
     private LinkedList<FrameAnalyser> frameAnalysers;
 
     private AnalysisSettingFrame settingFrame;
-
+    private AnalysisConclusion previousConclusuion;
     public AnalysisController(AnalysisFacade facade) {
         this.facade = facade;
         saveCoordToDB = false;
@@ -46,13 +46,35 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
 
     @Override
     public void processConclusion(AnalysisConclusion conclusion) {
-        ArrayList<GraphInfo> graphInfos = new ArrayList<>();
-        graphInfos.add(new GraphInfo(conclusion.getMeniscusBrightness(),
-                analysisPerformer.getMeniscus().getBegin().y, Color.red, (short) 2));
-        graphInfos.add(new GraphInfo(conclusion.getDeviationBrightness(),
-                analysisPerformer.getDeviation().getBegin().x, Color.blue, (short) 2));
+        LinkedList<GraphInfo> graphInfos = new LinkedList<>();
+
+        graphInfos.add(new GraphInfo(conclusion.getMeniscusBrightness(),analysisPerformer.getMeniscus().getBegin().y,
+                GraphTypes.CurrentMeniscusGraph));
+        graphInfos.add(new GraphInfo(conclusion.getDeviationBrightness(),analysisPerformer.getDeviation().getBegin().x,
+                GraphTypes.CurrentDeviationGraph));
+
+        if(previousConclusuion != null){
+            graphInfos.add(new GraphInfo(previousConclusuion.getMeniscusBrightness(),analysisPerformer.getMeniscus().getBegin().y,
+                    GraphTypes.PreviousMeniscusGraph));
+            graphInfos.add(new GraphInfo(previousConclusuion.getDeviationBrightness(),analysisPerformer.getDeviation().getBegin().x,
+                    GraphTypes.PreviousDeviationGraph));
+        }
         facade.getDiagramPanel().drawGraphs(graphInfos);
-        facade.viewResult(conclusion.toString());
+        int prevMeniscus,prevDeviation;
+
+        try{
+            prevMeniscus = previousConclusuion.getMeniscusHeight();
+            prevDeviation = previousConclusuion.getCrystalXDeviation();
+        }catch (NullPointerException e){
+            prevMeniscus = conclusion.getMeniscusHeight();
+            prevDeviation = conclusion.getCrystalXDeviation();
+        }
+
+
+        facade.viewResult(conclusion.toString() +
+                "\n\u0394meniscus = " + String.valueOf(conclusion.getMeniscusHeight() - prevMeniscus) +", " +
+                "Δdeviation = " + String.valueOf(conclusion.getCrystalXDeviation() - prevDeviation));
+        previousConclusuion = conclusion;
         if (!saveCoordToDB)
             return;
         Measure measure = new Measure(conclusion.getMeniscusHeight(), conclusion.getCrystalXDeviation(),
@@ -87,6 +109,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
             viewException("Analysis error","Analysis performer wasn't registered.");
         facade.viewResult("Analysis stopped");
         analysisPerforming = false;
+        previousConclusuion = null;
     }
 
     @Override
@@ -136,7 +159,7 @@ public class AnalysisController implements AnalysisResultProcessable, CaptureCoo
     public void initTunableAnalysis() {
         if (settingFrame != null)
             settingFrame.dispose();
-        SwingUtilities.invokeLater(() -> new AnalysisSettingFrame(this));
+        SwingUtilities.invokeLater(() -> settingFrame =  new AnalysisSettingFrame(this));
     }
 
     public void startAnalysis(int lenght, int frames){

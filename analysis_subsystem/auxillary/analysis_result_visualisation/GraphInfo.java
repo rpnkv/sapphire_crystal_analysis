@@ -1,26 +1,15 @@
 package analysis_subsystem.auxillary.analysis_result_visualisation;
 
-import java.awt.*;
-
-
 public class GraphInfo {
 
     int[] brightnessValues;
     int beginPixel;
-    Color color;
-    short width;
+    GraphTypes graphType;
 
-    public GraphInfo(int[] brightnessValues, int beginPixel, Color color) {
+    public GraphInfo(int[] brightnessValues, int beginPixel, GraphTypes graphType) {
         this.brightnessValues = brightnessValues;
         this.beginPixel = beginPixel;
-        this.color = color;
-    }
-
-    public GraphInfo(int[] brightnessValues, int beginPixel, Color color, short width) {
-        this.brightnessValues = brightnessValues;
-        this.beginPixel = beginPixel;
-        this.color = color;
-        this.width = width;
+        this.graphType = graphType;
     }
 
     public int[] getBrightnessValues() {
@@ -31,28 +20,8 @@ public class GraphInfo {
         return beginPixel;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
-    public short getWidth() {
-        return width;
-    }
-
-    public void setBrightnessValues(int[] brightnessValues) {
-        this.brightnessValues = brightnessValues;
-    }
-
-    public void setBeginPixel(short beginPixel) {
-        this.beginPixel = beginPixel;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public void setWidth(short width) {
-        this.width = width;
+    public GraphTypes getGraphType() {
+        return graphType;
     }
 }
 

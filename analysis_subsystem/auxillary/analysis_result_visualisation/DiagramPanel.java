@@ -8,7 +8,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 
 //выполняет визуализацию графиков
 public class DiagramPanel extends ImagePanel implements GraphDrawable{
@@ -173,8 +174,6 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 		g2d.dispose();
 	}
 
-
-
 	private void drawYDescr(){
 		Graphics2D g2d = defaultDiagramShape.createGraphics();
 		g2d.setColor(Color.white);
@@ -188,14 +187,38 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 	}
 
 	@Override
-	public void drawGraphs(ArrayList<GraphInfo> graphSInfo) {
+	public void drawGraphs(Collection<GraphInfo> graphSInfo) {
 		diagramShape = deepCopy(defaultDiagramShape);
 		graphSInfo.forEach(graph -> {
-			int[] brightnessValues = graph.getBrightnessValues();
-			drawGraphLine(brightnessValues, graph.getColor(), graph.getWidth());
-			viewGraphCoord(graph.getBeginPixel(), graph.getColor(), brightnessValues.length);
+			defineGraphParams(graph);
+			defineGraphCoord(graph);
 		});
 		setImage(diagramShape);
+	}
+
+	private void defineGraphCoord(GraphInfo graph) {
+
+		switch (graph.getGraphType()) {
+			case CurrentMeniscusGraph:
+				viewGraphCoord(graph.getBeginPixel(),Color.red,graph.getBrightnessValues().length);
+				break;
+			case CurrentDeviationGraph:
+				viewGraphCoord(graph.getBeginPixel(),Color.blue,graph.getBrightnessValues().length);
+				break;
+			case CurrentMeniscusCoord:
+				break;
+			case CurrentDeviationCoord:
+				break;
+			case PreviousMeniscusGraph:
+				break;
+			case PreviousDeviationGraph:
+				break;
+			case PreviousMeniscusCoord:
+				break;
+			case PreviousDeviatiobCoord:
+				break;
+		}
+
 	}
 
 	@Override
@@ -203,9 +226,42 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 		diagramShape = deepCopy(defaultDiagramShape);
 		int[] brightnessValues = graphInfo.getBrightnessValues();
 		redrawDiagramShape();
-		drawGraphLine(brightnessValues, graphInfo.getColor(), graphInfo.getWidth());
-		viewGraphCoord(graphInfo.getBeginPixel(), graphInfo.getColor(),brightnessValues.length);
+		defineGraphParams(graphInfo);
+		viewGraphCoord(graphInfo.getBeginPixel(), Color.green,brightnessValues.length);
 		setImage(diagramShape);
+	}
+
+	private void defineGraphParams(GraphInfo graphInfo) {
+		int[] brightness = graphInfo.getBrightnessValues();
+		Color color = Color.white;
+		int width = 1;
+		switch (graphInfo.getGraphType()) {
+			case CurrentMeniscusGraph:
+				color = Color.red;
+				width = 2;
+				break;
+			case CurrentDeviationGraph:
+				color = Color.blue;
+				width = 2;
+				break;
+			case CurrentMeniscusCoord:
+				break;
+			case CurrentDeviationCoord:
+				break;
+			case PreviousMeniscusGraph:
+				color = Color.red;
+				width = 1;
+				break;
+			case PreviousDeviationGraph:
+				color = Color.blue;
+				width = 1;
+				break;
+			case PreviousMeniscusCoord:
+				break;
+			case PreviousDeviatiobCoord:
+				break;
+		}
+		drawGraphLine(brightness,color,width);
 	}
 
 	private void viewGraphCoord(int beginPixel, Color color, int valsNum) {
@@ -262,6 +318,7 @@ public class DiagramPanel extends ImagePanel implements GraphDrawable{
 	private void drawGraphLine(int[] brightnessValues, Color color, int width){
 		Point prevPoint = new Point(25,275-brightnessValues[0]);
 		Point newPoint = new Point();
+
 		Graphics2D g2d = diagramShape.createGraphics();
 		g2d.setStroke(new BasicStroke(width));
 		g2d.setColor(color);
