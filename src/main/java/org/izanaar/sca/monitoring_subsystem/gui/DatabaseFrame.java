@@ -168,7 +168,10 @@ public class DatabaseFrame extends JFrame {
         viewPanel.setBorder(BorderFactory.createTitledBorder("Output:"));
         outpArea = new JTextArea(15, 46);
         outpArea.setEditable(false);
-        outpArea.setComponentPopupMenu(new PopupMenu(outpArea));
+
+        JPopupMenu popupMenu = new javax.swing.JPopupMenu(outpArea.toString());
+
+        outpArea.setComponentPopupMenu(popupMenu);
         JScrollPane scroll = new JScrollPane(outpArea);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         viewPanel.add(scroll);

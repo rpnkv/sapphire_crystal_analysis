@@ -26,7 +26,8 @@ public class FrameAnalysisPanel extends JPanel {
         logPanel.setLayout(new BorderLayout());
         iterationsLog = new JTextArea(5, 41);
         iterationsLog.setEditable(false);
-        iterationsLog.setComponentPopupMenu(new PopupMenu(iterationsLog));
+        JPopupMenu popupMenu = new javax.swing.JPopupMenu(iterationsLog.toString());
+        iterationsLog.setComponentPopupMenu(popupMenu);
         scrollPane = new JScrollPane(iterationsLog);
 
         iterationsLog.setLineWrap(true);

@@ -1,6 +1,7 @@
 package org.izanaar.sca.capture_subsystem.auxillary.frame_sources.camera;
 
 import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 import org.izanaar.sca.capture_subsystem.auxillary.frame_sources.FrameSource;
 
@@ -20,7 +21,7 @@ public class CameraFrameSource extends FrameSource {
 
     @Override
     public BufferedImage getFrame() throws FrameGrabber.Exception {
-        return grabber.grab().getBufferedImage();
+        return new Java2DFrameConverter().convert(grabber.grab());
     }
 
     @Override
